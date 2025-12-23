@@ -1,0 +1,25 @@
+# Environment
+.env 
+
+# SSL Certificate
+certs/
+
+# Python file
+__pycache__/
+*.pyc
+*.pyo 
+venv/
+env/
+
+# Media file
+media/
+
+# OS
+.DS_Store
+.env.local
+
+# Database
+db.sqlite3
+
+# IDE
+.vscode/
