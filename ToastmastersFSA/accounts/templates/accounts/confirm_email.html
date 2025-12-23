@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmer l’email</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Confirmez votre email</h1>
+    <p>Pour activer votre compte, cliquez sur le bouton ci-dessous.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn">Confirmer mon email</button>
+    </form>
+</body>
+</html>

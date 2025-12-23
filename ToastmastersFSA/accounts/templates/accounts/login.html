@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} Connexion {% endblock %}
+
+{% block body %}
+<h2>Connexion</h2>
+<form method="post">
+    {% csrf_token %}
+    <p>{{ form.username }}{{ form.username.errors }}</p>
+    <p>{{ form.password }}
+        {{ form.password.errors }}
+    </p>
+    <button type="submit">Se Connecter</button>
+</form>
+<p><a href="{% url 'password_reset' %}">Mot de passe oublié?</a></p>
+<p>
+    Pas encore de compte ? 
+    <a href="{% url 'signup' %}">Inscrivez-vous</a>
+</p>
+{% endblock %}
