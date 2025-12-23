@@ -1,0 +1,12 @@
+Bonjour {{ user.get_last_name|default:user.username|title }},
+
+Bienvenue chez Toastmasters FSA ULaval 🎤✨
+
+Nous sommes ravis de t’accueillir dans notre communauté !  
+Pour activer ton compte, il te suffit de cliquer sur le lien ci-dessous :
+
+{{ activate_url }}
+
+À très bientôt lors de nos rencontres !  
+
+L’équipe Toastmasters FSA ULaval
