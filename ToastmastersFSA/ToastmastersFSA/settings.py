@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import dj_database_url
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,7 +39,27 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Project's apps
+    "accounts",
+    "core",
+    "communications",
+    "forms",
+    "meetings",
+    "members",
+    "speechs",
+
+    # Allauth email-verifications's apps
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
+
+    # Celery's apps
+    "django_celery_beat"
 ]
+
+# Django site
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -48,7 +69,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    # Allauth Middleware
+    "allauth.account.middleware.AccountMiddleware"
 ]
+
 
 ROOT_URLCONF = "ToastmastersFSA.urls"
 
@@ -79,6 +104,22 @@ DATABASES = {
     )
 }
 
+# Media Path's configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Authentification with email or username
+AUTHENTIFICATION_BACKENDS = [
+    "accounts.backends.EmailOrUsernameForLogin",
+    "django.contrib.auth.backends.ModelBackend"
+]
+
+# Allauth email's verification
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+# Authentification Login's redirection
+LOGIN_REDIRECT_URL = "dashboard"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -102,11 +143,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "fr-ca"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Montreal"
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
@@ -126,3 +169,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_TIMEZONE = 'UTC'
+
+# Email Sender's configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
