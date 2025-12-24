@@ -1,0 +1,190 @@
+{% extends 'members/layout.html' %}
+{% load static %}
+{% block title %}Réunions{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/edit_meeting.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/create_meeting.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/show_meetings.js' %}" defer></script>
+<style>
+    .menu-dropdown a,
+    .menu-dropdown button {
+        display: block;
+        width: 100%;
+        padding: 8px 12px;
+        box-sizing: border-box;
+        background: none;
+        border: none;
+        text-align: left;
+        font: inherit;
+        cursor: pointer;
+        color: inherit;
+        margin: 0;
+        line-height: normal; 
+        text-decoration: none;
+    }
+    .menu-dropdown a:hover,
+    .menu-dropdown button:hover {
+        background: #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+    <h2>Réunions</h2>
+
+    <div class="container">
+    <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A venir</button>
+    <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Historique</button>
+    </div>
+</div>
+
+<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
+     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+    {% if user.is_staff %}
+    <div class="page-header">
+        <a href="{% url 'create_meeting' %}">
+        <button type="button" class="action-btn">Planifier une réunion</button>
+        </a>
+    </div>
+    {% endif %}
+<div class="meeting-filter">
+    <select id="monthFilter" name="monthFilter">
+        <option value="all">Tous les mois</option>
+        {% for month in reunions_months %}
+            <option value="{{ month.value }}">{{ month.label }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="meetings-container">
+    {% for meeting in meetings %}
+        <div class="reunion-card {% if meeting.format|lower == 'en ligne' %}en-ligne{% else %}presentiel{% endif %}" data-month="{{ meeting.date|date:'Y-m' }}">
+
+        {% if user.is_staff %}
+            <div class="action-menu">
+                <button class="menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                <div class="menu-dropdown">
+                <a href="{% url 'edit_meeting' meeting.id %}" class="edit-btn" data-create-url="{% url 'edit_meeting' meeting.id %}">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <form action="{% url 'delete_meeting' meeting.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit"><i class="fas fa-trash"></i> Supprimer</button>
+                </form>
+                </div>
+            </div>
+        {% endif %}
+
+            <div class="meeting-type">
+                Séance {{ meeting.type }}
+            </div>
+            <div class="meeting-date">
+                <i class="far fa-calendar-alt"></i> {{ meeting.date|date:'d/m/Y' }} — De {{ meeting.start_time }} à {{ meeting.end_time }}
+            </div>
+            <div class="meeting-format">
+                {% if meeting.format|lower == 'en ligne' %}
+                    <i class="fas fa-laptop"></i>
+                {% else %}
+                    <i class="fas fa-users"></i>
+                {% endif %}
+                {{ meeting.format|title }}
+            </div>
+            {% if meeting.format|lower != 'en ligne' %}
+                <div class="meeting-location">
+                    <i class="fas fa-map-marker-alt"></i> {{ meeting.location }}
+                </div>
+            {% endif %}
+            <div class="meeting-actions">
+                <a href="{% url 'meeting_infos' meeting.id %}" class="btn btn-primary">Voir la programmation</a>
+                {% if meeting.format|lower == 'en ligne' %}
+                    <a href="{{ meeting.url }}" class="btn btn-secondary">Se connecter</a>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="no-meetings">
+            <i class="far fa-calendar-alt"></i>
+            <p>Aucune réunion à venir</p>
+        </div>
+    {% endfor %}
+
+    <div class="meetings-pagination">
+        <button class="page-btn prev" disabled><i class="fas fa-chevron-left"></i></button>
+        <span class="page-count">10</span>
+        <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+</div>
+
+
+
+<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
+      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+<div class="advanced-filtre">
+    <form method="get">
+        <input type="hidden" name="section" value="club">
+        <select name="format" onchange="this.form.submit()">
+            <option value="">-- Tous les formats --</option>
+            {% for f in formats %}
+            <option value="{{ f }}" {% if request.GET.format == f %}selected{% endif %}>{{ f }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="type" onchange="this.form.submit()">
+            <option value="">-- Tous les types --</option>
+            {% for t in types %}
+            <option value="{{ t }}" {% if request.GET.type == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="date" onchange="this.form.submit()">
+            <option value="">-- Toute période --</option>
+            <option value="7j" {% if request.GET.date == "7j" %}selected{% endif %}>7 derniers jours</option>
+            <option value="14j" {% if request.GET.date == "14j" %}selected{% endif %}>14 derniers jours</option>
+            <option value="30j" {% if request.GET.date == "30j" %}selected{% endif %}>30 derniers jours</option>
+            <option value="90j" {% if request.GET.date == "90j" %}selected{% endif %}>90 derniers jours</option>
+            <option value="365j" {% if request.GET.date == "365j" %}selected{% endif %}>1 an</option>
+        </select>
+    </form>
+</div>
+
+
+<h3 class="section-title">Réunions réalisées</h3>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Format</th>
+                <th>Thème</th>
+                <th>Mot du jour</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meeting in past_meetings %}
+            <tr>
+                <td>{{ meeting.date|date:"d M Y" }}</td>
+                <td>{{ meeting.type|title }}</td>
+                <td>{{ meeting.format|title }}</td>
+                <td>{% if meeting.theme %} {{ meeting.theme|title }} {% else %} - {% endif %}</td>
+                <td>{% if meeting.highlight_word %} {{ meeting.highlight_word|title }} {% else %} - {% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Aucune réunion réalisée</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+
+{% endblock %}
