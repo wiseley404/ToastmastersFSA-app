@@ -1,0 +1,77 @@
+{% extends 'base_login.html' %}
+{% load static %}
+
+{% block title %}Certificats{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/accordion.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="page-container">
+    <div class="page-header">
+        <h2>Certificats</h2>
+    </div>
+
+    <div class="certificats-container">
+        <h3 class="section-title">Mes Certificats</h3>
+        {% for category, certifs in certificats_categories.items %}
+        <button class="accordion {% if forloop.first %}active{% endif %}">{{ category }}</button>
+        <div class="panel{% if forloop.first %} show{% endif %}">
+            <table class="table">
+            <thead>
+                <tr>
+                <th>Titre</th>
+                <th>Date</th>
+                <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for certif in certifs %}
+                <tr>
+                <td>
+                    <a href="{{ certif.get_absolute_url|default:'#' }}">
+                    Certificat de {{ certif.title }}
+                    </a>
+                </td>
+                <td>{{ certif.issue_date|date:"d-m-Y" }}</td>
+                <td>
+                    {% if certif.file %}
+                    <a href="{{ certif.file.url }}" class="action-link" title="Télécharger" download>
+                    <i class="fas fa-download"></i>
+                    </a>
+                    {% else %}
+                    <span class="text-muted" title="Aucun fichier disponible">N/A</span>
+                    {% endif %}
+                </td>
+                </tr>
+                {% empty %}
+                <tr>
+                <td colspan="3" class="text-center text-muted">Aucun certificat dans cette catégorie.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.accordion').forEach(button => {
+    button.addEventListener('click', () => {
+        const panel = button.nextElementSibling;
+        const isOpen = panel.classList.contains('show');
+
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
+        document.querySelectorAll('.accordion').forEach(btn => btn.classList.remove('active'));
+
+        if (!isOpen) {
+        panel.classList.add('show');
+        button.classList.add('active');
+        }
+    });
+    });
+</script>
+
+{% endblock %}
