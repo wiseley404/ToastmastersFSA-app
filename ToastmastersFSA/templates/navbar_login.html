@@ -1,0 +1,52 @@
+{% load static %}
+
+<nav class="navbar">
+    <div class="navbar-left">
+        <a href="{% url 'dashboard' %}" class="logo-container">
+            <img id="logo-toastmasters" src="{% static 'images/logo-toastmasters.svg' %}" 
+            alt="Logo Toastmasters" class="logo-img">
+        </a>
+    </div>
+
+    <div class="navbar-right">
+        <a href="{}" class="icon-link" title="Notifications">
+            <i class="fas fa-bell"></i>
+        </a>
+        <div class="notif-dropdown">
+            <div class="notif-header">
+                <span>Notifications</span>
+                <a href="{}" class="notif-settings" title="Paramètres">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+
+            <div class="notif-list" id="notif-list">
+
+            </div>
+        </div>
+
+        <div class="profil-menu">
+            <a href="{}" class="icon-link" title="Mon Compte">
+                <i class="fas fa-user-circle"></i>
+            </a>
+
+            <div class="profil-dropdown">
+                <div class="top-profil-dropdown">
+                    <img class="avatar-profil-menu" src="{{ profil.photo.url }}" width="50" height="50" style="border-radius: 50%; border: 1px solid green;">
+                    <h3>{{ profil.user.get_full_name.title }}</h3>
+                    <p>{{ profil.user.email }}</p>
+                </div>
+                <a href="{% url 'edit_profil' %}">Profil</a>
+                <a href="{}">Compte</a>
+                <a href="{% url 'logout' %}">Se deconnecter</a>
+            </div>
+        </div>
+    <button class="hamburger" id="hamburger-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+    </div>
+
+
+
+</nav>
+

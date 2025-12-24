@@ -1,0 +1,479 @@
+/* Dashboard General */
+.layout-dashboard {
+  display: flex;
+  gap: 24px;
+  padding: 20px;
+  box-sizing: border-box;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.column1-dashboard,
+.column2-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-left: 30px; 
+  flex: 1 1 350px;
+  max-width: 600px;
+}
+
+.column1-dashboard { 
+  margin-bottom: 15px;
+}
+
+
+/* DASHBOARD/PROFILE SECTION */
+.profil-card {
+    max-width: 500px; 
+    width: 100%;     
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 18px;
+    padding: 24px 30px 24px 30px;
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #e2e8f0;
+    gap:20px;
+}
+
+.profil-photo {
+    width: 115px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profil-photo img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 6px 12px rgba(29, 161, 242, 0.2);
+    border: 2px solid #1da1f2;
+    margin-bottom: 10px;
+}
+
+.profil-infos {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.profil-hello h2 {
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #111;
+    margin-top: 0;
+}
+
+.profil-name {
+    margin: 12px 0 8px 0;
+    font-size: 1.8em;
+    font-weight: 700;
+    word-break: break-word;
+    max-width: 250px;
+    line-height: 1.1;
+    color: #222;
+}
+
+.profil-infos p {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #444;
+}
+
+.profil-modif {
+    margin-top: 13px;
+}
+
+.profil-distinctions a,
+.profil-modif a {
+    color: #007BFF; 
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.profil-distinctions a::after,
+.profil-modif a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    left: 0;
+    bottom: -2px;
+    background: #2563eb;
+    transition: width 0.3s ease;
+}
+
+.profil-distinctions a:hover::after,
+.profil-modif a:hover::after {
+    width: 100%;
+}
+
+.profil-distinctions a:hover,
+.profil-modif a:hover {
+    color: #1e40af;
+}
+
+
+/* Dashboard/Progression */
+.progression-container {
+    display: flex;
+    gap: 10px;
+    max-width: 500px;
+}
+
+.progressionChart {
+  max-width: 500px;
+}
+
+.progression-item {
+  position: relative;
+  width: 120px;
+  font-family: Arial, sans-serif;
+  user-select: none;
+}
+
+.progression-svg-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+}
+
+.progress-ring__circle-bg,
+.progress-ring__circle {
+  stroke-width: 10;
+  fill: transparent;
+  r: 45;
+  cx: 50;
+  cy: 50;
+}
+.progress-ring__circle-bg{
+    stroke: #e5e7eb;
+}
+
+.progress-ring__circle {
+  stroke: #007BFF;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.progression-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 1.2em;
+  color: #374151;
+  pointer-events: none;
+}
+
+.progression-label {
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 1em;
+  color: #374151;
+  text-align: center;
+}
+
+
+/* Dashboard/Statistiques */
+.stats-section {
+    margin-top: 10px;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-weight: 600;
+  font-size: 1em;
+  color: #374151;
+}
+
+.stats-separator {
+  border: none;
+  border-top: 1px solid #d1d5db;
+  margin: 0;
+}
+
+/* Notifications  */
+.notifications-card {
+  box-sizing: border-box;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 10px 20px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  margin-bottom: 18px;
+  min-height: 200px;
+}
+
+/*.separator-line {
+  height: 1.5px;
+  background: #e5e7eb;
+  margin-bottom: 12px;
+  width: 100%;
+} */
+
+.notifications-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-item {
+  padding: 8px 8px 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  color: #475569;
+  font-weight: 500;
+}
+
+.notification-item.non-lue {
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.notification-date {
+  display: block;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+
+/* Dashboard-seances */
+.last-meeting-section,
+.next-meeting-section {
+  max-width: 500px;
+  background: #fff;
+  border-radius: 18px;
+  padding: 10px 30px 24px 20px;
+  border: 1px solid #d1d5db; 
+  box-sizing: border-box;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.1);
+}
+
+.header-card {
+  font-weight: 600;
+  font-size: 1.1rem;
+  width: 100%;
+  color: #334155;
+}
+
+.separator-line {
+  height: 1.5px;
+  background: #e5e7eb;
+  width: 100%;
+}
+
+.body-card {
+  display: flex;
+  max-height: none;   
+  gap: 12px;           
+  padding-top: 4px;   
+  padding-bottom: 4px; 
+}
+
+.left-side {
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-right: 1.5px solid #e5e7eb;
+  padding-right: 16px;
+  color: #475569;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.medal-icon {
+  font-size: 3.5rem;
+  margin-top: 12px;
+  color: #64748b; 
+  animation: pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.vertical-separator {
+  margin-right: 16px;
+}
+
+.right-side {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-container {
+  position: relative;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateX(100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  position: relative;
+
+}
+
+.title-slide {
+  font-weight: 700;
+  font-size: 1.3em;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.member-name {
+  font-style: italic;
+  margin-bottom: 12px;
+  color: #64748b;
+}
+
+.certificat-link {
+  color: #007BFF;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.certificat-link:hover {
+  color: #0056b3;
+  border-bottom-color: #0056b3;
+}
+
+.btn-nav {
+  background: #e5e7eb;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  border: none;
+  font-size: 1.4em;
+  color: #475569;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 2px 8px rgba(100, 116, 139, 0.3);
+}
+
+.btn-nav:hover {
+  background-color: #cbd5e1;
+  color: #1e293b;
+  transform: scale(1.1);
+}
+
+.controle-slider {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  gap: 14px;
+  user-select: none;
+}
+
+.texte-ligne-brisee {
+  word-wrap: break-word;
+  max-width: 130px;
+  margin: 0 0 12px 0; 
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.95em;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+
+
+
+/* Fix débordement dashboard sur mobile */
+@media (max-width: 767px) {
+  .layout-dashboard {
+    flex-direction: column;
+    align-items: stretch;  
+    padding: 10px;
+  }
+
+  .column1-dashboard,
+  .column2-dashboard {
+    margin-left: 0; 
+    flex: 1 1 100%;
+    max-width: 100% !important;
+  }
+
+  /* Tous les blocs prennent la largeur dispo */
+  .profil-card
+  .profil-section,
+  .progression-container,
+  .progression-section,
+  .progression-item,
+  .progressionChart,
+  .evolution-section,
+  .stats-section,
+  .carte-notifications,
+  .last-meeting-section,
+  .next-meeting-section {
+    margin: 0 auto;
+    max-width: 450px !important;
+    width: 100% !important;
+  }
+
+  .profil-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profil-name {
+    margin: 0 auto;
+  }
+
+  .profil-infos {
+    width: 100%;
+    word-break: break-word;
+  }
+
+  .progression-container,
+  .evolution-section,
+  .stats-section {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  canvas {
+    max-width: 100% !important;
+    min-width: 300px;
+  }
+}
+

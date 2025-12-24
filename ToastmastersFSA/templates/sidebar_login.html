@@ -1,0 +1,98 @@
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <button class="sidebar-open-btn" aria-label="Ouvrir la sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
+        <span class="sidebar-title">Toastmasters FSA</span>
+        <button class="sidebar-close-btn" aria-label="Fermer">
+        <i class="fas fa-times"></i>
+        </button>
+  </div>
+    <ul class="menu-list">
+        <li class="{% if section_active == 'dashboard' %}active{% endif %}">
+            <a href="{% url 'dashboard' %}" title="Tableau de bord">
+                <i class="fas fa-home"></i> 
+                <span>Tableau de bord</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'suivi' %}active{% endif %}">
+            <a href="{% url 'historique_discours' %}" title="Suivi de participation">
+                <i class="fas fa-user-check"></i> 
+                <span>Suivi de participation</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'roles' %}active{% endif %}">
+            <a href="{% url 'planning_discours' %}" title="Prise de rôle">
+                <i class="fas fa-tasks"></i> 
+                <span>Prise de rôle</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'evaluations' %}active{% endif %}">
+            <a href="{% url 'evaluations' %}" title="Évaluations">
+                <i class="fa-solid fa-star"></i> 
+                <span>Évaluations</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'mentorat' %}active{% endif %}">
+            <a href="{% url 'mentorat' %}" title="Mentorat">
+                <i class="fas fa-hands-helping"></i> 
+                <span>Mentorat</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'reunions' %}active{% endif %}">
+            <a href="{% url 'meetings' %}" title="Réunions">
+                <i class="fas fa-calendar-alt"></i> 
+                <span>Réunions</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'votes' %}active{% endif %}">
+            <a href="{% url 'liste_formulaires' %}" title="Votes">
+                <i class="fas fa-vote-yea"></i> 
+                <span>Votes</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'certificats' %}active{% endif %}">
+            <a href="{% url 'mes_certificats' %}" title="Certificats">
+                <i class="fas fa-award"></i> 
+                <span>Certificats</span>
+            </a>
+        </li>
+        
+        <li class="{% if section_active == 'ressources' %}active{% endif %}">
+            <a href="{% url 'afficher_ressources' %}" title="Ressources">
+                <i class="fas fa-book"></i> 
+                <span>Ressources</span>
+            </a>
+        </li>
+
+        {% if user.is_staff %}
+        <li class="sidebar-separator"></li>
+
+        <li class="{% if section_active == 'communications' %}active{% endif %}">
+            <a href="{% url 'communications' %}" title="Communications">
+                <i class="fas fa-envelope"></i> 
+                <span>Communications</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'statistiques' %}active{% endif %}">
+            <a href="{% url 'statistiques' %}" title="Statistiques">
+                <i class="fas fa-chart-pie"></i> 
+                <span>Statistiques</span>
+            </a>
+        </li>
+        <li class="{% if section_active == 'parametres' %}active{% endif %}">
+            <a href="{% url 'parametres' %}" title="Paramètres généraux">
+                <i class="fas fa-cog"></i> 
+                <span>Paramètres généraux</span>
+            </a>
+        </li>
+        {% endif %}
+        <li class="sidebar-separator"></li>
+        <li class="logout">
+        <a href="{% url 'logout' %}" title="Se déconnecter">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Se déconnecter</span>
+        </a>
+        </li>  
+    </ul>
+</aside>

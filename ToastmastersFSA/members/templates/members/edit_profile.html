@@ -1,0 +1,73 @@
+{% extends 'base_login.html' %}
+
+{% block title %} Modifier Profil {% endblock %}
+
+{% block body %}
+<h2>Profil Informations</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="photo">
+    {{ user_photo_form }}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_photo')">Annuler</button>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="firstname">
+    {{ user_firstname_form}}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_first_name')">Annuler</button>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="lastname">
+    {{ user_lastname_form }}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_last_name')">Annuler</button>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="username">
+    {{ user_username_form }}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_username')">Annuler</button>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="email">
+    {{ user_email_form }}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_email')">Annuler</button>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="telephone">
+    {{ user_telephone_form }}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_telephone')">Annuler</button>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="form_type" value="programmes">
+    {{ user_programmes_form }}
+    <button type="submit">Enregistrer</button>
+    <button type="button" onclick="resetField('id_programmes')">Annuler</button>
+</form>
+
+<a href="{% url 'password_change' %}">Changer mot de passe</a>
+
+<script>
+function resetField(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.value = field.defaultValue; 
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,219 @@
+.layout {
+  display: flex;
+  transition: all 0.3s ease;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 100%;
+  width: 230px;
+  background: #f8f8f8;
+  border-right: 1px solid #ddd;
+  transition: width 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.sidebar.close {
+  width: 40px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  margin-left: 230px;
+}
+
+
+.sidebar:not(.close) ~ .main-content {
+  margin-left: 230px;
+}
+
+.sidebar.close ~ .main-content {
+  margin-left: 40px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  height: 70px;
+  box-sizing: border-box;
+}
+.sidebar-title {
+  flex-grow: 1;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.sidebar-open-btn,
+.sidebar-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+.sidebar-open-btn {
+  display: none;
+  margin-left: -12px;
+}
+.sidebar.close .sidebar-open-btn {
+  display: inline-block;
+}
+.sidebar.close .menu-list li a {
+  margin-left: -8px;
+}
+.sidebar.close .menu-list li a i {
+  margin-right: 20px;
+}
+.sidebar.close .sidebar-title,
+.sidebar.close .sidebar-close-btn {
+  display: none;
+}
+
+
+.menu-list {
+  list-style: none;
+  padding: 0; margin: 0;
+}
+.menu-list li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.menu-list li a i {
+  margin-right: 8px;
+}
+.menu-list li:hover a {
+  background-color: #eaeaea;
+}
+.menu-list li.active a {
+  background-color: #d3d3d3; 
+  color: #222;              
+  font-weight: 600;          
+}
+
+
+.profil-menu {
+    display: block;
+}
+
+@media (min-width: 768px) {
+      .hamburger {
+    display: none !important; 
+  }
+}
+
+
+.sidebar {
+    transform: translateX(-100%);
+    width: 230px;            
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1200;
+    transition: transform 0.28s ease;
+    display: block;        
+    background: #f8f8f8;
+    overflow-y: auto;     
+    -webkit-overflow-scrolling: touch;
+}
+
+
+.sidebar.open {
+    transform: translateX(0);
+    width: 230px;     
+    height: 100vh;
+    left: 0;
+    top: 0;
+}
+
+@media (min-width: 768px){
+  .sidebar {
+    transform: none; 
+  }
+}
+
+
+@media (max-width: 767px) {
+
+  .navbar {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    position: fixed;
+    top: 0;
+    margin: 0;
+    padding: 0 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    z-index: 1100; 
+    border-bottom: 1px solid #ddd;
+  }
+
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+
+    .sidebar-overlay {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1190;
+        display: none;
+    }
+    .sidebar.open ~ .sidebar-overlay {
+        display: block;
+    }
+
+
+    .profil-menu { display: none !important; }
+
+
+    .hamburger {
+        display: inline-flex;
+        -webkit-appearance: none;
+        appearance: none;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        padding: 8px 10px;
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+        font-size: 1.05rem;
+        color: #222;
+        margin-left: 8px;
+        z-index: 1300; 
+    .hamburger:active { transform: scale(0.98); }
+    .hamburger i { font-size: 1.2rem; display:block; }
+
+    .sidebar.open .sidebar-close-btn {
+        display: inline-block !important;
+    }
+
+    .sidebar.open .sidebar-title {
+        display: inline-block !important;
+    }
+
+    .sidebar-open-btn{ display: none !important; }
+    }
+
+}
