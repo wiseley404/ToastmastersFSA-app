@@ -1,0 +1,76 @@
+{% extends 'base_login.html' %}
+{% load static %}
+{% block head %}
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/edit_meeting.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'discours/js/create_speech.js' %}" defer></script>
+{% endblock %}
+
+{% block title %}Programmation{% endblock %}
+
+{% block body %}
+{% include 'includes/popup.html' %}
+
+<div class="back-link no-print">
+    <a href="{% url 'show_meetings' %}">
+        <i class="fas fa-arrow-left"></i> Retour aux réunions
+    </a>
+</div>
+
+<div class="meeting-page">
+
+    <div class="logo-print">
+        <div class="logos">
+            <img src="{% static 'images/logo-toastmasters.svg' %}" alt="Logo Toastmasters" class="logo">
+        </div>
+        <h1 class="club-name">Club Toastmasters - FSA ULaval</h1>
+    </div>
+
+    <h2>Programmation</h2>
+
+
+    <a href="{% url 'create_speech' %}" class="no-print">
+        <button type="button" class="btn-role action-btn" data-create-url="{% url 'create_speech' %}" data-roles="{% url 'available_roles' %}">
+            <i class="fas fa-plus"></i> Prendre un rôle
+        </button>
+    </a>
+
+
+    <div class="meeting-actions no-print">
+        {% if user.is_staff %}
+            <a href="{% url 'edit_meeting' meeting.id%}" class="action-link edit-btn" data-create-url="{% url 'edit_meeting' meeting.id %}" data-id="{{ meeting.id }}">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+        {% endif %}
+        <a href="{% url 'meeting_pdf' meeting.id %}" class="action-link">
+            <i class="fas fa-download"></i> Télécharger
+        </a>
+    </div>
+
+
+    <div class="meeting-info">
+        <p><strong>Thème :</strong> {{ meeting.theme|default:"-" }}</p>
+        <p><strong>Mot du jour :</strong> {{ meeting.highlight_word|default:"-" }}</p>
+        <p><strong>Date :</strong> {{ meeting.date }}</p>
+        <p><strong>Heure :</strong> De {{ meeting.start_time }} à {{ meeting.end_time }}</p>
+        {% if meeting.location %}
+            <p><strong>Lieu :</strong> {{ meeting.location }}</p>
+        {% endif %}
+    </div>
+
+
+    {% if meeting.speechs.exists %}
+        <div class="meeting-speech">
+            {% for speech in meeting.speechs.all %}
+                <p><strong>{{ speech.role.title }}:</strong> {{ speech.orator.get_full_name.title }}</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-roles">
+            <i class="fas fa-user-slash"></i>
+            <p>Aucun rôle pris pour l’instant</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

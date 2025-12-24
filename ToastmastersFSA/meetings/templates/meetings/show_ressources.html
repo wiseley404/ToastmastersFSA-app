@@ -1,0 +1,73 @@
+{% extends 'members/layout.html' %}
+{% load static %}
+
+{% block title %} Ressources {% endblock %}
+{% block head %}
+<script type="text/javascript" src="{% static 'members/js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/ajouter_ressource.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/modifier_ressource.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/supprimer_ressource.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+{% include 'includes/popup.html' %}
+<div class="page-container">
+    <div class="page-header">
+        <h2>Ressources</h2>
+    {% if user.is_staff %}
+        <a href="{% url 'add_ressources' %}">
+            <button class="action-btn">Ajouter une ressource</button>
+        </a>
+    {% endif %}
+    </div>
+
+    <div class="resources-list">
+        <h3 class="section-title">Mes Documents/Autres</h3>
+    {% for ressource in ressources %}
+    <div class="resource-card">
+        {% if user.is_staff %}
+            <div class="action-menu">
+                <button class="menu-btn"><i class="fas fa-ellipsis-v"></i></button>
+                <div class="menu-dropdown">
+                    <a class="edit-btn" href="{% url 'edit_ressources' ressource.id %}" 
+                        data-create-url="{% url 'edit_ressources' ressource.id %}">
+                        <i class="fas fa-edit"></i> Modifier
+                    </a>
+                    <a class="delete-btn" href="{% url 'confirm_ressource_deletion' ressource.id %}"
+                            data-create-url="{% url 'confirm_ressource_deletion' ressource.id %}">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+        <div class="resource-icon"><i class="{{ ressource.icon }}"></i></div>
+        <div class="resource-content">
+        <div class="resource-title">{{ ressource.title|capfirst }}</div>
+        <div class="resource-desc">{{ ressource.description|capfirst }}</div>
+        <a class="resource-link" href="{{ ressource.link }}" target="_blank">Voir la ressource</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-ressources">
+        <i class="fas fa-book"></i>
+        <p>Aucune ressource disponible.</p>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+<script>
+    //menu-action
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.menu-dropdown').forEach(d => d.style.display = 'none');
+        this.nextElementSibling.style.display = 'block';
+    });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.menu-dropdown').forEach(d => d.style.display = 'none');
+    });
+</script>
+{% endblock %}
