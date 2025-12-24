@@ -1,0 +1,70 @@
+.accordion {
+  position: relative;
+  background: #eee;
+  cursor: pointer;
+  padding: 12px 40px 12px 20px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-weight: bold;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.accordion::after {
+  content: '+';
+  position: absolute;
+  right: 20px;
+  font-size: 18px;
+  transition: transform 0.3s ease;
+}
+
+.accordion.active,
+.accordion:hover {
+  background: #ccc;
+}
+
+.accordion.active::after {
+  content: '-';
+}
+
+.panel {
+  display: none;
+  padding: 0 20px;
+  margin-bottom: 10px;
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-top: none;
+}
+
+.panel.show {
+  display: block;
+}
+
+.action-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #888;
+}
+
+
+.table a {
+  color: #1a73e8;       
+  text-decoration: none; 
+  transition: color 0.3s ease;
+}
+
+.table a:hover {
+  color: #0049b7;  
+  text-decoration: underline;
+}

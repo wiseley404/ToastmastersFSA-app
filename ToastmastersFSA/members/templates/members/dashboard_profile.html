@@ -1,0 +1,38 @@
+<div class="profil-section">
+    <div class="profil-hello">
+        <h2>Bonjour, {{ user.profile.user.username.title }}</h2>
+    </div>
+    <div class="profil-card">
+        <div class="profil-photo">
+            {% if user.profile.photo %}
+                <img src="{{ user.profile.photo.url }}" alt="Photo de profil">
+            {% else %}
+                <img src="/media/profiles/avatar.jpg" alt="Photo par defaut">
+            {% endif %}
+            <div class="profil-distinctions">
+                <a href="{% url 'mes_certificats' %}">Mes distinctions</a>
+            </div>
+        </div>
+        <div class="profil-infos">
+            <h2 class="profil-name">{{ user.profile.user.get_full_name.title }}</h2>
+            <p>{{ user.profile.curriculum.all|join:" - " }}</p>
+            <p>
+                Statut(s): 
+
+                {% if other_statuts %}
+                    {{ other_statuts|join:" / " }}
+
+                    {% if is_official_member %}
+                    / Membre officiel <i class="fas fa-circle-check" style="color:#1da1f2;"></i>
+                    {% endif %}
+                {% else %}
+                    Membre officiel <i class="fas fa-circle-check" style="color:#1da1f2;"></i>
+                {% endif %}
+                
+            </p>
+            <div class="profil-modif">
+                <a href="{% url 'edit_profile' %}">Modifier mon profil</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="last-meeting-section"> 
+    <div class="header-card">
+        <h2>Dernière Séance — {% if last_meeting %}{{ last_meeting.date }} {% else %}Aucune{% endif %}</h2>
+    </div>
+
+    <div class="separator-line"></div>
+
+    <div class="body-card">
+        <div class="left-side">
+            <h3>Distinctions</h3>
+            <div class="medal-icon">🏅</div>
+        </div>
+
+        <div class="vertical-separator"></div>
+
+        <div class="right-side">
+            {% for certificat in certificats %}
+            <div class="slide {% if forloop.first %}active{% endif %}">
+                <h3 class="title-slide">{{ certificat.get_title_display }}</h3>
+                <p class="member-name">{{ certificat.speech.orator.get_full_name }}</p>
+                {% if certificat.file %}
+                <a href="{{ certificat.file.url }}" target="_blank" class="certificat-link">Voir certificat</a>
+                {% endif %}
+            </div>
+            {% empty %}
+                <p>Aucune distinction attribuée pour cette séance.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="controle-slider">
+        <button id="prev-btn" class="btn-nav gauche">&lt;</button>
+        <button id="next-btn" class="btn-nav droite">&gt;</button>
+    </div>
+</div>
+
+
+<div class="next-meeting-section"> 
+    <div class="header-card">
+        <h2>Prochaine Séance — {% if next_meeting %} {{ next_meeting.date }} {% else %}Aucune{% endif %}</h2>
+    </div>
+    <div class="separator-line"></div>
+
+    <div class="body-card">
+        <div class="left-side"> 
+            <h3>Thème</h3>
+            <p class="texte-ligne-brisee">
+                {{ next_meeting.theme|capfirst|default:"-" }}
+            </p>
+
+            <h3>Mot du jour</h3>
+            <p class="texte-ligne-brisee">
+                {{ next_meeting.highlight_word|capfirst|default:"-" }}
+            </p>
+        </div>
+
+        <div class="vertical-separator"></div>
+
+        <div class="right-side">
+            {% for speech in next_meeting.speech.all %}
+            <div class="slide {% if forloop.first %}active{% endif %}">
+                <h3 class="title-slide">{{ speech.role.title|capfirst }}</h3>
+                <p class="member-name">{{ speech.orator.get_full_name|title }}</p>
+            </div>
+            {% empty %}
+                <p>Aucune role pris pour cette séance.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="controle-slider">
+        <button id="prev-btn-prochaine" class="btn-nav gauche">&lt;</button>
+        <button id="next-btn-prochaine" class="btn-nav droite">&gt;</button>
+    </div>
+</div>
