@@ -1,0 +1,29 @@
+{% extends 'base_login.html' %}
+
+{% block title %}Attribuer un rôle{% endblock %}
+
+{% block body %}
+<h2>Attribuer un rôle</h2>
+<form class="popup-form" action="{% url 'attribuate_speech' %}" method="post">
+    {% csrf_token %}
+    <p>Date: {{ speech.meeting }}</p>
+    <p>Orateur: {{ speech.orator }}</p>
+    <p>Rôles: {{ speech.role }}</p>
+
+    <p id="title-field" style="display:none;">Titre: {{ speech.title }}
+        {{ speech.title.errors }}
+    </p>
+    <p id="theme-field" style="display:none;">Theme: {{ speech.theme }}
+        {{ speech.theme.errors }}
+    </p>
+    <p id="highlight_word-field" style="display:none;">Mot du jour: {{ speech.highlight_word }}
+        {{ speech.highlight_word.errors }}
+    </p>
+
+    <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+        Attribuer ce rôle
+    </button>
+</form>
+
+{% endblock %}

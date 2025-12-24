@@ -1,0 +1,153 @@
+{% extends 'base_login.html' %}
+{% load static %}
+
+{% block title %} Mes roles à venir {% endblock %}
+{% block head %}
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'discours/js/create_speech.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'discours/js/cancel_speech.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+<h2>Planning</h2>
+{% if user.is_staff %}
+<div class="container">
+  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">Personnel</button>
+  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Club</button>
+</div>
+{% endif %}
+</div>
+
+<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
+     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+<div class="page-header">
+        <a href="{% url 'create_speech' %}">
+    <button type="button" class="action-btn" data-create-url="{% url 'create_speech' %}" data-roles="{% url 'available_roles' %}">Prendre un rôle</button>
+</a>
+</div>
+
+<h3 class="section-title">Mes Discours/Rôles à venir</h3>
+<div class="table-wrapper">  
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Titre</th>
+                <th>Temps alloué</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for speech in future_speeches.personnel %}
+            <tr>
+                <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.role.title }}</td>
+                <td>
+                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
+                </td>
+                <td>
+                    {% if speech.role.min_secondes_duration == 0 %}
+                        -
+                    {% else %} {{ speech.role.min_secondes_duration }} - {{ speech.role.max_secondes_duration }} secondes
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Aucun discours à venir</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+
+{% if user.is_staff %}
+<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
+      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+<div class="page-header">
+    <a href="{% url 'attribuate_speech' %}">
+        <button type="button" class="action-btn" data-create-url="{% url 'attribuate_speech' %}" data-roles="{% url 'available_roles' %}">Attribuer un rôle</button>
+    </a>
+</div>
+
+<div class="advanced-filtre">
+    <form method="get">
+        <input type="hidden" name="section" value="club">
+        <select name="role" onchange="this.form.submit()">
+            <option value="">-- Tous les rôles --</option>
+            {% for r in roles %}
+            <option value="{{ r }}" {% if request.GET.role == r %}selected{% endif %}>{{ r }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="reunion" onchange="this.form.submit()">
+            <option value="">-- Toutes les reunions --</option>
+            {% for r in reunions %}
+            <option value="{{ r }}" {% if request.GET.reunion == r %}selected{% endif %}>{{ r }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<h3 class="section-title">Discours/Rôles à venir</h3>
+<div class="table-wrapper"> 
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Titre</th>
+                <th>Temps alloué</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for speech in future_speeches.club %}
+            <tr>
+                <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.orator.get_full_name|title }}</td>
+                <td>{{ speech.role.title }}</td>
+                <td>
+                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
+                </td>
+                <td>
+                    {% if speech.role.min_secondes_duration == 0 %}
+                        -
+                    {% else %} {{ speech.role.min_secondes_duration }} - {{ speech.role.max_secondes_duration }} secondes
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Aucun discours à venir</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endif %}
+</div>
+
+
+
+{% endblock %}

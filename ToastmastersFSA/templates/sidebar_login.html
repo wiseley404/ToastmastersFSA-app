@@ -33,12 +33,6 @@
                 <span>Évaluations</span>
             </a>
         </li>
-        <li class="{% if section_active == 'mentorat' %}active{% endif %}">
-            <a href="{% url 'mentorat' %}" title="Mentorat">
-                <i class="fas fa-hands-helping"></i> 
-                <span>Mentorat</span>
-            </a>
-        </li>
         <li class="{% if section_active == 'reunions' %}active{% endif %}">
             <a href="{% url 'meetings' %}" title="Réunions">
                 <i class="fas fa-calendar-alt"></i> 
@@ -57,7 +51,7 @@
                 <span>Certificats</span>
             </a>
         </li>
-        
+
         <li class="{% if section_active == 'ressources' %}active{% endif %}">
             <a href="{% url 'afficher_ressources' %}" title="Ressources">
                 <i class="fas fa-book"></i> 
