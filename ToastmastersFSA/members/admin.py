@@ -4,16 +4,16 @@ from django.utils.html import format_html
 
 # Register your models here.
 class CurriculumAdmin(admin.ModelAdmin):
-    list_display = ('nom',)
+    list_display = ('title',)
 
 
 class StatutAdmin(admin.ModelAdmin):
-    list_display = ('nom',)
+    list_display = ('title',)
 
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('get_last_name', 'get_first_name','get_email',
-                     'telephone', 'show_curriculums', 'show_statuts', 'get_photo_thumbnail'
+                     'telephone', 'get_curriculums', 'get_statuts', 'get_photo_thumbnail'
                     )
     search_fields = ('user__username', 'user__last_name', 'user__first_name', 'status')
 
@@ -29,12 +29,12 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
     def get_email(self, obj):
-        return obj.utilisateur.email
+        return obj.user.email
     get_email.short_description = 'Email'
 
-    def show_curriculums(self, obj):
-        return ', '.join(str(p) for p in obj.programmes.all())
-    show_curriculums.short_description = 'Programmes'
+    def get_curriculums(self, obj):
+        return ', '.join(str(c) for c in obj.curriculums.all())
+    get_curriculums.short_description = 'Programmes'
 
     def get_photo_thumbnail(self, obj):
         if obj.photo:
@@ -43,13 +43,13 @@ class ProfileAdmin(admin.ModelAdmin):
     get_photo_thumbnail.short_description = 'Photo'
     
 
-    def show_statuts(self, obj):
+    def get_statuts(self, obj):
         return ', '.join([str(statut) for statut in obj.statuts.all()])
-    show_statuts.short_description = 'Statuts'
+    get_statuts.short_description = 'Statuts'
 
 
 class ProgressionAdmin(admin.ModelAdmin):
-    list_display = ('utilisateur', 'reunion', 'pertinence', 'gestion_temps', 'eloquence', 'structure')
+    list_display = ('user', 'meeting', 'pertinence', 'time_gestion', 'eloquence', 'structure')
 
 
 admin.site.register(Statut, StatutAdmin)
