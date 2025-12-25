@@ -26,6 +26,8 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("accounts/", include("allauth.urls")),
     path("members/", include("members.urls")),
+    path("speechs/", include("speechs.urls")),
+    path("meetings", include("meetings.urls")),
 ]
 
 if settings.DEBUG:

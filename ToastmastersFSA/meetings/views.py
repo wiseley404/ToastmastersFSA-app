@@ -126,7 +126,7 @@ def edit_ressources(request, ressource_id):
 
 
 @staff_member_required
-def confirm_reesource_deletion(request, ressource_id):
+def confirm_ressource_deletion(request, ressource_id):
     ressource = get_object_or_404(Ressources, id=ressource_id)
     return render(request, 'meetings/delete_ressource.html', {'ressource':ressource})
 

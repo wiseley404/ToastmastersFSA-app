@@ -1,0 +1,146 @@
+{% extends 'base_login.html' %}
+{% load static %}
+
+
+{% block title %} Formulaires {% endblock %}
+{% block head %}
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'forms/js/create_form.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'forms/js/delete_form.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'forms/js/publish_form.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'forms/js/closeform.js' %}" defer></script>
+{% endblock %}
+
+
+{% block body %}
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+    <h2>Formulaires</h2>
+{% if user.is_staff %}
+<div class="container">
+  <button class="toggle-text-btn active" data-target="personnel">Actuel</button>
+  <button class="toggle-text-btn" data-target="club">Historique</button>
+</div>
+{% endif %}
+</div>
+
+<div class="section-content active" id="personnel" style="display:block;">
+    <div class="page-header">
+    {% if user.is_staff %}
+        <a href="{% url 'create_form' %}">
+            <button type="button" class="action-btn" data-create-url="{% url 'create_form' %}">
+                Créer un formulaire
+            </button>
+        </a>
+    {% endif %}
+    </div>
+
+{% if user.is_staff %}
+<h3 class="section-title">Non Publiés</h3>
+<div class="table-wrapper">
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for form in not_published_forms %}
+            <tr>
+                <td><a href="{% url 'show_form' form.id %}" title="Voir">{{ formulaire.title|title }}</a></td>
+                <td>{{ form.date|date:"d-m-Y" }}</td>
+                <td>
+                    <a class="push-btn" href="{% url 'confirm_form_publication' formid %}" data-create-url="{% url 'confirm_form_publication' form.id %}">
+                        <button type="button">Publier</button>
+                    </a>
+                    <a href="{% url 'edit_form' form.id %}">
+                        <button type="button" title="Modifier"><i class="fas fa-edit"></i></button>
+                    </a> 
+                    <a class="delete-btn" href="{% url 'confirm_form_deletion' form.id %}" data-create-url="{% url 'confirm_form_deletion' form.id %}">
+                        <button type="button" title="Supprimer"><i class="fas fa-trash"></i></button>
+                    </a>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="3">Aucun formulaire enregistré pour l'instant</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<h3 class="section-title">En cours</h3>
+<div class="table-wrapper">
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Date</th>
+        {% if user.is_staff %}
+            <th>Action</th>
+        {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for form in active_published_forms %}
+            <tr>
+                <td><a href="{% url 'show_form' form.id %}" title="Voir">{{ formulaire.title|title }}</a></td>
+                <td>{{ form.date|date:"d-m-Y" }}</td>
+            {% if user.is_staff %}
+                <td>
+                    <a class="close-btn" href="{% url 'confirm_form_closure' form.id %}" data-create-url="{% url 'confirm_form_closure' form.id %}">
+                        <button type="button">Fermer</button>
+                    </a>
+                    <a href="{% url 'edit_form' form.id %}">
+                        <button type="button" title="Modifier"><i class="fas fa-edit"></i></button>
+                    </a> 
+                    <a class="delete-btn" href="{% url 'confirm_form_deletion' form.id %}" data-create-url="{% url 'confirm_form_deletion' form.id %}">
+                        <button type="button" title="Supprimer"><i class="fas fa-trash"></i></button>
+                    </a>
+                </td>
+            {% endif %}
+            </tr>
+        {% empty %}
+            <tr><td {% if user.is_staff %}colspan="3"{% else %}colspan="2"{% endif %}>Aucun formulaire en cours pour l'instant</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+
+
+
+{% if user.is_staff %}
+<div class="section-content" id="club" style="display:none;">
+<h3 class="section-title">Publiés/Fermés</h3>
+<div class="table-wrapper">
+<table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Date</th>
+            <th>Nbre de soumissions</th>
+            <th>Résultats</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for form in inactive_published_forms %}
+            <tr>
+                <td>{{ form.title|title }}</td>
+                <td>{{ form.date|date:"d-m-Y" }}</td>
+                <td>{{ form.submission_numbers }}</td>
+                <td><a href="{% url 'show_results' form.id %}">Voir stats</a></td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">Aucun formulaire soumis pour l'instant</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+{% endif %}
+</div>
+{% endblock %}
