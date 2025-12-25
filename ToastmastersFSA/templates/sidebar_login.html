@@ -16,13 +16,13 @@
             </a>
         </li>
         <li class="{% if section_active == 'suivi' %}active{% endif %}">
-            <a href="{% url 'historique_discours' %}" title="Suivi de participation">
+            <a href="{% url 'speeches_historique' %}" title="Suivi de participation">
                 <i class="fas fa-user-check"></i> 
                 <span>Suivi de participation</span>
             </a>
         </li>
         <li class="{% if section_active == 'roles' %}active{% endif %}">
-            <a href="{% url 'planning_discours' %}" title="Prise de rôle">
+            <a href="{% url 'speeches_planning' %}" title="Prise de rôle">
                 <i class="fas fa-tasks"></i> 
                 <span>Prise de rôle</span>
             </a>
@@ -34,34 +34,35 @@
             </a>
         </li>
         <li class="{% if section_active == 'reunions' %}active{% endif %}">
-            <a href="{% url 'meetings' %}" title="Réunions">
+            <a href="{% url 'meetings_list' %}" title="Réunions">
                 <i class="fas fa-calendar-alt"></i> 
                 <span>Réunions</span>
             </a>
         </li>
         <li class="{% if section_active == 'votes' %}active{% endif %}">
-            <a href="{% url 'liste_formulaires' %}" title="Votes">
+            <a href="{% url 'forms_list' %}" title="Votes">
                 <i class="fas fa-vote-yea"></i> 
                 <span>Votes</span>
             </a>
         </li>
         <li class="{% if section_active == 'certificats' %}active{% endif %}">
-            <a href="{% url 'mes_certificats' %}" title="Certificats">
+            <a href="{% url 'myCertificats' %}" title="Certificats">
                 <i class="fas fa-award"></i> 
                 <span>Certificats</span>
             </a>
         </li>
 
         <li class="{% if section_active == 'ressources' %}active{% endif %}">
-            <a href="{% url 'afficher_ressources' %}" title="Ressources">
+            <a href="{% url 'show_ressources' %}" title="Ressources">
                 <i class="fas fa-book"></i> 
                 <span>Ressources</span>
             </a>
         </li>
 
         {% if user.is_staff %}
+        {% comment %}
         <li class="sidebar-separator"></li>
-
+        
         <li class="{% if section_active == 'communications' %}active{% endif %}">
             <a href="{% url 'communications' %}" title="Communications">
                 <i class="fas fa-envelope"></i> 
@@ -79,7 +80,8 @@
                 <i class="fas fa-cog"></i> 
                 <span>Paramètres généraux</span>
             </a>
-        </li>
+        </li> 
+        {% endcomment %}
         {% endif %}
         <li class="sidebar-separator"></li>
         <li class="logout">

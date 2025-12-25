@@ -226,7 +226,7 @@ def show_certificats(request):
         "Meilleur Français": top_grammar_certifs_list,
         "Meilleure Amélioration": top_amelioration_certifs_list,
     }
-    return render(request, 'discours/show_certificats.html', {
+    return render(request, 'speechs/show_certificats.html', {
         'certificats_categories': certificats_categories,
         'section_active': 'certificats'
         })

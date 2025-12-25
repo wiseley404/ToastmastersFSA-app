@@ -1,12 +1,7 @@
-{% extends 'base_login.html' %}
-
-{% block title %}Prendre un rôle{% endblock %}
-
-{% block body %}
 <h2>Prendre un rôle</h2>
-<form class="popup-form" action="{% url 'creer_discours' %}" method="post">
+<form class="popup-form" action="{% url 'create_speech' %}" method="post">
     {% csrf_token %}
-    <p>Date: {{ speech.reunion }}</p>
+    <p>Date: {{ speech.meeting }}</p>
     <p>Rôles: {{ speech.role }}</p>
 
     <p id="title-field" style="display:none;">Titre: {{ speech.title }}
@@ -24,5 +19,3 @@
         Prendre ce rôle
     </button>
 </form>
-
-{% endblock %}

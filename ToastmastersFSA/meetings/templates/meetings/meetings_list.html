@@ -1,4 +1,4 @@
-{% extends 'members/layout.html' %}
+{% extends 'base_login.html' %}
 {% load static %}
 {% block title %}Réunions{% endblock %}
 
@@ -70,7 +70,7 @@
             <div class="action-menu">
                 <button class="menu-btn"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="menu-dropdown">
-                <a href="{% url 'edit_meeting' meeting.id %}" class="edit-btn" data-create-url="{% url 'edit_meeting' meeting.id %}">
+                <a href="{% url 'edit_meeting' meeting.id %}" class="edit-btn" data-edit-url="{% url 'edit_meeting' meeting.id %}">
                     <i class="fas fa-edit"></i> Modifier
                 </a>
                 <form action="{% url 'delete_meeting' meeting.id %}" method="post">

@@ -80,7 +80,7 @@ ROOT_URLCONF = "ToastmastersFSA.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -109,17 +109,21 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Authentification with email or username
-AUTHENTIFICATION_BACKENDS = [
+AUTHENTICATION_BACKENDS = [
     "accounts.backends.EmailOrUsernameForLogin",
-    "django.contrib.auth.backends.ModelBackend"
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 # Allauth email's verification
+ACCOUNT_AUTHETICATION_METHOD = 'username_email'
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 # Authentification Login's redirection
 LOGIN_REDIRECT_URL = "dashboard"
+ACCOUNT_LOGOUT_REDIRECT_URL = "account_login"
+LOGIN_URL = "account_login"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -158,6 +162,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -10,6 +10,7 @@ import json
 
 
 # Create your views here.
+@login_required
 def show_dashboard(request):
     statuts = request.user.profile.statuts.all()
     other_statuts = [s.title.capitalize() for s in statuts if s.title.lower() != 'membre officiel']
