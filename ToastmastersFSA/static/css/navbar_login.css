@@ -1,0 +1,162 @@
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem; 
+}
+
+.logo-img {
+    height: 50px;     
+    width: auto;            
+    object-fit: contain;
+    display: block;
+   
+}
+
+#logo-toastmasters {
+    height: 55px;          
+    width: auto;
+    max-width: 160px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; 
+    margin-left: 15px;
+}
+
+
+.navbar {
+    position: fixed;
+    top: 0; right: 0;
+    height: 70px;
+    left: 230px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+  
+
+.navbar.sidebar.close {
+  left: 40px;
+  width: calc(100% - 40px);
+}
+
+
+.navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+  
+
+.logo-img {
+    height: 50px; width: auto; display: block;
+}
+
+
+.icon-link {
+    color: #333;
+    font-size: 1.4rem;
+    text-decoration: none;
+    position: relative;
+}
+
+.icon-link:hover {
+    color: #000;
+}
+
+
+.notif-menu,
+.profil-menu {
+    position: relative;
+}
+
+
+.notif-dropdown,
+.profil-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 260px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: none; 
+}
+
+
+.notif-header {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    background-color: #fafafa;
+}
+
+.notif-settings {
+    color: #666;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+.notif-settings:hover {
+    color: #000;
+}
+
+
+.notif-list {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.notif-item {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f2f2f2;
+    cursor: pointer;
+}
+
+.notif-item:hover {
+    background-color: #f8f8f8;
+}
+
+
+.profil-dropdown a {
+    display: block;
+    padding: 10px;
+    border-top: 1px solid #f2f2f2;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.profil-dropdown a:hover {
+    background-color: #f8f8f8;
+}
+
+
+.top-profil-dropdown {
+    text-align: center;
+    padding: 15px 10px;
+}
+
+.top-profil-dropdown h3 {
+    margin: 8px 0 4px;
+    font-size: 1rem;
+}
+
+.top-profil-dropdown p {
+    font-size: 0.85rem;
+    color: #777;
+}

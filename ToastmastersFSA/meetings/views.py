@@ -106,7 +106,8 @@ def add_ressources(request):
 @login_required
 def show_ressources(request):
     ressources = Ressources.objects.all()
-    return render(request, 'meetings/show_ressources.html', {'ressources':ressources})
+    return render(request, 'meetings/show_ressources.html', {
+        'ressources':ressources, 'section_active': 'ressources'})
 
 
 @staff_member_required
@@ -141,8 +142,8 @@ def delete_ressources(request, ressource_id):
 
 
 @staff_member_required
-def edit_meeting(request, reunion_id):
-    reunion = get_object_or_404(Meeting, id=reunion_id)
+def edit_meeting(request, meeting_id):
+    reunion = get_object_or_404(Meeting, id=meeting_id)
     if request.method == 'POST':
         form = MeetingForm(request.POST, instance=reunion)
         if form.is_valid():
@@ -154,8 +155,8 @@ def edit_meeting(request, reunion_id):
 
 
 @staff_member_required
-def delete_meeting(request, reunion_id):
-    reunion = get_object_or_404(Meeting, id=reunion_id)
+def delete_meeting(request, meeting_id):
+    reunion = get_object_or_404(Meeting, id=meeting_id)
     if reunion:
         reunion.delete()
     return redirect('meetings_list')

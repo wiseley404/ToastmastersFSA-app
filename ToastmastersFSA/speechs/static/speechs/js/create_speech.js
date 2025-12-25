@@ -1,35 +1,39 @@
-document.querySelectorAll(".action-btn").forEach(btn => {
-  btn.addEventListener("click", e => {
-    e.preventDefault();
-    const discoursUrl = btn.dataset.createUrl;
+document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll(".action-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+        e.preventDefault();
+        const speechUrl = btn.dataset.createUrl;
 
-    fetch(`${discoursUrl}`)
-      .then(response => response.text())
-      .then(html => openPopup(html)) 
-      .then(() => {
-            const popupForm = document.querySelector('.popup-form');
-          initRoleSelect(popupForm);
-          initFieldVisibility(popupForm);
-      });
+        fetch(`${speechUrl}`)
+        .then(response => response.text())
+        .then(html => openPopup(html)) 
+        .then(() => {
+                const popupForm = document.querySelector('.popup-form');
+            initRoleSelect(popupForm);
+            initFieldVisibility(popupForm);
+        });
 
-  });
+    });
+    });
 });
 
+
 function initRoleSelect (FormElement) {
-    const meetingSelect = FormElement.querySelector('#id_reunion');
+    
+    const meetingSelect = FormElement.querySelector('#id_meeting');
     const roleSelect = FormElement.querySelector('#id_role');
     const rolesUrl = document.querySelector('.action-btn').dataset.roles;
 
     meetingSelect.addEventListener('change', function() {
         const meetingId = this.value;
-        fetch(`${rolesUrl}?reunion=${meetingId}`)
+        fetch(`${rolesUrl}?meeting=${meetingId}`)
             .then(response => response.json())
             .then(data => {
                 roleSelect.innerHTML = '<option value="">--- Choisir un rôle disponible ---</option>';
                 data.roles.forEach(role => {
                     const option = document.createElement('option');
                     option.value = role.id;
-                    option.text = role.nom;
+                    option.text = role.title;
                     roleSelect.add(option);
                 });
             });

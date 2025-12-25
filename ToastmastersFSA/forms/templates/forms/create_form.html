@@ -1,8 +1,3 @@
-{% extends 'base_login.html' %}
-
-{% block title %} Creer formulaire {% endblock %}
-
-{% block body %}
 <h2>Creer un formulaire</h2>
 <form action="{% url 'create_form' %}" method="post">
     {% csrf_token %}
@@ -11,4 +6,3 @@
     <button type="submit">Continuer</button>
     
 </form>
-{% endblock %}

@@ -1,12 +1,12 @@
-{% extends 'members/layout.html' %}
+{% extends 'base_login.html' %}
 {% load static %}
 
 {% block title %} Ressources {% endblock %}
 {% block head %}
-<script type="text/javascript" src="{% static 'members/js/popup.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/ajouter_ressource.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/modifier_ressource.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/supprimer_ressource.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/add_ressource.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/edit_ressource.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/delete_ressource.js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -30,11 +30,11 @@
                 <button class="menu-btn"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="menu-dropdown">
                     <a class="edit-btn" href="{% url 'edit_ressources' ressource.id %}" 
-                        data-create-url="{% url 'edit_ressources' ressource.id %}">
+                        data-edit-url="{% url 'edit_ressources' ressource.id %}">
                         <i class="fas fa-edit"></i> Modifier
                     </a>
                     <a class="delete-btn" href="{% url 'confirm_ressource_deletion' ressource.id %}"
-                            data-create-url="{% url 'confirm_ressource_deletion' ressource.id %}">
+                            data-delete-url="{% url 'confirm_ressource_deletion' ressource.id %}">
                         <i class="fas fa-trash"></i> Supprimer
                     </a>
                 </div>
