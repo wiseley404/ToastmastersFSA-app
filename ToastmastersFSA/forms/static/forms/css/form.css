@@ -1,0 +1,91 @@
+.form-votes {
+  display: flex;
+  flex-direction: column;
+  max-width: 900px;
+  margin: 30px auto 0;
+  padding: 50px;
+  border: 1px solid #ccc;
+  background: white;
+  font-family: "Georgia", serif;
+  font-size: 17px;
+  line-height: 1.5;
+  color: #333;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  align-items: flex-start;
+}
+
+.form-votes h1 {
+  margin: 0 auto 15px;
+  font-weight: bold;
+  font-size: 28px;
+  color: #222;
+}
+
+.form-votes p {
+  margin: 0 auto 15px;
+  font-size: 16px;
+  color: #555;
+  max-width: 90%;
+  text-align: center;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: left;
+  color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 12px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="number"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.form-votes .add-btn {
+  background-color: #ccc;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin-top: 30px;
+  align-self: flex-start;
+  transition: background-color 0.3s ease;
+}
+
+.form-votes .add-btn:hover {
+  background-color: #999;
+}
+
+

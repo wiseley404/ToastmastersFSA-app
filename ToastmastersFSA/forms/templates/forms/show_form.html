@@ -1,0 +1,86 @@
+{% extends 'base_login.html' %}
+{% load static %}
+
+
+{% block title %} Formulaire de Vote {% endblock %}
+{% block head %}
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'forms/js/add_field.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'forms/css/form.css' %}?v=2">
+{% endblock %}
+
+
+{% block body %}
+{% include 'includes/popup.html' %}
+<div class="page-container">
+{% if submitted %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            openPopup(`<p>⚠️ Vous avez déjà soumis ce formulaire.</p>
+                <a href="{% url 'liste_formulaires' %}">
+                <button type='button'>Fermer</button>
+                </a>`);
+        });
+    </script>
+{% elif submitted_successfully %} 
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            openPopup(`<p>Votre Formulaire a été soumis avec succès✅</p>
+                <a href="{% url 'liste_formulaires' %}">
+                <button type='button'>Fermer</button>
+                </a>`);
+        });
+    </script>
+{% elif in_creation_mode %}
+    <div class="back-link no-print">
+        <a href="{% url 'forms_list' %}">
+            <i class="fas fa-arrow-left"></i> Retour aux formulaires
+        </a>
+    </div>
+        <div class="page-header">
+            <a href="{% url 'forms_list' %}">
+                <button class="action-btn" type="button">Enregistrer</button>
+            </a> 
+        </div>
+    <div class="form-votes">
+        <h1>{{ formulaire.title|title }}</h1>
+        <p>{{ formulaire.description|capfirst }}</p>
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        <a href="{% url 'add_fields' form.id %}">
+            <button type="button" class="add-btn" data-create-url="{% url 'add_fields' form.id %}">
+                Ajouter un autre Champ
+            </button>
+        </a>
+    </div>
+
+    
+{% elif form and is_active %}
+    <div class="back-link no-print">
+        <a href="{% url 'forms_list' %}">
+            <i class="fas fa-arrow-left"></i> Retour aux formulaires
+        </a>
+    </div>
+    <form action="{% url 'submit_form' form.id %}" class="form-votes" method="post">
+        <h1>{{ formulaire.title|title }}</h1>
+        <p>{{ formulaire.description|capfirst }}</p>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+        </div>
+        {% endfor %}
+        {% if is_published %}
+        <div class="page-header">
+            <button type="submit" class="action-btn" style="margin-top: 40px;">Soumettre</button>
+        </div>
+        {% endif %}
+    </form>
+{% endif %}
+</div>
+{% endblock %}

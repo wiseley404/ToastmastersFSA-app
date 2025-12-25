@@ -1,0 +1,21 @@
+{% extends 'base_login.html' %}
+
+{% block title %} Ajouter champ {% endblock %}
+
+{% block body %}
+<h2>Ajouter un champ</h2>
+<form class="popup-form" action="{% url 'add_fields' form.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div id="optionsDisplay" style="display: none;">
+        <label>Options:</label>
+        <div id="optionsContainer">
+
+        </div>
+        <button type="button" id="addOption" style="margin-bottom: 5px;">Ajouter options</button>
+    </div>
+    <button type="submit" style="margin-top: 25px;">Sauvegarder</button>
+</form>
+
+{% endblock %}

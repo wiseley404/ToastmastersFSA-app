@@ -7,6 +7,6 @@ from .models import Profile, Statut
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        member_statut, _ = Statut.objects.get_or_create(nom='Membre')
+        member_statut, _ = Statut.objects.get_or_create(title='Membre')
         Profile.objects.get_or_create(user=instance)
         instance.profile.statuts.add(member_statut)

@@ -11,7 +11,6 @@ from forms.forms import create_or_update_form
 from datetime import timedelta
 from django.utils.timezone import now
 from django.http import JsonResponse
-from .models import Discours
 from meetings.models import Role
 from members.models import Profile
 from django.db.models import Q
@@ -180,7 +179,7 @@ def show_available_roles(request):
             "Mot d'humour",
             "Évaluateur(rice) général(e)"    
             ]
-        chosen_roles = Discours.objects.filter(
+        chosen_roles = Speech.objects.filter(
             meeting_id=meeting_id,
             role__title__in=unique_roles
         ).values_list("role_id", flat=True)
