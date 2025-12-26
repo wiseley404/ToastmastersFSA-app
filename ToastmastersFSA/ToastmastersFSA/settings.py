@@ -197,4 +197,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # CSRF ACCESS
-CSRF_TRUSTED_ORIGINS = os.getenv('CRSF_TRUSTED_ORIGINS', 'https://localhost:8000').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://localhost:8000').split(',')
