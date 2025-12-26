@@ -10,10 +10,9 @@ RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
 
 COPY . .
 
 RUN python manage.py collectstatic --noinput || true
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+CMD [ "gunicorn", "ToastmastersFSA.wsgi:application", "--bind", "0.0.0.0:${PORT}" ]
