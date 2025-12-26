@@ -16,5 +16,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput || true
 
-ENTRYPOINT [ "/app/entrypoint.sh" ]
-CMD [ "gunicorn" ]
+CMD [ "gunicorn", "ToastmastersFSA.wsgi:application", "--bind", "0.0.0.0:${PORT}" ]
