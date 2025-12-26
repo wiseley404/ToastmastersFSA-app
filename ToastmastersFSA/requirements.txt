@@ -10,3 +10,4 @@ django-timezone-field==7.1
 phonenumbers==9.0.12
 pillow==11.3.0
 weasyprint==66.0
+whitenoise==6.6.0
