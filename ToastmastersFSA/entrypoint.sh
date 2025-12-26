@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -7,7 +7,7 @@ if [ "$1" != "celery" ]; then
 fi
 
 if [ "$1" = "gunicorn" ]; then
-    exec gunicorn ToastmastersFSA.wsgi:application --bind 0.0.0.0:${PORT}
+    exec gunicorn ToastmastersFSA.wsgi:application --bind 0.0.0.0:${PORT:-8000}
 elif [ "$1" = "celery" ]; then
     cd /app
     exec celery -A ToastmastersFSA.celery worker --loglevel=info
