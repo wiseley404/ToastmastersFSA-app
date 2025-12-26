@@ -16,5 +16,5 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput || true
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD [ "gunicorn" ]
