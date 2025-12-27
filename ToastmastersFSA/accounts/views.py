@@ -14,7 +14,7 @@ def signup(request):
         form = CustomUserCreatioForm(request.POST)
         if form.is_valid():
             user = form.save_user()
-            user.profile.programmes.add(form.cleaned_data['programme'])
+            user.profile.curriculums.add(form.cleaned_data['curriculum'])
             user.profile.save()
             email, _ = EmailAddress.objects.get_or_create(
                 user=user,

@@ -1,4 +1,4 @@
-
+# Docker compose for development use
 services:
   nginx:
     image: nginx:latest
@@ -14,8 +14,10 @@ services:
 
   web:
     build: .
-    command: gunicorn
+    command: python manage.py runserver 0.0.0.0:8000
     restart: always
+    ports:
+      - '8000:8000'
     volumes:
       - .:/app
       - media:/app/media
@@ -23,14 +25,18 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       SECRET_KEY: ${SECRET_KEY}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      DEBUG: ${DEBUG}
     depends_on:
       - redis
       - db
-    entrypoint: /app/entrypoint.sh
-  
+
   db:
     image: postgres:15
     restart: always
+    ports:
+      - '5432:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
@@ -41,11 +47,18 @@ services:
   redis:
     image: redis:7
     restart: always
+    ports:
+      - '6379:6379'
 
   celery:
     build: .
     restart: always
-    command: celery
+    command: celery -A ToastmastersFSA.celery worker --loglevel=info
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      DEBUG: ${DEBUG}
+
     depends_on:
       - redis
       - db
