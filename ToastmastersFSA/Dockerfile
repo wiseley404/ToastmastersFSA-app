@@ -1,3 +1,5 @@
+# Dockerfile for productio use
+
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED 1
@@ -23,4 +25,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput || true
 
-CMD [ "gunicorn", "ToastmastersFSA.wsgi:application", "--bind", "0.0.0.0:8000" ]
+CMD ["sh", "-c", "python manage.py migrate && gunicorn ToastmastersFSA.wsgi:application --bind 0.0.0.0:$PORT"]
