@@ -9,14 +9,23 @@ from datetime import date, timedelta
 from django.utils.timezone import now
 from django.template.loader import render_to_string
 from weasyprint import HTML
+import locale
 
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    try:
+        locale.setlocale(locale.LC_TIME, 'fr_FR')
+    except locale.Error:
+        pass
 
 # Create your views here.
+@login_required
 def show_meeting_infos(request, pk):
     meeting = get_object_or_404(Meeting, pk=pk)
     return render(request, 'meetings/meeting_infos.html', {'meeting': meeting})
 
-
+@login_required
 def show_meetings_list(request):
     meetings = Meeting.objects.filter(date__gte=date.today()).order_by('date')
     meetings_months = [{
@@ -79,11 +88,11 @@ def create_meeting(request):
         form = MeetingForm()
     return render(request, 'meetings/create_meeting.html', {'meeting':form})
 
-
+@login_required
 def create_meeting_pdf_download(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id)
 
-    html_string = render_to_string('meetings/meeting_infos.html', {'meeting': meeting})
+    html_string = render_to_string('meetings/meeting_pdf.html', {'meeting': meeting})
     pdf_file = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
 
     response = HttpResponse(pdf_file, content_type='application/pdf')
@@ -143,21 +152,21 @@ def delete_ressources(request, ressource_id):
 
 @staff_member_required
 def edit_meeting(request, meeting_id):
-    reunion = get_object_or_404(Meeting, id=meeting_id)
+    meeting = get_object_or_404(Meeting, id=meeting_id)
     if request.method == 'POST':
-        form = MeetingForm(request.POST, instance=reunion)
+        form = MeetingForm(request.POST, instance=meeting)
         if form.is_valid():
             form.save()
             return redirect(request.META.get("HTTP_REFERER", "/"))
     else:
-        form = MeetingForm(instance=reunion)
-    return render(request, 'meetings/edit_meeting.html', {'form':form, 'reunion': reunion})
+        form = MeetingForm(instance=meeting)
+    return render(request, 'meetings/edit_meeting.html', {'form':form, 'meeting': meeting})
 
 
 @staff_member_required
 def delete_meeting(request, meeting_id):
-    reunion = get_object_or_404(Meeting, id=meeting_id)
-    if reunion:
-        reunion.delete()
+    meeting = get_object_or_404(Meeting, id=meeting_id)
+    if meeting:
+        meeting.delete()
     return redirect('meetings_list')
 

@@ -19,14 +19,14 @@
     <form method="get">
         <input type="hidden" name="section" value="personnel">
         <select name="role" onchange="this.form.submit()">
-            <option value="">-- Tous les rôles --</option>
+            <option value="">Tous les rôles</option>
             {% for r in roles %}
             <option value="{{ r }}" {% if request.GET.role == r %}selected{% endif %}>{{ r }}</option>
             {% endfor %}
         </select>
 
         <select name="date" onchange="this.form.submit()">
-            <option value="">-- Toute période --</option>
+            <option value="">Toute période</option>
             <option value="7j" {% if request.GET.date == "7j" %}selected{% endif %}>7 derniers jours</option>
             <option value="14j" {% if request.GET.date == "14j" %}selected{% endif %}>14 derniers jours</option>
             <option value="30j" {% if request.GET.date == "30j" %}selected{% endif %}>30 derniers jours</option>

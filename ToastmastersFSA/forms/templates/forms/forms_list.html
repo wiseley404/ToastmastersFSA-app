@@ -8,7 +8,7 @@
 <script type="text/javascript" src="{% static 'forms/js/create_form.js' %}" defer></script>
 <script type="text/javascript" src="{% static 'forms/js/delete_form.js' %}" defer></script>
 <script type="text/javascript" src="{% static 'forms/js/publish_form.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'forms/js/closeform.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'forms/js/close_form.js' %}" defer></script>
 {% endblock %}
 
 
@@ -50,10 +50,10 @@
     <tbody>
         {% for form in not_published_forms %}
             <tr>
-                <td><a href="{% url 'show_form' form.id %}" title="Voir">{{ formulaire.title|title }}</a></td>
+                <td><a href="{% url 'show_form' form.id %}" title="Voir">{{ form.title|title }}</a></td>
                 <td>{{ form.date|date:"d-m-Y" }}</td>
                 <td>
-                    <a class="push-btn" href="{% url 'confirm_form_publication' formid %}" data-create-url="{% url 'confirm_form_publication' form.id %}">
+                    <a class="push-btn" href="{% url 'confirm_form_publication' form.id %}" data-create-url="{% url 'confirm_form_publication' form.id %}">
                         <button type="button">Publier</button>
                     </a>
                     <a href="{% url 'edit_form' form.id %}">
@@ -87,7 +87,7 @@
     <tbody>
         {% for form in active_published_forms %}
             <tr>
-                <td><a href="{% url 'show_form' form.id %}" title="Voir">{{ formulaire.title|title }}</a></td>
+                <td><a href="{% url 'show_form' form.id %}" title="Voir">{{ form.title|title }}</a></td>
                 <td>{{ form.date|date:"d-m-Y" }}</td>
             {% if user.is_staff %}
                 <td>

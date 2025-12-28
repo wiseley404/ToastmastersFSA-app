@@ -29,7 +29,7 @@ function initRoleSelect (FormElement) {
         fetch(`${rolesUrl}?meeting=${meetingId}`)
             .then(response => response.json())
             .then(data => {
-                roleSelect.innerHTML = '<option value="">--- Choisir un rôle disponible ---</option>';
+                roleSelect.innerHTML = '<option value="">Choisir un rôle disponible</option>';
                 data.roles.forEach(role => {
                     const option = document.createElement('option');
                     option.value = role.id;

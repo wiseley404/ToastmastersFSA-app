@@ -3,7 +3,7 @@
         <button class="sidebar-open-btn" aria-label="Ouvrir la sidebar">
             <i class="fas fa-bars"></i>
         </button>
-        <span class="sidebar-title">Toastmasters FSA</span>
+        <span class="sidebar-title">MENU</span>
         <button class="sidebar-close-btn" aria-label="Fermer">
         <i class="fas fa-times"></i>
         </button>
@@ -85,10 +85,14 @@
         {% endif %}
         <li class="sidebar-separator"></li>
         <li class="logout">
-        <a href="{% url 'logout' %}" title="Se déconnecter">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Se déconnecter</span>
-        </a>
-        </li>  
+            <form method="POST" action="{% url 'logout' %}" style="display: contents;">
+                {% csrf_token %}
+                <a href="#" onclick="event.preventDefault(); this.parentNode.submit();" 
+                style="text-decoration: none; color: inherit;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Se déconnecter</span>
+                </a>
+            </form>
+        </li>
     </ul>
 </aside>

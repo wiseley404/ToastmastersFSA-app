@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', ()=> {
         // Desktop screen
     if (window.innerWidth >= 1025) {
         sidebar.classList.remove('close'); 
+        document.documentElement.classList.remove('sidebar-closed');
     }
+    
 
     function updateNavbar() {
         if (!navbar) return;
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
         sidebar.classList.toggle('close', closed);
         navbar.style.transition = 'none';
 
-        updateNavbar(); 
+        updateNavbar();
 
         setTimeout(() => {
         navbar.style.transition = 'left 0.3s ease, width 0.3s ease';
@@ -44,7 +46,6 @@ document.addEventListener('DOMContentLoaded', ()=> {
         localStorage.setItem('sidebarClosed', closed ? '1' : '0');
         updateNavbar();
     }
-
     closeBtn?.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
         setClosed(true);
@@ -58,20 +59,33 @@ document.addEventListener('DOMContentLoaded', ()=> {
     // Previous state on loading..
     applySavedState();
 
+
     const hamburger = document.querySelector('.hamburger');
     const overlay = document.createElement('div');
     overlay.className = 'sidebar-overlay';
     document.body.appendChild(overlay);
 
     function openMobileSidebar() {
-    sidebar.classList.add('open');
-    overlay.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+        sidebar.classList.add('open');
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        const sidebarOpenBtn = sidebar.querySelector('.sidebar-open-btn');
+        if (sidebarOpenBtn) sidebarOpenBtn.style.display = 'none';
+        
+        sidebar.querySelector('.sidebar-title').style.display = 'block';
+        sidebar.querySelector('.sidebar-close-btn').style.display = 'flex';
     }
+
+
     function closeMobileSidebar() {
-    sidebar.classList.remove('open');
-    overlay.style.display = '';
-    document.body.style.overflow = '';
+        sidebar.classList.remove('open');
+        overlay.style.display = '';
+        document.body.style.overflow = '';
+        const sidebarOpenBtn = sidebar.querySelector('.sidebar-open-btn');
+        if (sidebarOpenBtn) sidebarOpenBtn.style.display = '';
+        
+        sidebar.querySelector('.sidebar-title').style.display = '';
+        sidebar.querySelector('.sidebar-close-btn').style.display = '';
     }
 
     // On mobile

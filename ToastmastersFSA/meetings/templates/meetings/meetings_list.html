@@ -56,7 +56,7 @@
 <div class="meeting-filter">
     <select id="monthFilter" name="monthFilter">
         <option value="all">Tous les mois</option>
-        {% for month in reunions_months %}
+        {% for month in meetings_months %}
             <option value="{{ month.value }}">{{ month.label }}</option>
         {% endfor %}
     </select>
@@ -64,7 +64,7 @@
 
 <div class="meetings-container">
     {% for meeting in meetings %}
-        <div class="reunion-card {% if meeting.format|lower == 'en ligne' %}en-ligne{% else %}presentiel{% endif %}" data-month="{{ meeting.date|date:'Y-m' }}">
+        <div class="meeting-card {% if meeting.format|lower == 'en ligne' %}en-ligne{% else %}presentiel{% endif %}" data-month="{{ meeting.date|date:'Y-m' }}">
 
         {% if user.is_staff %}
             <div class="action-menu">
@@ -85,7 +85,7 @@
                 Séance {{ meeting.type }}
             </div>
             <div class="meeting-date">
-                <i class="far fa-calendar-alt"></i> {{ meeting.date|date:'d/m/Y' }} — De {{ meeting.start_time }} à {{ meeting.end_time }}
+                <i class="far fa-calendar-alt"></i> {{ meeting.date|date:'d/m/Y' }} — De {{ meeting.start_time|time:"H:i" }} à {{ meeting.end_time|time:"H:i" }}
             </div>
             <div class="meeting-format">
                 {% if meeting.format|lower == 'en ligne' %}
@@ -130,21 +130,21 @@
     <form method="get">
         <input type="hidden" name="section" value="club">
         <select name="format" onchange="this.form.submit()">
-            <option value="">-- Tous les formats --</option>
+            <option value="">Tous les formats</option>
             {% for f in formats %}
             <option value="{{ f }}" {% if request.GET.format == f %}selected{% endif %}>{{ f }}</option>
             {% endfor %}
         </select>
 
         <select name="type" onchange="this.form.submit()">
-            <option value="">-- Tous les types --</option>
+            <option value="">Tous les types</option>
             {% for t in types %}
             <option value="{{ t }}" {% if request.GET.type == t %}selected{% endif %}>{{ t }}</option>
             {% endfor %}
         </select>
 
         <select name="date" onchange="this.form.submit()">
-            <option value="">-- Toute période --</option>
+            <option value="">Toute période</option>
             <option value="7j" {% if request.GET.date == "7j" %}selected{% endif %}>7 derniers jours</option>
             <option value="14j" {% if request.GET.date == "14j" %}selected{% endif %}>14 derniers jours</option>
             <option value="30j" {% if request.GET.date == "30j" %}selected{% endif %}>30 derniers jours</option>

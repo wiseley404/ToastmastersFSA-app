@@ -68,3 +68,10 @@
   color: #0049b7;  
   text-decoration: underline;
 }
+
+.accordion,
+.accordion:hover,
+.accordion.active {
+  color: #333 !important;
+  text-decoration: none !important;
+}
