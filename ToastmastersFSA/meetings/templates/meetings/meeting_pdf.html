@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Programmation</title>
+     <style>
+        @page { 
+            size: A4; 
+            margin: 10mm 20mm 10mm 20mm; 
+        }
+    </style>
+</head>
+<body>
+    <div class="pdf-content">
+
+    <div class="logo-print" style="margin: 0 !important; padding: 15px 0 !important;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img src="{% static 'images/logo-toastmasters.svg' %}" 
+                alt="Logo Toastmasters" 
+                style="height: 120px !important; width: auto !important; max-width: 180px !important; object-fit: contain; margin: 0 !important;">
+            <div style="display: flex; flex-direction: column; line-height: 1.5;">
+                <div style="font-size: 18pt !important; font-weight: bold !important; margin: 0 !important;">Club Toastmasters</div>
+                <div style="font-size: 18pt !important; font-weight: bold !important; margin: 0 !important;">FSA ULaval</div>
+            </div>
+        </div>
+        <hr style="border: none; border-top: 1.5px solid #000; margin: 20px 0 0 0 !important;">
+    </div>
+
+
+
+        <h2>Programmation</h2>
+
+        <div class="meeting-infos">
+            <p><strong>Thème :</strong> {{ meeting.theme|default:"-" }}</p>
+            <p><strong>Mot du jour :</strong> {{ meeting.highlight_word|default:"-" }}</p>
+            <p><strong>Date :</strong> {{ meeting.date|date:"d F Y" }}</p>
+            <p><strong>Heure :</strong> De {{ meeting.start_time|time:"H:i" }} à {{ meeting.end_time|time:"H:i" }}</p>
+            {% if meeting.location %}
+                <p><strong>Lieu :</strong> {{ meeting.location }}</p>
+            {% endif %}
+        </div>
+
+
+        {% if meeting.speechs.exists %}
+            <div class="meeting-speech">
+                {% for speech in meeting.speech.all %}
+                    <p><strong>{{ speech.role.title }}:</strong> {{ speech.orator.get_full_name|title }}</p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-roles">
+                <i class="fas fa-user-slash"></i>
+                <p>Aucun rôle pris pour l'instant</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

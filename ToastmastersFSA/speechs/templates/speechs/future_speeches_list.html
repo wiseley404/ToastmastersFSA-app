@@ -86,14 +86,14 @@
     <form method="get">
         <input type="hidden" name="section" value="club">
         <select name="role" onchange="this.form.submit()">
-            <option value="">-- Tous les rôles --</option>
+            <option value="">Tous les rôles</option>
             {% for r in roles %}
             <option value="{{ r }}" {% if request.GET.role == r %}selected{% endif %}>{{ r }}</option>
             {% endfor %}
         </select>
 
         <select name="reunion" onchange="this.form.submit()">
-            <option value="">-- Toutes les reunions --</option>
+            <option value="">Toutes les réunions</option>
             {% for r in reunions %}
             <option value="{{ r }}" {% if request.GET.reunion == r %}selected{% endif %}>{{ r }}</option>
             {% endfor %}

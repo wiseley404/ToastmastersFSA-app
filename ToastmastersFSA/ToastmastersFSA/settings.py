@@ -128,8 +128,7 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 # Authentification Login's redirection
 LOGIN_REDIRECT_URL = "dashboard"
-ACCOUNT_LOGOUT_REDIRECT_URL = "account_login"
-LOGIN_URL = "account_login"
+LOGOUT_REDIRECT_URL = "login"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

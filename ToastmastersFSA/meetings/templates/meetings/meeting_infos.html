@@ -3,7 +3,7 @@
 {% block head %}
 <script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
 <script type="text/javascript" src="{% static 'meetings/js/edit_meeting.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'discours/js/create_speech.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'speechs/js/create_speech.js' %}" defer></script>
 {% endblock %}
 
 {% block title %}Programmation{% endblock %}
@@ -12,11 +12,12 @@
 {% include 'includes/popup.html' %}
 
 <div class="back-link no-print">
-    <a href="{% url 'show_meetings' %}">
+    <a href="{% url 'meetings_list' %}">
         <i class="fas fa-arrow-left"></i> Retour aux réunions
     </a>
 </div>
 
+<div class="pdf-container">
 <div class="meeting-page">
 
     <div class="logo-print">
@@ -38,7 +39,7 @@
 
     <div class="meeting-actions no-print">
         {% if user.is_staff %}
-            <a href="{% url 'edit_meeting' meeting.id%}" class="action-link edit-btn" data-create-url="{% url 'edit_meeting' meeting.id %}" data-id="{{ meeting.id }}">
+            <a href="{% url 'edit_meeting' meeting.id%}" class="action-link edit-btn" data-edit-url="{% url 'edit_meeting' meeting.id %}" data-id="{{ meeting.id }}">
                 <i class="fas fa-edit"></i> Modifier
             </a>
         {% endif %}
@@ -52,7 +53,7 @@
         <p><strong>Thème :</strong> {{ meeting.theme|default:"-" }}</p>
         <p><strong>Mot du jour :</strong> {{ meeting.highlight_word|default:"-" }}</p>
         <p><strong>Date :</strong> {{ meeting.date }}</p>
-        <p><strong>Heure :</strong> De {{ meeting.start_time }} à {{ meeting.end_time }}</p>
+        <p><strong>Heure :</strong> De {{ meeting.start_time|time:"H:i" }} à {{ meeting.end_time|time:"H:i" }}</p>
         {% if meeting.location %}
             <p><strong>Lieu :</strong> {{ meeting.location }}</p>
         {% endif %}
@@ -61,7 +62,7 @@
 
     {% if meeting.speechs.exists %}
         <div class="meeting-speech">
-            {% for speech in meeting.speechs.all %}
+            {% for speech in meeting.speech.all %}
                 <p><strong>{{ speech.role.title }}:</strong> {{ speech.orator.get_full_name.title }}</p>
             {% endfor %}
         </div>
@@ -72,5 +73,6 @@
         </div>
     {% endif %}
 
+</div>
 </div>
 {% endblock %}

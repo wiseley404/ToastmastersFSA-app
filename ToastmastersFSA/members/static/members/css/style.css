@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    user-select: none;
 }
 
 
@@ -9,10 +10,11 @@ html, body {
     margin-top: 70px;  
     margin-left: 230px; 
     padding: 20px;
-    height: calc(100vh - 70px);
     flex: 1;
+    min-height: calc(100vh - 70px);  
+    height: auto !important;      
+    overflow: visible !important;  
 }
-
 
 .page-header {
     display: flex;
@@ -83,13 +85,34 @@ html, body {
   flex: 1;        
   min-width: 160px;            
   border: 1px solid #ccc;
-  padding: 8px 12px;
+  padding: 8px 24px 8px 12px !important;
   border-radius: 6px;
   font-size: 0.95rem;
   background: #fff;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none;         
+  -webkit-appearance: none;    
+  -moz-appearance: none;        
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e"); 
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
 }
+
+@media (hover: none) and (pointer: coarse) { 
+    .advanced-filtre select:hover,
+    .advanced-filtre select:focus {
+        border-color: #ccc;      
+        box-shadow: none;      
+    }
+    
+    .advanced-filtre select:focus { 
+        border-color: #1a73e8;
+        box-shadow: 0 0 4px rgba(26,115,232,0.3);
+    }
+}
+
 
 .advanced-filtre select:hover,
 .advanced-filtre select:focus {
@@ -137,10 +160,37 @@ html, body {
 
 .meeting-filter select {
     border: 1px solid #ccc;
-    padding: 6px 10px;
+    padding: 8px 35px 8px 12px !important;
     border-radius: 4px;
     font-size: 0.95rem;
     cursor: pointer;
+    appearance: none;         
+    -webkit-appearance: none;    
+    -moz-appearance: none;        
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e"); 
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+}
+@media (hover: none) and (pointer: coarse) { 
+    .meeting-filter select:hover,
+    .meeting-filter select:focus {
+        border-color: #ccc;      
+        box-shadow: none;      
+    }
+    
+    .meeting-filter select:focus { 
+        border-color: #1a73e8;
+        box-shadow: 0 0 4px rgba(26,115,232,0.3);
+    }
+}
+
+
+.meeting-filter select:hover,
+.meeting-filter select:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 4px rgba(26,115,232,0.3);
+  outline: none;
 }
 
 .history-link {
