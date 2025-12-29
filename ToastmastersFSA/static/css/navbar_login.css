@@ -4,36 +4,55 @@
   gap: 1rem; 
 }
 
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: 5px;
+  text-decoration: none;
+  color: inherit;
+}
+
 .logo-img {
-    height: 50px;     
-    width: auto;            
-    object-fit: contain;
-    display: block;
-   
+  height: 67px;
+  width: auto;
+  max-width: 200px;
 }
 
-.navbar-title {
-    flex-grow: 1 !important;
-    font-weight: 700 !important; 
-    font-size: 1.8rem !important; 
-    text-decoration: none !important;
-    user-select: none; 
+.brand-text {
+  flex-grow: 1;
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
 }
 
-#logo-toastmasters {
-    height: 65px !important;   
-    width: auto !important;
-    max-width: 200px !important;
-     user-select: none; 
+.brand-line-main {
+  font-size: 1.6rem;
 }
 
-.logo-container {
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.75rem !important;
-    margin-left: 15px !important;
-    text-decoration: none !important;
-    color: inherit !important;
+.brand-line-sub {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 767px) {
+  .logo-img {
+    height: 40px;
+    max-width: 140px;
+  }
+
+  .brand-text {
+    font-size: 1.1rem;
+  }
+
+  .brand-line-main {
+    font-size: 1.2rem;
+  }
+
+  .brand-line-sub {
+    font-size: 0.95rem;
+  }
 }
 
 
@@ -171,4 +190,39 @@
 .top-profil-dropdown p {
     font-size: 0.85rem;
     color: #777;
+}
+
+@media (max-width: 767px) {
+  .navbar-right {
+    gap: 0.25rem;
+  }
+
+  .navbar-right .icon-link i {
+    font-size: 1.2rem;
+  }
+
+  .notif-dropdown,
+  .profil-dropdown {
+    right: 0;
+    left: auto;
+    width: 220px;
+    max-height: 60vh;
+  }
+
+  .notif-dropdown,
+  .profil-dropdown {
+    top: auto;
+    bottom: 110%;
+  }
+
+  .navbar-right button,
+  .navbar-right .icon-link,
+  .hamburger {
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+
 }

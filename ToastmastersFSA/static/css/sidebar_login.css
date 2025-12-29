@@ -209,7 +209,6 @@ layout {
     .profil-menu { display: none !important; }
 
 
-
     .hamburger {
         display: inline-flex;
         -webkit-appearance: none;
@@ -225,6 +224,7 @@ layout {
         color: #222;
         margin-left: 8px;
         z-index: 1300;
+    }
     .hamburger:active { transform: scale(0.98); }
     .hamburger i { font-size: 1.2rem; display:block; }
 
@@ -240,4 +240,4 @@ layout {
 
 
     .sidebar-open-btn{ display: none !important; }
-    }
+}
