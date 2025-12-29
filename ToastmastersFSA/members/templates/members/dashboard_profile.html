@@ -1,3 +1,4 @@
+{% load static %}
 <div class="profile-section">
     <div class="profile-hello">
         <h2>Bienvenue Toastmaster,</h2>
@@ -7,7 +8,7 @@
             {% if user.profile.photo %}
                 <img src="{{ user.profile.photo.url }}" alt="Photo de profil">
             {% else %}
-                <img src="/media/profiles/avatar.jpg" alt="Photo par defaut">
+                <img src="{% static 'images/avatar.jpg' %}" alt="Photo par defaut">
             {% endif %}
             <div class="profile-distinctions">
                 <a href="{% url 'myCertificats' %}">Mes distinctions</a>
@@ -31,7 +32,7 @@
                 
             </p>
             <div class="profile-modif">
-                <a href="{% url 'edit_profile' %}">Modifier mon profil</a>
+                <a href="#">Modifier mon profil</a>
             </div>
         </div>
     </div>
