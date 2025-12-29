@@ -54,10 +54,10 @@
 
 <form method="post">
     {% csrf_token %}
-    <input type="hidden" name="form_type" value="programmes">
-    {{ user_programmes_form }}
+    <input type="hidden" name="form_type" value="curriculums">
+    {{ user_curriculums_form }}
     <button type="submit">Enregistrer</button>
-    <button type="button" onclick="resetField('id_programmes')">Annuler</button>
+    <button type="button" onclick="resetField('id_curriculums')">Annuler</button>
 </form>
 
 <a href="{% url 'password_change' %}">Changer mot de passe</a>
