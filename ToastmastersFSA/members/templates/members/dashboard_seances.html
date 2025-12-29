@@ -45,12 +45,12 @@
         <div class="left-side"> 
             <h3>Thème</h3>
             <p class="texte-ligne-brisee">
-                {{ next_meeting.theme|capfirst|default:"-" }}
+                {{ next_meeting.theme|default:"-"|capfirst }}
             </p>
 
             <h3>Mot du jour</h3>
             <p class="texte-ligne-brisee">
-                {{ next_meeting.highlight_word|capfirst|default:"-" }}
+                {{ next_meeting.highlight_word|default:"-"|capfirst }}
             </p>
         </div>
 

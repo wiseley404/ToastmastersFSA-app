@@ -9,7 +9,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from forms.forms import create_or_update_form
 from datetime import timedelta
-from django.utils.timezone import now
 from django.http import JsonResponse
 from meetings.models import Role
 from members.models import Profile

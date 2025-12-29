@@ -27,7 +27,7 @@ def show_meeting_infos(request, pk):
 
 @login_required
 def show_meetings_list(request):
-    meetings = Meeting.objects.filter(date__gte=date.today()).order_by('date')
+    meetings = Meeting.objects.filter(date__gte=now()).order_by('date')
     meetings_months = [{
         "value": m.date.strftime("%Y-%m"),
         "label": m.date.strftime("%B %Y")
