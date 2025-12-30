@@ -19,8 +19,20 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
+.popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  color: #000;
+  z-index: 1302;
+}
+
 @media (max-width: 767px) {
-.popup-overlay[style*="display: flex"],
+  .popup-overlay[style*="display: flex"],
   .popup-overlay[style*="display:flex"] {
     justify-content: center !important;
     align-items: flex-end !important;
