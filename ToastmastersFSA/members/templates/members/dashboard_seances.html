@@ -1,6 +1,6 @@
 <div class="last-meeting-section"> 
     <div class="header-card">
-        <h2>Dernière Séance — {% if last_meeting %}{{ last_meeting.date }} {% else %}Aucune{% endif %}</h2>
+        <h2>Dernière Séance - {% if last_meeting %}{{ last_meeting.date }} {% else %}Aucune{% endif %}</h2>
     </div>
 
     <div class="separator-line"></div>
@@ -37,7 +37,7 @@
 
 <div class="next-meeting-section"> 
     <div class="header-card">
-        <h2>Prochaine Séance — {% if next_meeting %} {{ next_meeting.date }} {% else %}Aucune{% endif %}</h2>
+        <h2>Prochaine Séance - {% if next_meeting %} {{ next_meeting.date }} {% else %}Aucune{% endif %}</h2>
     </div>
     <div class="separator-line"></div>
 
@@ -63,7 +63,7 @@
                 <p class="member-name">{{ speech.orator.get_full_name|title }}</p>
             </div>
             {% empty %}
-                <p>Aucune role pris pour cette séance.</p>
+                <p>Aucun role pris pour cette séance.</p>
             {% endfor %}
         </div>
     </div>
