@@ -14,7 +14,7 @@
 }
 
 .logo-img {
-  height: 67px;
+  height: 70px;
   width: auto;
   max-width: 200px;
 }
@@ -38,7 +38,7 @@
 
 @media (max-width: 767px) {
   .logo-img {
-    height: 40px;
+    height: 55px;
     max-width: 140px;
   }
 
@@ -83,11 +83,6 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-}
-  
-
-.logo-img {
-    height: 50px; width: auto; display: block;
 }
 
 
