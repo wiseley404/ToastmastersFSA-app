@@ -29,6 +29,8 @@ urlpatterns = [
     path("speechs/", include("speechs.urls")),
     path("meetings/", include("meetings.urls")),
     path("forms/", include("forms.urls")),
+    path("communications/", include("communications.urls")),
+    path("core/", include("core.urls")),
 ]
 
 if settings.DEBUG:

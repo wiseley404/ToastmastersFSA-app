@@ -60,7 +60,6 @@
         </li>
 
         {% if user.is_staff %}
-        {% comment %}
         <li class="sidebar-separator"></li>
         
         <li class="{% if section_active == 'communications' %}active{% endif %}">
@@ -76,12 +75,11 @@
             </a>
         </li>
         <li class="{% if section_active == 'parametres' %}active{% endif %}">
-            <a href="{% url 'parametres' %}" title="Paramètres généraux">
+            <a href="{% url 'settings' %}" title="Paramètres généraux">
                 <i class="fas fa-cog"></i> 
                 <span>Paramètres généraux</span>
             </a>
         </li> 
-        {% endcomment %}
         {% endif %}
         <li class="sidebar-separator"></li>
         <li class="logout">
