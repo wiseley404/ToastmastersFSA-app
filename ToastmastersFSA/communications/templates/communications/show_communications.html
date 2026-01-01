@@ -1,11 +1,120 @@
-{% extends "base_login.html" %}
+{% extends 'base_login.html' %}
+{% load static %}
 
-{% block body %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; font-size: 1.2rem;">
-  <i class="fa-solid fa-envelope" style="font-size: 96px; color: #bbb;"></i>
-
-  <h2 style="margin-top: 24px;">Communications en cours de développement</h2>
-  <p>La gestion des communications (emails, rappels, relances, etc..) sera bientôt disponible.</p>
-</div>
+{% block title %} Mes roles à venir {% endblock %}
+{% block head %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {% endblock %}
 
+{% block body %}
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+<h2>Planning</h2>
+{% if user.is_staff %}
+<div class="container">
+  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">E-mail</button>
+  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Notifications</button>
+</div>
+</div>
+
+<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
+     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+<div class="page-header">
+    <a href="{% url 'create_email_list' %}">
+        <button type="button" class="action-btn" data-popup-url="{% url 'create_email_list' %}"
+        onclick="openPopupEmailListForm(this)">Créer une liste</button>
+    </a>
+</div>
+
+<h3 class="section-title">Envoyer un mail</h3>
+<div class="email-section">  
+    
+</div>
+</div>
+
+
+<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
+      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+<div class="page-header">
+    <a href="{% url 'create_notif' %}">
+        <button type="button" class="action-btn" data-create-url="{% url 'create_notif' %}">Publier une notification</button>
+    </a>
+</div>
+
+
+<h3 class="section-title">Notifications publiées</h3>
+<div class="table-wrapper"> 
+   <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Publiée par</th>
+                <th>Titre</th>
+                <th>Aperçu</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notif in published_notifs %}
+                <tr>
+                    <td>{{ notif.created_at|date:"d-m-Y H:i" }}</td>
+                    <td>{{ notif.sender.get_full_name|title }}</td>
+                    <td><a href="#" title="Voir">{{ notif.title|title }}</a></td>
+                    <td>{{ notif.message|truncatechars:30 }}</td>
+                    <td>
+                        <a href="{% url 'edit_notif' notif.id %}">
+                            <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_notif' notif.id %}"><i class="fas fa-edit"></i></button>
+                        </a> 
+                        <a class="delete-btn" href="{% url 'confirm_notif_deletion' notif.id %}" data-delete-url="{% url 'confirm_notif_deletion' notif.id %}">
+                            <button type="button" title="Supprimer"><i class="fas fa-trash"></i></button>
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">Aucune notification publiée pour l'instant</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endif %}
+</div>
+<script>
+function openPopupEmailListForm(btn) {
+    const url = btn.dataset.popupUrl;
+    
+    fetch(url)
+        .then(r => r.text())
+        .then(html => {
+            // Injecte HTML
+            document.querySelector('#popup-content').innerHTML = html;
+            
+            // Select2 MAGIC
+            setTimeout(() => {
+                const select = document.querySelector('#popup-content select[name="members"]');
+                if (select) {
+                    $(select).select2({
+                        placeholder: "Tape le nom d'un membre...",
+                        tags: true,
+                        width: '100%'
+                    });
+                }
+            }, 50);
+            
+            // Ouvre popup
+            document.querySelector('#popup-overlay').style.display = 'flex';
+        });
+}
+
+// Ferme popup
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'popup-overlay') {
+        document.querySelector('#popup-overlay').style.display = 'none';
+    }
+});
+</script>
+
+
+{% endblock %}

@@ -233,4 +233,9 @@ def show_certificats(request):
 
 @login_required
 def show_evaluations(request):
-    return render(request, 'speechs/show_evaluations.html', {'section_active':'evaluations'})
+    section_active = request.GET.get('section', 'personnel')
+    context = {
+        'current_section':section_active,
+        'section_active':'evaluations'
+    }
+    return render(request, 'speechs/show_evaluations.html', context)

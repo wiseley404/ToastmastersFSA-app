@@ -1,10 +1,119 @@
-{% extends "base_login.html" %}
+{% extends 'base_login.html' %}
+{% load static %}
+
+{% block title %} Mes evaluations {% endblock %}
+{% block head %}
+<script type="text/javascript" src="{% static 'speechs/js/create_speech.js' %}?v=3" defer></script>
+<script type="text/javascript" src="{% static 'speechs/js/cancel_speech.js' %}" defer></script>
+{% endblock %}
 
 {% block body %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; font-size: 1.2rem;">
-  <i class="fa-solid fa-star" style="font-size: 96px; color: #bbb;"></i>
-
-  <h2 style="margin-top: 24px;">Évaluations en cours de développement</h2>
-  <p>La gestion des évaluations des discours sera bientôt disponible.</p>
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+<h2>Evaluations</h2>
+<div class="container">
+  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A faire</button>
+  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Recues</button>
 </div>
+</div>
+
+<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
+     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+
+<h3 class="section-title">Mes Evaluations à faire</h3>
+<div class="table-wrapper">  
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Titre</th>
+                <th>Temps alloué</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for speech in future_speeches.personnel %}
+            <tr>
+                <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.role.title }}</td>
+                <td>
+                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
+                </td>
+                <td>
+                    {% if speech.role.min_secondes_duration == 0 %}
+                        -
+                    {% else %} {{ speech.role.min_secondes_duration }} - {{ speech.role.max_secondes_duration }} secondes
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Aucun discours à venir</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+
+<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
+      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+
+<h3 class="section-title">Evaluations recues</h3>
+<div class="table-wrapper"> 
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Titre</th>
+                <th>Temps alloué</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for speech in future_speeches.club %}
+            <tr>
+                <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.orator.get_full_name|title }}</td>
+                <td>{{ speech.role.title }}</td>
+                <td>
+                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
+                </td>
+                <td>
+                    {% if speech.role.min_secondes_duration == 0 %}
+                        -
+                    {% else %} {{ speech.role.min_secondes_duration }} - {{ speech.role.max_secondes_duration }} secondes
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Aucun discours à venir</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+</div>
+
+
+
 {% endblock %}

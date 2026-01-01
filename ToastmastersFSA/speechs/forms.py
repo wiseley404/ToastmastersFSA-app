@@ -1,7 +1,7 @@
 from django import forms
 from .models import Speech
 from meetings.models import Meeting
-from datetime import datetime
+from django.utils.timezone import now
 from django.contrib.auth.models import User
 
 
@@ -23,7 +23,7 @@ class SpeechForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['meeting'].queryset = Meeting.objects.filter(date__gt=datetime.now())
+        self.fields['meeting'].queryset = Meeting.objects.filter(date__gte=now())
         self.fields['meeting'].empty_label = "--- Choisir une réunion ---"
         self.fields['role'].empty_label = "--- Choisir un rôle disponible ---"
 

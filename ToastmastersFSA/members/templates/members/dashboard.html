@@ -4,7 +4,7 @@
 {% block title %} Tableau De Bord {% endblock %}
 
 {% block head %}
-<link rel="stylesheet"  href="{% static 'members/css/dashboard.css' %}">
+<link rel="stylesheet"  href="{% static 'members/css/dashboard.css' %}?v=3">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     window.dashboardData = {
@@ -88,13 +88,21 @@
             <ul class="notifications-list">
                 {% for notif in notifications %}
                 <li class="notification-item {% if not notif.is_read %}non-lue{% endif %}">
-                    {{ notif.message }}
+                    {{notif.title}}</br>
+                    {{ notif.message| truncatechars:60 }}
                     <small class="notification-date">{{ notif.created_at|date:"d/m/Y H:i" }}</small>
                 </li>
                 {% empty %}
                 <li>Aucune notification récente.</li>
                 {% endfor %}
             </ul>
+            {% if notifications %}
+                <div class="notif-link-section">
+                    <a href="#" class="notif-link">
+                        Voir toutes les notifications
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         {% include 'members/dashboard_seances.html' %}
