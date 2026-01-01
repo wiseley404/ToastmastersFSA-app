@@ -229,7 +229,7 @@
 .separator-line {
   height: 1.5px;
   background: #e5e7eb;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   width: 100%;
 } 
 
@@ -248,7 +248,7 @@
 
 .notification-item.non-lue {
   font-weight: 700;
-  color: #1d4ed8;
+  color: #007BFF; 
 }
 
 .notification-date {
@@ -256,6 +256,18 @@
   font-size: 0.8rem;
   color: #94a3b8;
   margin-top: 2px;
+}
+
+.notif-link-section {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.notif-link {
+    text-decoration: none;
+    color: #007BFF; 
+    font-weight: 600;
 }
 
 
@@ -421,9 +433,6 @@
 }
 
 
-
-
-/* Fix débordement dashboard sur mobile */
 @media (max-width: 767px) {
   .layout-dashboard {
     flex-direction: column;

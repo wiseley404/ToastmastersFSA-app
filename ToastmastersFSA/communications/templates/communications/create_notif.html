@@ -1,0 +1,10 @@
+<h2>Publier une notification</h2>
+<form action="{% url 'create_notif' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+     Publier
+    </button>
+    
+</form>

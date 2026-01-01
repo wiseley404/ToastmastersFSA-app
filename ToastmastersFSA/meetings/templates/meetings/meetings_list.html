@@ -3,9 +3,6 @@
 {% block title %}Réunions{% endblock %}
 
 {% block head %}
-<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/edit_meeting.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/create_meeting.js' %}" defer></script>
 <script type="text/javascript" src="{% static 'meetings/js/show_meetings.js' %}" defer></script>
 <style>
     .menu-dropdown a,
@@ -49,7 +46,7 @@
     {% if user.is_staff %}
     <div class="page-header">
         <a href="{% url 'create_meeting' %}">
-        <button type="button" class="action-btn">Planifier une réunion</button>
+        <button type="button" class="action-btn" data-create-url="{% url 'create_meeting' %}">Planifier une réunion</button>
         </a>
     </div>
     {% endif %}
@@ -75,7 +72,9 @@
                 </a>
                 <form action="{% url 'delete_meeting' meeting.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit"><i class="fas fa-trash"></i> Supprimer</button>
+                    <button type="submit" data-delete-url="{% url 'delete_meeting' meeting.id %}">
+                        <i class="fas fa-trash" ></i> Supprimer
+                    </button>
                 </form>
                 </div>
             </div>

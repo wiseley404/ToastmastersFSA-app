@@ -1,0 +1,10 @@
+<h2>Créer une liste de diffusion</h2>
+<form action="{% url 'create_email_list' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+     Créer
+    </button>
+    
+</form>
