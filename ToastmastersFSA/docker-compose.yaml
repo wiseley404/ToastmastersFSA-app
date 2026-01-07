@@ -26,6 +26,7 @@ services:
       REDIS_URL: ${REDIS_URL}
       SECRET_KEY: ${SECRET_KEY}
       EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
       DEBUG: ${DEBUG}
     depends_on:
@@ -53,15 +54,44 @@ services:
   celery:
     build: .
     restart: always
-    command: celery -A ToastmastersFSA.celery worker --loglevel=info
+    command: celery -A ToastmastersFSA worker --loglevel=info
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       DEBUG: ${DEBUG}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+
+    volumes:
+      - .:/app
+      - media:/app/media
 
     depends_on:
       - redis
       - db
+      - web
+
+  celery-beat:
+    build: .
+    restart: always
+    command: celery -A ToastmastersFSA beat --loglevel=info
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      DEBUG: ${DEBUG}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      
+    volumes:
+      - .:/app
+      - media:/app/media
+
+    depends_on:
+      - redis
+      - db
+      - web
 
 volumes:
   db_data:

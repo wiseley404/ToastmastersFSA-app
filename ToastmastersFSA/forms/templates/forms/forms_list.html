@@ -97,7 +97,7 @@
                     <a href="{% url 'edit_form' form.id %}">
                         <button type="button" title="Modifier"><i class="fas fa-edit"></i></button>
                     </a> 
-                    <a class="delete-btn" href="{% url 'confirm_form_deletion' form.id %}" data-create-url="{% url 'confirm_form_deletion' form.id %}">
+                    <a class="delete-btn" href="{% url 'confirm_form_deletion' form.id %}" data-delete-url="{% url 'confirm_form_deletion' form.id %}">
                         <button type="button" title="Supprimer"><i class="fas fa-trash"></i></button>
                     </a>
                 </td>

@@ -11,8 +11,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 import dj_database_url
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -58,7 +62,7 @@ INSTALLED_APPS = [
     "allauth.account",
 
     # Celery's apps
-    "django_celery_beat"
+    "django_celery_beat",
 ]
 
 # Django site
@@ -107,7 +111,8 @@ WSGI_APPLICATION = "ToastmastersFSA.wsgi.application"
 
 DATABASES = {
     "default": dj_database_url.config(
-        default= os.getenv('DATABASE_URL')
+        default= os.getenv('DATABASE_URL'),
+        conn_max_age=0
     )
 }
 
@@ -181,9 +186,41 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Celery
 
+CELERY_APP = 'ToastmastersFSA'
 CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_URL', 'redis://redis:6379/0')
 CELERY_TIMEZONE = 'UTC'
+CELERY_BEAT_SCHEDULE = {
+    'check-scheduled-emails': {
+        'task': 'communications.tasks.check_and_send_scheduled_emails',
+        'schedule': crontab(minute='*/1'), 
+    },  
+    'check-meeting-reminders': {
+        'task': 'communications.tasks.check_and_send_meeting_reminders',
+        'schedule': crontab(minute='*/30'),
+    },
+    'check-absence-warnings': {
+        'task': 'communications.tasks.check_and_send_absence_warnings',
+        'schedule': crontab(minute='0', hour='9'), 
+    },
+    'check-role-attribution': {
+        'task': 'communications.tasks.check_and_send_role_attribution',
+        'schedule': crontab(minute='*/30'),
+    },
+    'check-role-reminder': {
+        'task': 'communications.tasks.check_and_send_role_reminder',
+        'schedule': crontab(minute='*/30'),
+    },
+    'check-certificate-attribution': {
+        'task': 'communications.tasks.check_and_send_certificate_attribution',
+        'schedule': crontab(minute='*/30'),
+    },
+    'mark-absences': {
+        'task': 'communications.tasks.mark_absences',
+        'schedule': crontab(minute='0', hour='1'), 
+    },
+}
+
 
 # Email Sender's configuration
 
@@ -194,7 +231,7 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 
 # CSRF ACCESS

@@ -58,7 +58,7 @@
                 <td>
                     <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                        <button type="submit" class="delete-btn" data-delete-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
                     </form>
                 </td>
             </tr>
@@ -88,14 +88,14 @@
         <select name="role" onchange="this.form.submit()">
             <option value="">Tous les rôles</option>
             {% for r in roles %}
-            <option value="{{ r }}" {% if request.GET.role == r %}selected{% endif %}>{{ r }}</option>
+            <option value="{{ m }}" {% if request.GET.role == m %}selected{% endif %}>{{ m }}</option>
             {% endfor %}
         </select>
 
-        <select name="reunion" onchange="this.form.submit()">
+        <select name="meeting" onchange="this.form.submit()">
             <option value="">Toutes les réunions</option>
-            {% for r in reunions %}
-            <option value="{{ r }}" {% if request.GET.reunion == r %}selected{% endif %}>{{ r }}</option>
+            {% for m in meetings %}
+            <option value="{{ m }}" {% if request.GET.reunion == m %}selected{% endif %}>{{ m }}</option>
             {% endfor %}
         </select>
     </form>
@@ -132,7 +132,7 @@
                 <td>
                     <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                        <button type="submit" class="cancel-btn" data-delete-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
                     </form>
                 </td>
             </tr>

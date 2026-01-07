@@ -1,6 +1,5 @@
 from django import forms
-from .models import Notification, EmailList
-from members.models import Profile
+from .models import Notification, EmailList, EmailScheduled, SystemEmail, AbsenceEmailCondition
 
 class NotificationForm(forms.ModelForm):
     class Meta:
@@ -28,14 +27,45 @@ class EmailListForm(forms.ModelForm):
         model = EmailList
         fields = ['title', 'members']
         widgets = {
-            'members': forms.SelectMultiple(attrs={'class': 'select2-members'})
+            'title': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Nom de la liste e-mail'
+            }),
+            'members': forms.SelectMultiple(
+                attrs={
+                    'id': 'id_members',
+                    'class': 'form-control',
+                }
+            )
         }
         labels = {
             'title': 'Titre',
             'members': 'Membres'
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['members'].queryset = Profile.objects.all()[:10]  # Limite 10 pour test
 
+class EmailScheduledForm(forms.ModelForm):
+    class Meta:
+        model = EmailScheduled
+        exclude = ['attachments', 'created_by', 'created_at', 'last_sent_at', 'is_active']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 10}),
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'send_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+
+class SystemEmailForm(forms.ModelForm):
+    class Meta:
+        model = SystemEmail
+        exclude = ['code',]
+        widgets = {
+            'body': forms.Textarea(attrs={'rows': 10}),
+        }
+
+
+class AbsenceEmailConditionForm(forms.ModelForm):
+    class Meta:
+        model = AbsenceEmailCondition
+        fields = ['absence_count',]

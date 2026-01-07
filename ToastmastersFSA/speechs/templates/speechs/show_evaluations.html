@@ -14,7 +14,7 @@
 <h2>Evaluations</h2>
 <div class="container">
   <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A faire</button>
-  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Recues</button>
+  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Reçues</button>
 </div>
 </div>
 
@@ -68,44 +68,32 @@
 <div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
       style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
 
-<h3 class="section-title">Evaluations recues</h3>
+<h3 class="section-title">Evaluations reçues</h3>
 <div class="table-wrapper"> 
     <table>
         <thead>
             <tr>
                 <th>Date</th>
-                <th>Nom</th>
+                <th>Evaluateur</th>
                 <th>Type</th>
-                <th>Titre</th>
-                <th>Temps alloué</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            {% for speech in future_speeches.club %}
+            {% for eval in received_evals %}
             <tr>
-                <td>{{ speech.meeting.date|date:"d M Y" }}</td>
-                <td>{{ speech.orator.get_full_name|title }}</td>
-                <td>{{ speech.role.title }}</td>
+                <td>{{ eval.date|date:"d M Y" }}</td>
+                <td>{{ eval.evaluator.get_full_name|title }}</td>
+                <td>{{ eval.get_type|title }}</td>
                 <td>
-                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
-                </td>
-                <td>
-                    {% if speech.role.min_secondes_duration == 0 %}
-                        -
-                    {% else %} {{ speech.role.min_secondes_duration }} - {{ speech.role.max_secondes_duration }} secondes
-                    {% endif %}
-                </td>
-                <td>
-                    <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
-                    </form>
+                    <a href="#">
+                      Voir
+                    </a>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6">Aucun discours à venir</td>
+                <td colspan="4">Aucune évaluation reçue</td>
             </tr>
             {% endfor %}
         </tbody>

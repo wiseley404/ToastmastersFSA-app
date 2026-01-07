@@ -49,3 +49,6 @@ def change_password(request):
         form = CustomPasswordChangeForm(user=request.user)
     return render(request, 'accounts/password_change.html', {'form': form})
 
+
+def show_home_page(request):
+    return redirect('login')

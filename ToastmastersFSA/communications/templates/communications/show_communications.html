@@ -1,17 +1,16 @@
 {% extends 'base_login.html' %}
 {% load static %}
 
-{% block title %} Mes roles à venir {% endblock %}
+{% block title %} Communications {% endblock %}
 {% block head %}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 {% endblock %}
 
 {% block body %}
 {% include 'includes/popup.html' %}
 <div class="page-container">
 <div class="page-header">
-<h2>Planning</h2>
+<h2>Communications</h2>
 {% if user.is_staff %}
 <div class="container">
   <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">E-mail</button>
@@ -23,16 +22,168 @@
      style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
 <div class="page-header">
     <a href="{% url 'create_email_list' %}">
-        <button type="button" class="action-btn" data-popup-url="{% url 'create_email_list' %}"
-        onclick="openPopupEmailListForm(this)">Créer une liste</button>
+        <button type="button" class="action-btn" data-create-url="{% url 'create_email_list' %}">Créer une liste</button>
     </a>
 </div>
 
-<h3 class="section-title">Envoyer un mail</h3>
+
 <div class="email-section">  
-    
+    <h3 class="section-title">Envoyer/Programmer un mail</h3>
+    <form action="{% url 'create_email_scheduled' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="">
+            <label>Pièces jointes (optionnel)</label>
+            <input type="file" name="attachments" multiple class="form-control">
+        </div>
+        {{ form.as_p }}
+        <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
+            border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+        {% if form.send_now %} Envoyer maintenant {% else %} Planifier {% endif %}
+        </button>
+        
+    </form>
 </div>
+
+
+<div id="email-list-section" class="email-list-section">  
+    <h3 class="section-title">Listes de diffusion</h3>
+    <div class="table-wrapper"> 
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Créé par</th>
+                        <th>Créé le</th>
+                        <th>Membres</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email_list in emails_list %}
+                        <tr>
+                            <td>{{ email_list.title|title }}</td>
+                            <td>{{ email_list.created_by.get_full_name|title }}</td>
+                            <td>{{ email_list.created_at|date:"d-m-Y H:i" }}</td>
+                            <td>{{ email_list.total_members }}</td>
+                            <td>
+                                <a href="{% url 'edit_email_list' email_list.id %}">
+                                    <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_email_list'  email_list.id%}"><i class="fas fa-edit"></i></button>
+                                </a> 
+                                <a class="delete-btn" href="{% url 'confirm_email_list_deletion'  email_list.id %}" data-delete-url="{% url 'confirm_email_list_deletion' email_list.id %}">
+                                    <button type="button" title="Supprimer"><i class="fas fa-trash"></i></button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5">Aucune liste de diffusion pour l'instant</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
 </div>
+
+
+<div id="email-scheduled-section" class="email-scheduled-section">  
+<h3 class="section-title">Mails programmés</h3>
+    <div class="table-wrapper"> 
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Aperçu</th>
+                        <th>Date début</th>
+                        <th>Date de fin</th>
+                        <th>Heure d'envoi</th>
+                        <th>Fréquence</th>
+                        <th>Destinataire</th>
+                        <th>Action</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    {% for mail in emails_scheduled %}
+                        <tr>
+                            <td>{{ mail.title|title }}</td>
+                            <td>{{ mail.message|truncatechars:30 }}</td>
+                            <td>{{ mail.start_date|date:"d-m-Y" }}</td>
+                            <td>{{ mail.end_date|date:"d-m-Y" }}</td>
+                            <td>{{ mail.send_time|time:"H:i" }}</td>
+                            <td>{{ mail.frequency }}</td>
+                            <td>
+                                {% if mail.to_email %}
+                                    {{ mail.to_email }}
+                                {% endif %}
+
+                                {% if mail.to_profile %}
+                                    - {{ mail.to_profile.user.get_full_name|title }}
+                                {% endif %}
+
+                                {% if mail.to_list %}
+                                    - {{ mail.to_list.title }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_email_scheduled' mail.id %}">
+                                    <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_email_scheduled' mail.id %}"><i class="fas fa-edit"></i></button>
+                                </a> 
+                                <a class="delete-btn" href="{% url 'confirm_email_scheduled_deletion' mail.id %}" data-delete-url="{% url 'confirm_email_scheduled_deletion' mail.id %}">
+                                    <button type="button" title="Supprimer"><i class="fas fa-trash"></i></button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="8">Aucun mail programmé pour l'instant</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<div id="email-system-section" class="email-system-section">  
+<h3 class="section-title">Mails systeme</h3>
+    <div class="table-wrapper"> 
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Titre</th>
+                        <th>Apercu</th>
+                        <th>Periode d'envoi</th>
+                        <th>Condition</th>
+                        <th>Action</th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    {% for mail in system_emails %}
+                        <tr>
+                            <td>{{ mail.get_code_display }}</td>
+                            <td>{{ mail.subject|title }}</td>
+                            <td>{{ mail.body|truncatechars:30 }}</td>
+                            <td>{{ mail.get_send_offset_display }}</td>
+                            <td>
+                                {% if mail.absence_condition %}
+                                    {{ mail.absence_condition.absence_count }} absence(s)
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_system_email' mail.id %}">
+                                    <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_system_email' mail.id %}"><i class="fas fa-edit"></i></button>
+                                </a> 
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="6">Aucun mail systeme pour l'instant</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+
+</div>
+
+
+
 
 
 <div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
@@ -42,7 +193,6 @@
         <button type="button" class="action-btn" data-create-url="{% url 'create_notif' %}">Publier une notification</button>
     </a>
 </div>
-
 
 <h3 class="section-title">Notifications publiées</h3>
 <div class="table-wrapper"> 
@@ -81,40 +231,7 @@
 </div>
 {% endif %}
 </div>
-<script>
-function openPopupEmailListForm(btn) {
-    const url = btn.dataset.popupUrl;
-    
-    fetch(url)
-        .then(r => r.text())
-        .then(html => {
-            // Injecte HTML
-            document.querySelector('#popup-content').innerHTML = html;
-            
-            // Select2 MAGIC
-            setTimeout(() => {
-                const select = document.querySelector('#popup-content select[name="members"]');
-                if (select) {
-                    $(select).select2({
-                        placeholder: "Tape le nom d'un membre...",
-                        tags: true,
-                        width: '100%'
-                    });
-                }
-            }, 50);
-            
-            // Ouvre popup
-            document.querySelector('#popup-overlay').style.display = 'flex';
-        });
-}
 
-// Ferme popup
-document.addEventListener('click', (e) => {
-    if (e.target.id === 'popup-overlay') {
-        document.querySelector('#popup-overlay').style.display = 'none';
-    }
-});
-</script>
 
 
 {% endblock %}

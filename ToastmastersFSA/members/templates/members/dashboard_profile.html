@@ -26,6 +26,13 @@
                     {% if is_official_member %}
                     / Membre officiel <i class="fas fa-circle-check" style="color:#1da1f2;"></i>
                     {% endif %}
+
+                    {% if is_board_member %}
+                    / {% for bp in board_profiles %}
+                            {{ bp.role.title }}{% if not forloop.last %} / {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                    
                 {% else %}
                     Membre officiel <i class="fas fa-circle-check" style="color:#1da1f2;"></i>
                 {% endif %}

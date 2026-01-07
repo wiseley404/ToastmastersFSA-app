@@ -38,6 +38,14 @@ class Meeting(models.Model):
     def __str__(self):
         return f"Reunion du {self.date}"
     
+class MeetingAttendance(models.Model):
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendances')
+    member = models.ForeignKey('members.Profile', on_delete=models.CASCADE, related_name='meeting_attendances')
+    is_present = models.BooleanField(default=False)
+    confirmed_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        unique_together = ('meeting', 'member')
 
 class Role(models.Model):
     title = models.CharField(max_length=50)

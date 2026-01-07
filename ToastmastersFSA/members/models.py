@@ -33,7 +33,7 @@ class Profile(models.Model):
     curriculums = models.ManyToManyField(Curriculum, blank=True, related_name='profiles')
 
     def __str__(self):
-        return self.user.get_full_name()
+        return self.user.get_full_name() or self.user.username
     
     @property
     def get_roles_performed(self):
