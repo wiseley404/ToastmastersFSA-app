@@ -1,0 +1,9 @@
+<h2>Modifier cette liste</h2>
+<form class="popup-form" action="{% url 'edit_email_list' email_list.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+        Sauvegarder
+    </button>
+</form>

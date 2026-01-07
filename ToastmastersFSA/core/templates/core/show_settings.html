@@ -1,11 +1,128 @@
-{% extends "base_login.html" %}
+{% extends 'base_login.html' %}
+{% load static %}
+
+{% block title %} Paramètres {% endblock %}
+{% block head %}
+
+{% endblock %}
 
 {% block body %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; font-size: 1.2rem;">
-  <i class="fa-solid fa-gear" style="font-size: 96px; color: #bbb;"></i>
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+<h2>Paramètres</h2>
+{% if user.is_staff %}
+<div class="container">
+  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">Club</button>
+  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Website</button>
+</div>
+</div>
 
-  <h2 style="margin-top: 24px;">Paramètres en cours de développement</h2>
-  <p>La gestion des paramètres sera bientôt disponible.</p>
+<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
+     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+<div class="page-header">
+    <a href="{% url 'add_member_to_board' %}">
+        <button type="button" class="action-btn" data-create-url="{% url 'add_member_to_board' %}">Nouveau role</button>
+    </a>
+</div>
+
+<div class="club-board-settings-section">  
+    <h3 class="section-title">Gestion du comité</h3> 
+    <div class="table-wrapper"> 
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Responsable</th>
+                        <th>Entree en fonction</th>
+                        <th>Sortie en fonction</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in comite %}
+                        <tr>
+                            <td>{{ member.role|title }}</td>
+                            <td>{{ member.profile.user.get_full_name|title|default:"-" }}</td>
+                            <td>{{ member.start_date }}</td>
+                            <td>{{ member.end_date|default:"-" }}</td>
+                            <td>
+                                <a href="{% url 'edit_board_role' member.id %}">
+                                    <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_board_role' member.id %}"><i class="fas fa-edit"></i></button>
+                                </a> 
+
+                                <a  href="{% url 'confirm_board_profile_deletion' member.id %}"></a>
+                                    <button type="button" title="Supprimer" class="delete-btn" 
+                                        data-delete-url="{% url 'confirm_board_profile_deletion' member.id %}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3">Aucun comité pour l'instant</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<div class="club-members-settings-section">  
+    <h3 class="section-title">Gestion des membres</h3> 
+    <div class="table-wrapper"> 
+        <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Nom d'utilisateur</th>
+                        <th>Statut</th>
+                        <th>Programme</th>
+                        <th>E-mail</th>
+                        <th>Telephone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in club_members %}
+                        <tr>
+                            <td>{{ member.user.last_name|title|default:"-" }}</td>
+                            <td>{{ member.user.first_name|title|default:"-" }}</td>
+                            <td>{{ member.user.username|title|default:"-" }}</td>
+                            <td>{{ member.statuts.all |join:" / "|default:"-" }}</td>
+                            <td>{{ member.curriculums.all |join:" / "|default:"-" }}</td>
+                            <td>{{ member.user.email|default:"-" }}</td>
+                            <td>{{ member.telephone|default:"-" }}</td>
+                            <td>
+                                <a href="{% url 'edit_member_profile' member.id %}">
+                                    <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_member_profile' member.id %}"><i class="fas fa-edit"></i></button>
+                                </a> 
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="8">Aucun membre pour l'instant</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+
+</div>
+
+</div>
+
+
+<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
+      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; font-size: 1.2rem;">
+        <i class="fa-solid fa-gear" style="font-size: 96px; color: #bbb;"></i>
+
+        <h2 style="margin-top: 24px;">Paramètres du website en cours de développement</h2>
+        <p>La gestion des modifications du website sera bientôt disponible.</p>
+    </div>
+</div>
+{% endif %}
 </div>
 {% endblock %}
+
 

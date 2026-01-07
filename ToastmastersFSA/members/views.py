@@ -13,8 +13,10 @@ import json
 @login_required
 def show_dashboard(request):
     statuts = request.user.profile.statuts.all()
+    board_profiles = request.user.profile.board_roles.all()
     other_statuts = [s.title.capitalize() for s in statuts if s.title.lower() != 'membre officiel']
     is_official_member = request.user.profile.statuts.filter(title__iexact='membre officiel').exists()
+    is_board_member = request.user.profile.board_roles.exists()
 
     CIRCLE_LENGTH = 2 * 3.1416 * 45
 
@@ -73,6 +75,8 @@ def show_dashboard(request):
         'data_structure': json.dumps(data_structure),
         'other_statuts': other_statuts,
         'is_official_member': is_official_member,
+        'is_board_member': is_board_member,
+        'board_profiles': board_profiles,
         'section_active':'dashboard',
         'progression': progression,
         'certificats': certificats,

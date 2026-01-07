@@ -5,6 +5,7 @@ from . import views
 
 
 urlpatterns = [
+    path("", views.show_home_page, name='home_page'),
     path('login/', auth_views.LoginView.as_view(
         template_name='accounts/login.html',
         form_class=CustomAuthentificationForm),

@@ -1,0 +1,15 @@
+<h2>Modifier cet email système</h2>
+<form class="popup-form" action="{% url 'edit_system_email' email_system.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    {% if absence_form %}
+        <h4>Condition d'absence</h4>
+        {{ absence_form.as_p }}
+    {% endif %}
+    
+    <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+        Sauvegarder
+    </button>
+</form>

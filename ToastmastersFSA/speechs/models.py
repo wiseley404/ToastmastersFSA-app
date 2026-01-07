@@ -54,4 +54,8 @@ class Evaluation(models.Model):
     def __str__(self):
         return f'Evaluation de {self.evaluator} pour le discours de {self.speech.orator}'
     
+    @property
+    def get_type(self):
+        return self.evaluator.evaluations_done.speech.role
+    
     
