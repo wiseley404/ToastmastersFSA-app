@@ -120,7 +120,7 @@ def add_fields(request, form_id):
                     Option.objects.create(field=field, value=option.strip())
                 return HttpResponseRedirect(reverse('edit_form', args=[formulaire.id]))
             else:
-                return HttpResponseRedirect(reverse('modifier_formulaire', args=[formulaire.id]))
+                return HttpResponseRedirect(reverse('edit_form', args=[formulaire.id]))
     else:
         form = FieldForm()
     return render(request, 'forms/add_field.html', {'form': form, 'formulaire': formulaire})

@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Speech(models.Model):
     title = models.TextField(max_length=255, blank=True, null=True)
-    orator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='speech', null=False)
-    meeting = models.ForeignKey('meetings.Meeting', on_delete=models.CASCADE, related_name='speech')
-    role = models.ForeignKey('meetings.Role', on_delete=models.CASCADE, related_name='speech')
+    orator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='speeches', null=False)
+    meeting = models.ForeignKey('meetings.Meeting', on_delete=models.CASCADE, related_name='speeches')
+    role = models.ForeignKey('meetings.Role', on_delete=models.CASCADE, related_name='speeches')
     votes = models.PositiveIntegerField(default=0)
 
 

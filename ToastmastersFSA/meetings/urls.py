@@ -12,5 +12,7 @@ urlpatterns = [
     path('ressources/add/', views.add_ressources, name='add_ressources'),
     path('ressources/<ressource_id>/edit/', views.edit_ressources, name='edit_ressources'),
     path('ressources/<ressource_id>/delete/', views.delete_ressources, name='delete_ressources'),
-    path('ressources/<ressource_id>/delete/confirmation/', views.confirm_ressource_deletion, name='confirm_ressource_deletion')
+    path('ressources/<ressource_id>/delete/confirmation/', views.confirm_ressource_deletion, name='confirm_ressource_deletion'),
+    path('check-attendance/', views.check_attendance, name='check_attendance'),
+    path('<int:meeting_id>/confirm-attendance/', views.confirm_attendance, name='confirm_attendance'),
 ]

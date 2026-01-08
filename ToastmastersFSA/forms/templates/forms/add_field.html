@@ -1,5 +1,5 @@
 <h2>Ajouter un champ</h2>
-<form class="popup-form" action="{% url 'add_fields' form.id %}" method="post">
+<form class="popup-form" action="{% url 'add_fields' formulaire.id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 

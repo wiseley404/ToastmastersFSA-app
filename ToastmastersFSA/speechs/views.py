@@ -126,7 +126,7 @@ def create_speech(request):
             speech = form.save(commit=False)
             speech.orator = request.user
             speech.save()
-            create_or_update_form(speech.meeting)
+            #create_or_update_form(speech.meeting)
             return HttpResponseRedirect(reverse('meeting_infos', args=[speech.meeting.id]))
     else:
         form = SpeechForm()
@@ -201,14 +201,16 @@ def show_available_roles(request):
 
 @login_required
 def show_certificats(request):
-    speech = Speech.objects.filter(orator=request.user, role__title='Discours préparé')
-    impro = Speech.objects.filter(orator=request.user, role__title='Discours improvisé')
-    evaluation = Speech.objects.filter(orator=request.user, role__title__in=[
-        'Évaluateur(rice) des improvisations',
-        'Évaluateur(rice) de discours',
-        'Grammairien(ne)',
-        'Chronométreur(se)',
-    ])
+    speech = Speech.objects.filter(orator=request.user, role__title__iexact='Discours préparé')
+    impro = Speech.objects.filter(orator=request.user, role__title__iexact='Discours improvisé')
+    evaluation = Speech.objects.filter(
+        orator=request.user
+    ).filter(
+        Q(role__title__iexact='Évaluateur(rice) des improvisations') |
+        Q(role__title__iexact='Évaluateur(rice) de discours') |
+        Q(role__title__iexact='Grammairien(ne)') |
+        Q(role__title__iexact='Chronométreur(se)')
+    )
     langage = Meeting.objects.filter(top_grammar__icontains=request.user.last_name.title())
     amelioration = Meeting.objects.filter(top_amelioration__icontains=request.user.last_name.title())
 

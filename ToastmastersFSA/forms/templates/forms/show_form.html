@@ -51,8 +51,8 @@
             {{ field }}
         </div>
         {% endfor %}
-        <a href="{% url 'add_fields' form.id %}">
-            <button type="button" class="add-btn" data-create-url="{% url 'add_fields' form.id %}">
+        <a href="{% url 'add_fields' formulaire.id %}">
+            <button type="button" class="add-btn" data-create-url="{% url 'add_fields' formulaire.id %}">
                 Ajouter un autre Champ
             </button>
         </a>
@@ -65,7 +65,7 @@
             <i class="fas fa-arrow-left"></i> Retour aux formulaires
         </a>
     </div>
-    <form action="{% url 'submit_form' form.id %}" class="form-votes" method="post">
+    <form action="{% url 'submit_form' formulaire.id %}" class="form-votes" method="post">
         <h1>{{ formulaire.title|title }}</h1>
         <p>{{ formulaire.description|capfirst }}</p>
         {% csrf_token %}

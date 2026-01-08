@@ -155,10 +155,10 @@
                 <tbody>
                     {% for mail in system_emails %}
                         <tr>
-                            <td>{{ mail.get_code_display }}</td>
-                            <td>{{ mail.subject|title }}</td>
-                            <td>{{ mail.body|truncatechars:30 }}</td>
-                            <td>{{ mail.get_send_offset_display }}</td>
+                            <td>{{ mail.get_code_display|default:"-" }}</td>
+                            <td>{{ mail.subject|capfirst|default:"-" }}</td>
+                            <td>{{ mail.body|truncatechars:30|default:"-" }}</td>
+                            <td>{{ mail.get_send_offset_display|default:"-" }}</td>
                             <td>
                                 {% if mail.absence_condition %}
                                     {{ mail.absence_condition.absence_count }} absence(s)
@@ -210,7 +210,7 @@
             {% for notif in published_notifs %}
                 <tr>
                     <td>{{ notif.created_at|date:"d-m-Y H:i" }}</td>
-                    <td>{{ notif.sender.get_full_name|title }}</td>
+                    <td>{{ notif.sender.get_full_name|title|default:"-" }}</td>
                     <td><a href="#" title="Voir">{{ notif.title|title }}</a></td>
                     <td>{{ notif.message|truncatechars:30 }}</td>
                     <td>

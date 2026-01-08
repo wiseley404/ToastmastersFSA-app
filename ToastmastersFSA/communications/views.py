@@ -12,7 +12,7 @@ from .tasks import send_scheduled_email
 # Create your views here.
 @staff_member_required
 def manage_communications(request):
-    notifs = Notification.objects.all()
+    notifs = Notification.objects.filter(sender__isnull=False)
     emails_list = EmailList.objects.all()
     emails_scheduled = EmailScheduled.objects.filter(is_active=True)
     system_emails = SystemEmail.objects.filter(is_active=True)
@@ -38,7 +38,8 @@ def create_notif(request):
             notif.sender = request.user
             notif.save()
             members = Profile.objects.all()
-            notif.recipients.add(*members)
+            notif.recipients.set(members)
+            notif.save()
             return redirect(request.META.get("HTTP_REFERER", "/"))
     else:
         form = NotificationForm()

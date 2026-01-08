@@ -165,7 +165,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -201,23 +201,15 @@ CELERY_BEAT_SCHEDULE = {
     },
     'check-absence-warnings': {
         'task': 'communications.tasks.check_and_send_absence_warnings',
-        'schedule': crontab(minute='0', hour='9'), 
-    },
-    'check-role-attribution': {
-        'task': 'communications.tasks.check_and_send_role_attribution',
-        'schedule': crontab(minute='*/30'),
+        'schedule': crontab(minute='*/1'), 
     },
     'check-role-reminder': {
         'task': 'communications.tasks.check_and_send_role_reminder',
-        'schedule': crontab(minute='*/30'),
+        'schedule': crontab(minute='*/1'),
     },
     'check-certificate-attribution': {
         'task': 'communications.tasks.check_and_send_certificate_attribution',
-        'schedule': crontab(minute='*/30'),
-    },
-    'mark-absences': {
-        'task': 'communications.tasks.mark_absences',
-        'schedule': crontab(minute='0', hour='1'), 
+        'schedule': crontab(minute='*/1'),
     },
 }
 

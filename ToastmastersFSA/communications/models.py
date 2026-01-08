@@ -5,7 +5,7 @@ from members.models import Profile
 
 # Create your models here.
 class Notification(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications_sent', blank=True, null=True)
     recipients = models.ManyToManyField(Profile, blank=True, related_name='notifications')
     title = models.CharField(max_length=200) 
     message = models.TextField(max_length=1000) 
@@ -109,7 +109,8 @@ class SystemEmail(models.Model):
         ('ABSENCE_WARNING', 'ABSENCE ALERTE'),
         ('ROLE_REMINDER', 'RAPPEL ROLE'),
         ('ROLE_ATTRIBUTION', 'ATTRIBUTION ROLE'),
-        ('CERTIFICAT_ATTRIBUTION', 'ATTRIBUTION CERTIFICAT')
+        ('CERTIFICAT_ATTRIBUTION', 'ATTRIBUTION CERTIFICAT'),
+        ('MEETING_ALERT', 'NOUVELLE REUNION'),
     )
 
     SEND_AT_CHOICES = [
@@ -162,7 +163,9 @@ class SystemEmail(models.Model):
 
     send_offset = models.CharField(
         max_length=20,
-        choices=SEND_AT_CHOICES
+        choices=SEND_AT_CHOICES,
+        blank=True,
+        null=True
     )
 
     is_active = models.BooleanField(default=True)

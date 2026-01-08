@@ -1,9 +1,10 @@
+import json
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from .models import Meeting, Ressources
+from .models import Meeting, MeetingAttendance, Ressources
 from .forms import MeetingForm, RessourcesForm
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from datetime import date, timedelta
 from django.utils.timezone import now
@@ -170,3 +171,45 @@ def delete_meeting(request, meeting_id):
         meeting.delete()
     return redirect('meetings_list')
 
+
+
+@login_required
+def check_attendance(request):
+    current_time = now()
+    print(f"Current time: {current_time}")
+    print(f"Date: {current_time.date()}, Time: {current_time.time()}")
+    
+    meeting = Meeting.objects.filter(
+        date=current_time.date(),
+        start_time__lte=current_time.time(),
+        end_time__gte=current_time.time()
+    ).first()
+    
+    print(f"Meeting found: {meeting}")
+    # ...
+    if meeting:
+        attendance, created = MeetingAttendance.objects.get_or_create(
+            meeting=meeting,
+            member=request.user.profile
+        )
+        if attendance.confirmed_at is None:
+            return JsonResponse({'meeting_id': meeting.id, 'date': meeting.date})
+
+    return JsonResponse({})
+
+
+@login_required
+def confirm_attendance(request, meeting_id):
+    meeting = get_object_or_404(Meeting, id=meeting_id)
+    data = json.loads(request.body)
+    is_present = data.get('is_present')
+    
+    attendance = MeetingAttendance.objects.get(
+        meeting=meeting,
+        member=request.user.profile
+    )
+    attendance.is_present = is_present
+    attendance.confirmed_at = now()
+    attendance.save()
+    
+    return JsonResponse({'success': True})
