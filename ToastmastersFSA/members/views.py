@@ -60,11 +60,11 @@ def show_dashboard(request):
 
     certificats = []
     if last_meeting:
-        speechs_last_meeting = last_meeting.speech.all()
+        speechs_last_meeting = last_meeting.speeches.all()
         certificats = Certificat.objects.filter(speech__in=speechs_last_meeting, is_won=True)
 
 
-    notifications = request.user.notifications.all()[:3]
+    notifications = request.user.profile.notifications.all()[:3]
 
 
     context = {

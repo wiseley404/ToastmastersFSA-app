@@ -64,6 +64,13 @@ class SystemEmailForm(forms.ModelForm):
             'body': forms.Textarea(attrs={'rows': 10}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        if self.instance.code in ['ROLE_ATTRIBUTION', 'MEETING_ALERT'] :
+            self.fields['send_offset'].widget = forms.HiddenInput()
+
+
 
 class AbsenceEmailConditionForm(forms.ModelForm):
     class Meta:

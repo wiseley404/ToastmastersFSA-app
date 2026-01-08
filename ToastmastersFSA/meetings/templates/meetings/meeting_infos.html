@@ -60,9 +60,9 @@
     </div>
 
 
-    {% if meeting.speechs.exists %}
+    {% if meeting.speeches.exists %}
         <div class="meeting-speech">
-            {% for speech in meeting.speech.all %}
+            {% for speech in meeting.speeches.all %}
                 <p><strong>{{ speech.role.title }}:</strong> {{ speech.orator.get_full_name.title }}</p>
             {% endfor %}
         </div>

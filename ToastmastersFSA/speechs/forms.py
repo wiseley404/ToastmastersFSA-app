@@ -35,5 +35,5 @@ class SpeechForm(forms.ModelForm):
         meeting.mot_du_jour = self.cleaned_data['highlight_word']
         meeting.save()
         if commit:
-            meeting.save()
-        return meeting
+            speech.save()
+        return speech
