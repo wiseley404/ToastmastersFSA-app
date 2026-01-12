@@ -3,7 +3,9 @@
 {% block title %}Réunions{% endblock %}
 
 {% block head %}
-<script type="text/javascript" src="{% static 'meetings/js/show_meetings.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/show_meetings.js' %}?v=2" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/meeting_popup.js' %}?v=4" defer></script>
+<script type="text/javascript" src="{% static 'meetings/js/meeting_form.js' %}?v=4" defer></script>
 <style>
     .menu-dropdown a,
     .menu-dropdown button {
@@ -46,7 +48,9 @@
     {% if user.is_staff %}
     <div class="page-header">
         <a href="{% url 'create_meeting' %}">
-        <button type="button" class="action-btn" data-create-url="{% url 'create_meeting' %}">Planifier une réunion</button>
+        <button type="button" id="create-meeting-btn" class="action-btn" data-create-url="{% url 'create_meeting' %}">
+            Planifier une réunion
+        </button>
         </a>
     </div>
     {% endif %}
@@ -54,7 +58,7 @@
     <select id="monthFilter" name="monthFilter">
         <option value="all">Tous les mois</option>
         {% for month in meetings_months %}
-            <option value="{{ month.value }}">{{ month.label }}</option>
+            <option value="{{ month.value }}">{{ month.date|date:"F Y"|title }}</option>
         {% endfor %}
     </select>
 </div>
@@ -102,12 +106,14 @@
             <div class="meeting-actions">
                 <a href="{% url 'meeting_infos' meeting.id %}" class="btn btn-primary">Voir la programmation</a>
                 {% if meeting.format|lower == 'en ligne' %}
-                    <a href="{{ meeting.url }}" class="btn btn-secondary">Se connecter</a>
+                    <a href="{{ meeting.url }}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                        Se connecter
+                    </a>
                 {% endif %}
             </div>
         </div>
     {% empty %}
-        <div class="no-meetings">
+        <div class="no-data">
             <i class="far fa-calendar-alt"></i>
             <p>Aucune réunion à venir</p>
         </div>
@@ -128,17 +134,18 @@
 <div class="advanced-filtre">
     <form method="get">
         <input type="hidden" name="section" value="club">
+        
         <select name="format" onchange="this.form.submit()">
             <option value="">Tous les formats</option>
-            {% for f in formats %}
-            <option value="{{ f }}" {% if request.GET.format == f %}selected{% endif %}>{{ f }}</option>
+            {% for value, label in format_choices %}
+            <option value="{{ value }}" {% if selected_format == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
 
         <select name="type" onchange="this.form.submit()">
             <option value="">Tous les types</option>
-            {% for t in types %}
-            <option value="{{ t }}" {% if request.GET.type == t %}selected{% endif %}>{{ t }}</option>
+            {% for value, label in type_choices %}
+            <option value="{{ value }}" {% if selected_type == value %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
 
@@ -160,6 +167,7 @@
         <thead>
             <tr>
                 <th>Date</th>
+                <th>Heure</th>
                 <th>Type</th>
                 <th>Format</th>
                 <th>Thème</th>
@@ -170,6 +178,7 @@
             {% for meeting in past_meetings %}
             <tr>
                 <td>{{ meeting.date|date:"d M Y" }}</td>
+                <td>{{ meeting.start_time|time:"H:i" }} - {{ meeting.end_time|time:"H:i" }}</td>
                 <td>{{ meeting.type|title }}</td>
                 <td>{{ meeting.format|title }}</td>
                 <td>{% if meeting.theme %} {{ meeting.theme|title }} {% else %} - {% endif %}</td>
@@ -185,5 +194,4 @@
 </div>
 </div>
 </div>
-
 {% endblock %}

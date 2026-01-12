@@ -1,0 +1,21 @@
+<h2>Evaluation Reçue</h2>
+<div class="eval-answer">
+    <p><strong>{{ answer.evaluation.evaluation_type }}</strong></p>
+    <p>Évaluateur : {{ answer.evaluation.evaluator.get_full_name }}</p>
+    <p>Date : {{ answer.evaluation.date|date:"d M Y" }}</p>
+    
+    <h3>Réponses</h3>
+    {% for criteria, level in answer.data.items %}
+        <div class="answer-item">
+            <label>{{ criteria }}</label>
+            <span>: {{ level }}</span>
+        </div>
+    {% empty %}
+        <p>Aucune réponse</p>
+    {% endfor %}
+    
+    {% if answer.comment %}
+        <h3>Commentaires</h3>
+        <p>{{ answer.comment }}</p>
+    {% endif %}
+</div>

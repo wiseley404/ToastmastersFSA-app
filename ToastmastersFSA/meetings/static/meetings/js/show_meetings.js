@@ -1,6 +1,6 @@
 function filterMeetings() {
     const selected = document.getElementById('monthFilter').value;
-    document.querySelectorAll('.reunion-card').forEach(card => {
+    document.querySelectorAll('.meeting-card').forEach(card => {
         if (selected === 'all' || card.dataset.month === selected) {
             card.style.display = 'flex';
         } else {
@@ -28,7 +28,7 @@ document.addEventListener('click', () => {
 
 // CONFIG 
 const itemsPerPage = 10;
-const cards = Array.from(document.querySelectorAll('.reunion-card')); 
+const cards = Array.from(document.querySelectorAll('.meeting-card')); 
 const btnPrev = document.querySelector('.page-btn.prev');
 const btnNext = document.querySelector('.page-btn.next');
 const pageCount = document.querySelector('.page-count');

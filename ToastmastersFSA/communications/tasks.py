@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
 from celery import shared_task
-from communications.models import EmailScheduled, Notification, SystemEmail
+from communications.models import EmailScheduled, Notification, SystemEmail, SystemEmailLog
 from meetings.models import Meeting, MeetingAttendance
 from speechs.models import Speech, Certificat
 from members.models import Profile
@@ -65,8 +65,6 @@ def send_scheduled_email(self, email_id):
         email_scheduled.is_active = False
     if email_scheduled.frequency == "Une seule fois":
         email_scheduled.is_active = False
-    if email_scheduled.end_date and email_scheduled.end_date <= today:
-        email_scheduled.is_active = False
 
     email_scheduled.save()
     
@@ -106,6 +104,8 @@ def check_and_send_scheduled_emails():
     for email in emails:
         if should_send(email, now):
             send_scheduled_email.delay(email.id)
+        if email.end_date and email.end_date <= today:
+            email.is_active = False
 
 
 
@@ -185,43 +185,55 @@ def check_and_send_meeting_reminders():
         return "No MEETING_REMINDER config"
     
     delta = email_config.get_send_delta()
-    meetings = Meeting.objects.all()
+    
+    # Cherche les futures réunions
+    meetings = Meeting.objects.filter(date__gte=now.date()).order_by('date')
     
     for meeting in meetings:
-        if delta.total_seconds() < 0:
-            reference_time = meeting.start_time
-        else:
-            reference_time = meeting.end_time
-
+        reference_time = meeting.start_time if delta.total_seconds() < 0 else meeting.end_time
+        
         meeting_datetime = datetime.combine(meeting.date, reference_time)
         send_datetime = meeting_datetime + delta
         
         if now >= send_datetime and now < send_datetime + timedelta(minutes=1):
-            programmation_pdf = generate_meeting_pdf_content(meeting)  # ← Ici seulement
+            programmation_pdf = generate_meeting_pdf_content(meeting)
+            
+            attachments = None
             if programmation_pdf:
-                logger.info(f"PDF généré: {len(programmation_pdf)} bytes")
+                attachments = [('programmation.pdf', programmation_pdf, 'application/pdf')]
             
             members = Profile.objects.all()
             
             for member in members:
-                context = {
-                    'first_name': member.user.first_name,
-                    'meeting_date': meeting.date.strftime('%d/%m/%Y'),
-                    'meeting_time': meeting.start_time.strftime('%H:%M'),
-                    'meeting_location': meeting.location or 'Non spécifié',
-                }
+                already_sent = SystemEmailLog.objects.filter(
+                    email_config=email_config,
+                    recipient=member,
+                    meeting=meeting
+                ).exists()
                 
-                subject = render_template(email_config.subject, context)
-                body = render_template(email_config.body, context)
-                attachments = [('programmation.pdf', programmation_pdf, 'application/pdf')]
-                send_system_email(member.user.email, subject, body, email_config.footer, attachments)
+                if not already_sent:
+                    context = {
+                        'first_name': member.user.first_name,
+                        'meeting_date': meeting.date.strftime('%d/%m/%Y'),
+                        'meeting_time': meeting.start_time.strftime('%H:%M'),
+                        'meeting_location': meeting.location or 'Non spécifié',
+                    }
+                    
+                    subject = render_template(email_config.subject, context)
+                    body = render_template(email_config.body, context)
+                    send_system_email(member.user.email, subject, body, email_config.footer, attachments)
+                    
+                    SystemEmailLog.objects.create(
+                        email_config=email_config,
+                        recipient=member,
+                        meeting=meeting
+                    )
     
     return "Done"
 
 
 @shared_task
 def check_and_send_absence_warnings():
-    """Envoie les alertes d'absence selon send_offset et condition"""
     now = timezone.now()
     email_config = SystemEmail.objects.filter(code='ABSENCE_WARNING', is_active=True).first()
     
@@ -234,31 +246,61 @@ def check_and_send_absence_warnings():
         return "No absence condition"
     
     delta = email_config.get_send_delta()
-    meetings = Meeting.objects.all()
     
-    for meeting in meetings:
-        reference_time = meeting.end_time if delta.total_seconds() >= 0 else meeting.start_time
-        
-        meeting_datetime = datetime.combine(meeting.date, reference_time)
-        send_datetime = meeting_datetime + delta
-        
-        if now >= send_datetime and now < send_datetime + timedelta(minutes=1):
-            absent_attendances = MeetingAttendance.objects.filter(
-                meeting=meeting,
-                is_present=False,
-                confirmed_at__isnull=True
+    # Récupère les N dernières réunions passées
+    past_meetings = Meeting.objects.filter(
+        Q(date=now.date(), end_time__lt=now.time()) |  
+        Q(date__lt=now.date())           
+    ).order_by('-date', '-end_time')[:condition.absence_count]
+    
+    if not past_meetings:
+        return "Not enough past meetings"
+    
+    # Calcule le datetime d'envoi basé sur la DERNIÈRE réunion
+    last_meeting = past_meetings.first()
+    reference_time = last_meeting.end_time if delta.total_seconds() >= 0 else last_meeting.start_time
+    meeting_datetime = datetime.combine(last_meeting.date, reference_time)
+    send_datetime = meeting_datetime + delta
+    
+    # Envoie seulement si on est dans la fenêtre d'envoi
+    if now >= send_datetime and now < send_datetime + timedelta(minutes=1):
+        # Cherche les membres absents dans TOUTES les réunions
+        absent_in_all = None
+        for meeting in past_meetings:
+            absent_this_meeting = set(
+                MeetingAttendance.objects.filter(
+                    meeting=meeting,
+                    is_present=False
+                ).values_list('member_id', flat=True)
             )
             
-            for attendance in absent_attendances:
-                member = attendance.member
-                context = {
-                    'first_name': member.user.first_name,
-                }
-                
+            if absent_in_all is None:
+                absent_in_all = absent_this_meeting
+            else:
+                absent_in_all = absent_in_all.intersection(absent_this_meeting)
+        
+        # Envoie aux membres absents
+        for member_id in absent_in_all:
+            member = Profile.objects.get(id=member_id)
+            
+            already_sent = SystemEmailLog.objects.filter(
+                email_config=email_config,
+                recipient=member,
+                meeting=last_meeting
+            ).exists()
+            
+            if not already_sent:
+                context = {'first_name': member.user.first_name}
                 subject = render_template(email_config.subject, context)
                 body = render_template(email_config.body, context)
                 
                 send_system_email(member.user.email, subject, body, email_config.footer)
+                
+                SystemEmailLog.objects.create(
+                    email_config=email_config,
+                    recipient=member,
+                    meeting=last_meeting
+                )
     
     condition.last_triggered_at = now
     condition.save()
@@ -317,34 +359,48 @@ def check_and_send_role_reminder():
         return "No ROLE_REMINDER config"
     
     delta = email_config.get_send_delta()
-    meetings = Meeting.objects.all()
+    
+    # Cherche les futures réunions
+    meetings = Meeting.objects.filter(date__gte=now.date()).order_by('date')
     
     for meeting in meetings:
-        if delta.total_seconds() < 0:
-            reference_time = meeting.start_time
-        else:
-            reference_time = meeting.end_time
+        reference_time = meeting.start_time if delta.total_seconds() < 0 else meeting.end_time
 
         meeting_datetime = datetime.combine(meeting.date, reference_time)
         send_datetime = meeting_datetime + delta
         
         if now >= send_datetime and now < send_datetime + timedelta(minutes=1):
-
             speeches = Speech.objects.filter(meeting=meeting)       
+            
             for speech in speeches:
                 member = speech.orator
-                context = {
-                    'first_name': member.first_name,
-                    'role_title': speech.role.title,
-                    'meeting_date': speech.meeting.date.strftime('%d/%m/%Y'),
-                    'meeting_time': speech.meeting.start_time.strftime('%H:%M'),
-                    'meeting_location': speech.meeting.location or 'Non spécifié',
-                }
                 
-                subject = render_template(email_config.subject, context)
-                body = render_template(email_config.body, context)
+                # Vérifie si déjà envoyé
+                already_sent = SystemEmailLog.objects.filter(
+                    email_config=email_config,
+                    recipient=member.profile,
+                    meeting=meeting
+                ).exists()
                 
-                send_system_email(member.email, subject, body, email_config.footer)
+                if not already_sent:
+                    context = {
+                        'first_name': member.first_name,
+                        'role_title': speech.role.title,
+                        'meeting_date': speech.meeting.date.strftime('%d/%m/%Y'),
+                        'meeting_time': speech.meeting.start_time.strftime('%H:%M'),
+                        'meeting_location': speech.meeting.location or 'Non spécifié',
+                    }
+                    
+                    subject = render_template(email_config.subject, context)
+                    body = render_template(email_config.body, context)
+                    
+                    send_system_email(member.email, subject, body, email_config.footer)
+                    
+                    SystemEmailLog.objects.create(
+                        email_config=email_config,
+                        recipient=member.profile,
+                        meeting=meeting
+                    )
     
     return "DONE"
 
@@ -359,9 +415,11 @@ def check_and_send_certificate_attribution():
         return "No CERTIFICAT_ATTRIBUTION config"
     
     delta = email_config.get_send_delta()
-    meetings = Meeting.objects.all()
     
-    for meeting in meetings:
+    # Cherche les réunions passées
+    past_meetings = Meeting.objects.filter(date__lte=now.date()).order_by('-date')
+    
+    for meeting in past_meetings:
         reference_time = meeting.end_time if delta.total_seconds() >= 0 else meeting.start_time
         
         meeting_datetime = datetime.combine(meeting.date, reference_time)
@@ -375,31 +433,45 @@ def check_and_send_certificate_attribution():
             
             for cert in certificates:
                 member = cert.speech.orator
-                context = {
-                    'first_name': member.first_name,
-                    'certificate_type': cert.title,
-                }
                 
-                subject = render_template(email_config.subject, context)
-                body = render_template(email_config.body, context)
+                # Vérifie si déjà envoyé
+                already_sent = SystemEmailLog.objects.filter(
+                    email_config=email_config,
+                    recipient=member.profile,
+                    meeting=meeting
+                ).exists()
                 
-                certificate_file = generate_certificat(
-                    cert.title, 
-                    member.get_full_name(), 
-                    meeting.date.strftime('%d/%m/%Y')
-                )
-                
-                if certificate_file:
-                    notif = Notification.objects.create(
-                        sender=None,
-                        title='Nouveau certificat',
-                        message=f'Vous avez recu un nouveau certificat, felicitaions a vous !'
-                    )
-                    notif.recipients.add(member.profile)
-
-                    attachments = [('certificat.png', certificate_file, 'image/png')]
-                    send_system_email(member.email, subject, body, email_config.footer, attachments)
+                if not already_sent:
+                    context = {
+                        'first_name': member.first_name,
+                        'certificate_type': cert.title,
+                    }
                     
+                    subject = render_template(email_config.subject, context)
+                    body = render_template(email_config.body, context)
+                    
+                    certificate_file = generate_certificat(
+                        cert.title, 
+                        member.get_full_name(), 
+                        meeting.date.strftime('%d/%m/%Y')
+                    )
+                    
+                    if certificate_file:
+                        notif = Notification.objects.create(
+                            sender=None,
+                            title='Nouveau certificat',
+                            message=f'Vous avez recu un nouveau certificat, felicitaions a vous !'
+                        )
+                        notif.recipients.add(member.profile)
+
+                        attachments = [('certificat.png', certificate_file, 'image/png')]
+                        send_system_email(member.email, subject, body, email_config.footer, attachments)
+                        
+                        SystemEmailLog.objects.create(
+                            email_config=email_config,
+                            recipient=member.profile,
+                            meeting=meeting
+                        )
     
     return "DONE"
 

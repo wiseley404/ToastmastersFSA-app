@@ -1,6 +1,7 @@
 from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
+from meetings.models import Meeting
 from members.models import Profile
 
 # Create your models here.
@@ -115,6 +116,12 @@ class SystemEmail(models.Model):
 
     SEND_AT_CHOICES = [
         # Minutes
+        ('M5_BEFORE', '5 minutes avant'),
+        ('M5_AFTER',  '5 minutes après'),
+
+        ('M15_BEFORE', '15 minutes avant'),
+        ('M15_AFTER',  '15 minutes après'),
+
         ('M30_BEFORE', '30 minutes avant'),
         ('M30_AFTER',  '30 minutes après'),
 
@@ -176,6 +183,10 @@ class SystemEmail(models.Model):
     def get_send_delta(self):
         """Retourne un timedelta basé sur send_offset"""
         offset_map = {
+            'M5_BEFORE': timedelta(minutes=-5),
+            'M5_AFTER': timedelta(minutes=5),
+            'M15_BEFORE': timedelta(minutes=-15),
+            'M15_AFTER': timedelta(minutes=15),
             'M30_BEFORE': timedelta(minutes=-30),
             'M30_AFTER': timedelta(minutes=30),
             'H1_BEFORE': timedelta(hours=-1),
@@ -241,3 +252,12 @@ class AbsenceEmailCondition(models.Model):
     def __str__(self):
         return f"{self.absence_count} absences"
 
+
+class SystemEmailLog(models.Model):
+    email_config = models.ForeignKey(SystemEmail, on_delete=models.CASCADE, related_name='logs')
+    recipient = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, null=True, blank=True)
+    sent_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('email_config', 'recipient', 'meeting')

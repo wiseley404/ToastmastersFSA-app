@@ -3,6 +3,10 @@ from .forms import BoardProfileForm, MemberProfileForm
 from .models import BoardProfile
 from members.models import Profile
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.timezone import now
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+
 
 # Create your views here.
 def show_settings(request):
@@ -30,14 +34,17 @@ def add_member_to_board(request):
         form = BoardProfileForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(request.META.get("HTTP_REFERER", "/"))
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string('core/add_member_to_board.html', {'form': form}, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = BoardProfileForm()
 
     context = {
-            'form':form,
-            'section_active':'parametres',
-        }
+        'form': form,
+        'section_active': 'parametres',
+    }
     return render(request, 'core/add_member_to_board.html', context)
 
 
@@ -47,27 +54,35 @@ def edit_board_role(request, board_profile_id):
         form = BoardProfileForm(request.POST, instance=board_profile)
         if form.is_valid():
             form.save()
-            return redirect(request.META.get("HTTP_REFERER", "/"))
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string('core/edit_board_role.html', {
+                'form': form,
+                'board_profile': board_profile
+            }, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = BoardProfileForm(instance=board_profile)
     context = {
-        'form':form,
-        'board_profile':board_profile,
+        'form': form,
+        'board_profile': board_profile,
     }
     return render(request, 'core/edit_board_role.html', context)
 
 
 @staff_member_required
-def confirm_board_profile_deletion(request, board_profile_id):
+def confirm_board_profile_remove(request, board_profile_id):
     board_profile = get_object_or_404(BoardProfile, id=board_profile_id)
-    return render(request, 'core/delete_board_profile.html', {'board_profile':board_profile})
+    return render(request, 'core/remove_board_profile.html', {'board_profile':board_profile})
 
 
 @staff_member_required
-def delete_board_profile(request, board_profile_id):
+def remove_board_profile(request, board_profile_id):
     board_profile = get_object_or_404(BoardProfile, id=board_profile_id)
     if board_profile:
-        board_profile.delete()
+        board_profile.is_active = False
+        board_profile.end_date = now().date()
+        board_profile.save() 
     return redirect('settings')
 
 

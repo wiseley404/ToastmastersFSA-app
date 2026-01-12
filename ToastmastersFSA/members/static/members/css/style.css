@@ -354,7 +354,7 @@ html, body {
 }
 
 
-.no-meetings {
+.no-data {
     text-align: center;
     width: 100%;
     padding: 50px 0;
@@ -362,7 +362,7 @@ html, body {
     font-weight: 400;
     font-size: 1.1rem;
 }
-.no-meetings i {
+.no-data i {
     font-size: 4.5rem;
     margin-bottom: 12px;
     color: #ccc;

@@ -25,14 +25,15 @@ class BoardProfileForm(forms.ModelForm):
         if profile and role:
             exists = BoardProfile.objects.filter(
                 profile=profile,
-                role=role
+                role=role,
+                is_active=True 
             )
             if self.instance.pk:
                 exists = exists.exclude(pk=self.instance.pk)
 
             if exists.exists():
                 raise forms.ValidationError(
-                    "Ce membre a déjà ce rôle."
+                    f"{profile.user.last_name} a déjà ce rôle actif."
                 )
 
         return cleaned_data

@@ -41,21 +41,51 @@ class Certificat(models.Model):
         return self.title
 
 
-class Evaluation(models.Model):
-    evaluator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='evaluations_done')
-    speech = models.ForeignKey('speechs.Speech', on_delete=models.CASCADE, related_name='evaluations_received')
-    date = models.DateTimeField(auto_now_add=True)
-    pertinence = models.PositiveSmallIntegerField(default=0, blank=True, null=True)
-    structure = models.PositiveSmallIntegerField(default=0, blank=True, null=True)
-    clarte = models.PositiveSmallIntegerField(default=0, blank=True, null=True)
-    eloquence = models.PositiveSmallIntegerField(default=0, blank=True, null=True)
-
+class EvaluationType(models.Model):
+    TYPES = [
+        ('grammaire', 'Grammaire'),
+        ('gestion_temps', 'Gestion du temps'),
+        ('improvisation', 'Improvisation'),
+        ('discours_prepare', 'Discours préparé'),
+        ('evaluation_generale', 'Évaluation générale'),
+    ]
+    name = models.CharField(max_length=50, choices=TYPES, unique=True)
 
     def __str__(self):
-        return f'Evaluation de {self.evaluator} pour le discours de {self.speech.orator}'
+        return self.get_name_display()
+
+class EvaluationLevel(models.Model):
+    name = models.CharField(max_length=50, unique=True) 
+    points = models.IntegerField()
+    order = models.IntegerField(default=0)
     
-    @property
-    def get_type(self):
-        return self.evaluator.evaluations_done.speech.role
+    def __str__(self):
+        return self.name
+
+class EvaluationCriteria(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200, blank=True) 
+    evaluation_types = models.ManyToManyField(EvaluationType)
+    progression_field = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.name
+
+class Evaluation(models.Model):
+    evaluator = models.ForeignKey(User, on_delete=models.CASCADE)
+    meeting = models.ForeignKey('meetings.Meeting', on_delete=models.CASCADE)
+    evaluation_type = models.ForeignKey(EvaluationType, on_delete=models.CASCADE)
+    profiles = models.ManyToManyField('members.Profile') 
+    criteria = models.ManyToManyField(EvaluationCriteria)
+    is_submitted = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True)
+
+
+class EvaluationAnswer(models.Model):
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, related_name='answers')
+    profile = models.ForeignKey('members.Profile', on_delete=models.CASCADE)
+    data = models.JSONField(default=dict)
+    comment = models.TextField(blank=True, null=True)
+
     
     
