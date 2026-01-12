@@ -2,7 +2,7 @@
 <p>Êtes-vous sûr de vouloir supprimer ce poste ? Cette action est irréversible.</p>
 
 <div class="btn-validation" style="display: flex; gap: 1rem; margin-top: 1rem;">
-    <form method="post" action="{% url 'delete_board_profile' board_profile.id %}" style="margin: 0;">
+    <form method="post" action="{% url 'remove_board_profile' board_profile.id %}" style="margin: 0;">
         {% csrf_token %}
         <button type="submit" class="btn-oui" style="padding: 0.5rem 1rem; border: none; border-radius: 6px;
                 cursor: pointer; font-weight: bold;  background-color: #007BFF;

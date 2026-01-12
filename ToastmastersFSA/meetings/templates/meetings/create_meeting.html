@@ -1,15 +1,21 @@
-<h2>Planifier une reunion</h2>
+<h2>Planifier une réunion</h2>
 <form action="{% url 'create_meeting' %}" method="post">
     {% csrf_token %}
-    <p>Date: {{ meeting.date }}</p>
-    <p>Heure de debut: {{ meeting.start_time }}</p>
-    <p>Heure de fin: {{ meeting.end_time }}</p>
-    <p>Format: {{ meeting.format }}</p>
-    <p>Type: {{ meeting.type }}</p>
-    <p>Attribution des roles: {{ meeting.attribution_role }}</p>
-    <p>Adresse</p>
-    <p>{{ meeting.location }}</p>
-    <p>Lien: {{ meeting.url }}</p>
+    
+    {% if meeting.errors %}
+        <div style="color: red; margin-bottom: 10px;">
+            {{ meeting.non_field_errors }}
+        </div>
+    {% endif %}
+    <p>{{ meeting.date.label_tag }} {{ meeting.date }} {{ meeting.date.errors }}</p>
+    <p>{{ meeting.start_time.label_tag }} {{ meeting.start_time }} {{ meeting.start_time.errors }}</p>
+    <p>{{ meeting.end_time.label_tag }} {{ meeting.end_time }} {{ meeting.end_time.errors }}</p>
+    <p>{{ meeting.format.label_tag }} {{ meeting.format }} {{ meeting.format.errors }}</p>
+    <p>{{ meeting.type.label_tag }} {{ meeting.type }} {{ meeting.type.errors }}</p>
+    <p>{{ meeting.attribution_role.label_tag }} {{ meeting.attribution_role }} {{ meeting.attribution_role.errors }}</p>
+    <p>{{ meeting.location.label_tag }} {{ meeting.location }} {{ meeting.location.errors }}</p>
+    <p>{{ meeting.url.label_tag }} {{ meeting.url }} {{ meeting.url.errors }}</p>
+    
     <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
         border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
         Planifier

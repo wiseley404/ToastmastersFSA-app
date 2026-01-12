@@ -42,18 +42,20 @@
         <thead>
             <tr>
                 <th>Date</th>
+                <th>Heure</th>
                 <th>Type</th>
                 <th>Titre</th>
                 <th>Certificat</th>
             </tr>
         </thead>
         <tbody>
-            {% for speech in past_speeches.personnel %}
+            {% for speech in past_personal_speeches %}
             <tr>
                 <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.meeting.start_time|time:"H:i" }} - {{ speech.meeting.end_time|time:"H:i" }}</td>
                 <td>{{ speech.role.title }}</td>
                 <td>
-                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
+                    {% if speech.title %}{{ speech.title|title|truncatechars:50 }}{% else %}-{% endif %}
                 </td>
                 <td>
                     {% if speech.certificat.is_won %}
@@ -79,7 +81,7 @@
 <div class="filtre-recherche">
     <form method="get">
         <input type="hidden" name="section" value="club">
-        <input type="text" name="filtre" placeholder="Recherchez">
+        <input type="text" name="filtre" placeholder="Recherchez" value="{{ request.GET.filtre }}">
         <button><i class="fas fa-search"></i></button>
     </form>
 </div>
@@ -91,27 +93,27 @@
                 <th>Nom</th>
                 <th>Séances assistées</th>
                 <th>Dernière participation</th>
-                <th>Discours/Roles réalisés</th>
+                <th>Discours/Rôles réalisés</th>
                 <th>Certificats obtenus</th>
             </tr>
         </thead>
         <tbody>
             {% for member in profils %}
             <tr>
-                <td>{{ member.user.get_full_name|title }}</td>
+                <td>{{ member.user.last_name|title }} {{ member.user.first_name|title }}</td>
                 <td> 
-                     {{ 5 }}
+                     {{ member.meeting_attendances.count|default:'-' }}
                 </td>
                 <td>
-                   {{'21-08-2025'}}
+                   {{ member.meeting_attendances.last.meeting.date | date:"d-m-Y"| default:"-" }}
                 </td>
                     
                 <td>
-                    {{ member.roles_performed }}
+                    {{ member.get_roles_performed|default:'-' }}
 
                 </td>
                 <td>
-                    {{ member.certificats_won }}
+                    {{ member.get_certificats_won|default:'-' }}
                 </td>
                 
             </tr>

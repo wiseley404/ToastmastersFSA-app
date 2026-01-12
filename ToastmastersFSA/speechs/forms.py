@@ -3,7 +3,7 @@ from .models import Speech
 from meetings.models import Meeting
 from django.utils.timezone import now
 from django.contrib.auth.models import User
-
+from django.db.models import Q
 
 class SpeechForm(forms.ModelForm):
     theme = forms.CharField(max_length=100, required=False, widget=forms.Textarea(attrs={'class':'form-control'}))
@@ -23,7 +23,11 @@ class SpeechForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['meeting'].queryset = Meeting.objects.filter(date__gte=now())
+        today = now().date()
+        self.fields['meeting'].queryset = Meeting.objects.filter(
+            Q(date__gt=today) |
+            Q(date=today, start_time__gt=now().time())
+        )
         self.fields['meeting'].empty_label = "--- Choisir une réunion ---"
         self.fields['role'].empty_label = "--- Choisir un rôle disponible ---"
 
@@ -32,7 +36,7 @@ class SpeechForm(forms.ModelForm):
         speech = super().save(commit=False)
         meeting = speech.meeting
         meeting.theme = self.cleaned_data['theme']
-        meeting.mot_du_jour = self.cleaned_data['highlight_word']
+        meeting.highlight_word = self.cleaned_data['highlight_word']
         meeting.save()
         if commit:
             speech.save()

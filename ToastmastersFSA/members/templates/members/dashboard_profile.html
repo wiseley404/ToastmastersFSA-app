@@ -32,14 +32,14 @@
                             {{ bp.role.title }}{% if not forloop.last %} / {% endif %}
                       {% endfor %}
                     {% endif %}
-                    
+
                 {% else %}
                     Membre officiel <i class="fas fa-circle-check" style="color:#1da1f2;"></i>
                 {% endif %}
                 
             </p>
             <div class="profile-modif">
-                <a href="#">Modifier mon profil</a>
+                <a href="{% url 'edit_profile' %}">Modifier mon profil</a>
             </div>
         </div>
     </div>

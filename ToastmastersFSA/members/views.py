@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Profile, Progression
-from meetings.models import Meeting
+from meetings.models import Meeting, MeetingAttendance
 from speechs.models import Certificat
 from django.contrib.auth.decorators import login_required
 from .forms import UpdatePhoneNumberForm, UpdatePhotoForm, UpdateCurriculumsForm, UpdateStatutsForm
 from accounts.forms import UpdateEmailForm, UpdateFirstNameForm, UpdateLastNameForm, UpdateUsernameForm
 from django.utils.timezone import now
 import json
+from django.db.models import Q
 
 
 # Create your views here.
@@ -17,6 +18,7 @@ def show_dashboard(request):
     other_statuts = [s.title.capitalize() for s in statuts if s.title.lower() != 'membre officiel']
     is_official_member = request.user.profile.statuts.filter(title__iexact='membre officiel').exists()
     is_board_member = request.user.profile.board_roles.exists()
+    
 
     CIRCLE_LENGTH = 2 * 3.1416 * 45
 
@@ -34,6 +36,7 @@ def show_dashboard(request):
     progression = []
     for label, value in criteres.items():
         offset = CIRCLE_LENGTH - (CIRCLE_LENGTH * value / 100)
+
         progression.append({
             'label': label,
             'value': value,
@@ -43,25 +46,41 @@ def show_dashboard(request):
 
     progressions = Progression.objects.filter(user=request.user).order_by('meeting__date')
 
-    labels = [progression.reunion.date.strftime("%Y-%m-%d") for progression in progressions]
+    labels = [progression.meeting.date.strftime("%Y-%m-%d") for progression in progressions]
     data_pertinence = [progression.pertinence for progression in progressions]
-    data_temps = [progression.gestion_temps for progression in progressions]
+    data_temps = [progression.time_gestion for progression in progressions]
     data_eloquence = [progression.eloquence for progression in progressions]
     data_structure = [progression.structure for progression in progressions]
 
     today = now()
-    last_meeting = Meeting.objects.filter(date__lte=today).order_by('-date').first()
-    next_meeting = Meeting.objects.filter(date__gte=today).order_by('date').first()
+
+    last_meeting = Meeting.objects.filter(
+        Q(date=today.date(), end_time__lt=today.time()) |
+        Q(date__lt=today.date())
+    ).order_by('-date', '-end_time').first()
+
+    next_meeting = Meeting.objects.filter(
+        Q(date=today.date(), start_time__gt=today.time()) |
+        Q(date__gt=today.date())
+    ).order_by('date', 'start_time').first()
 
     stats = {
-        'next_meetings': Meeting.objects.filter(date__gte=today).count(),
-        'certificats_won': Certificat.objects.filter(speech__orator=request.user).count()
+        'next_meetings': Meeting.objects.filter(
+            Q(date=today.date(), end_time__gt=today.time()) |  
+            Q(date__gt=today.date())
+        ).count(),
+        'certificats_won': Certificat.objects.filter(speech__orator=request.user).count(),
+        'total_presences': MeetingAttendance.objects.filter(member=request.user.profile, is_present=True).count(),
+        'total_meetings': Meeting.objects.all().count(),
+        'last_meeting_attendance': MeetingAttendance.objects.filter(member=request.user.profile, is_present=True).order_by('-meeting__date').first(),
     }
 
     certificats = []
     if last_meeting:
-        speechs_last_meeting = last_meeting.speeches.all()
-        certificats = Certificat.objects.filter(speech__in=speechs_last_meeting, is_won=True)
+        certificats = Certificat.objects.filter(
+            speech__meeting=last_meeting,
+            is_won=True
+        )
 
 
     notifications = request.user.profile.notifications.all()[:3]

@@ -3,104 +3,138 @@
 
 {% block title %} Mes evaluations {% endblock %}
 {% block head %}
-<script type="text/javascript" src="{% static 'speechs/js/create_speech.js' %}?v=3" defer></script>
-<script type="text/javascript" src="{% static 'speechs/js/cancel_speech.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'speechs/js/evaluation_setup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'speechs/js/evaluation_submit.js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
 {% include 'includes/popup.html' %}
 <div class="page-container">
-<div class="page-header">
-<h2>Evaluations</h2>
-<div class="container">
-  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A faire</button>
-  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Reçues</button>
-</div>
-</div>
+    <div class="page-header">
+        <h2>Evaluations</h2>
+        <div class="container">
+        <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A faire</button>
+        <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Reçues</button>
+        </div>
+    </div>
 
-<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
-     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+    <div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
+        style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+        <div class="page-header">
+            <a href="{% url 'start_evaluation' %}">
+                <button type="button" class="action-btn" id="start-eval-btn" data-create-url="{% url 'start_evaluation' %}">Commencer une évaluation</button>
+            </a>
+        </div>
+        <h3 class="section-title">Mes Evaluations à faire</h3>
 
-<h3 class="section-title">Mes Evaluations à faire</h3>
-<div class="table-wrapper">  
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Titre</th>
-                <th>Temps alloué</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for speech in future_speeches.personnel %}
-            <tr>
-                <td>{{ speech.meeting.date|date:"d M Y" }}</td>
-                <td>{{ speech.role.title }}</td>
-                <td>
-                    {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
-                </td>
-                <td>
-                    {% if speech.role.min_secondes_duration == 0 %}
-                        -
-                    {% else %} {{ speech.role.min_secondes_duration }} - {{ speech.role.max_secondes_duration }} secondes
-                    {% endif %}
-                </td>
-                <td>
-                    <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="cancel-btn" data-create-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
-                    </form>
-                </td>
-            </tr>
+        <div class="evaluations-container">
+            {% for eval in evaluations %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Critères</th>
+                                {% for profile in eval.profiles.all %}
+                                    <th>{{ profile.user.get_full_name|title }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for criteria in eval.criteria.all %}
+                            <tr class="criteria-header">
+                                <td><strong>{{ criteria.name }}</strong></td>
+                                <td colspan="{{ eval.profiles.count }}"></td>
+                            </tr>
+                            {% for level in evaluation_levels %}
+                            <tr class="level-row">
+                                <td>{{ level.name }}</td>
+                                {% for profile in eval.profiles.all %}
+                                    <td>
+                                        <input type="radio" 
+                                            name="answer_{{ eval.id }}_{{ criteria.id }}_{{ profile.id }}" 
+                                            value="{{ level.id }}"
+                                            data-eval="{{ eval.id }}" 
+                                            data-criteria="{{ criteria.id }}" 
+                                            data-profile="{{ profile.id }}">
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                            {% endfor %}
+                            
+                            <tr class="comments-row">
+                                <td><strong>Commentaires</strong></td>
+                                {% for profile in eval.profiles.all %}
+                                    <td>
+                                        <button type="button" class="comment-btn" 
+                                                data-eval="{{ eval.id }}" 
+                                                data-profile="{{ profile.id }}"
+                                                data-has-comment="false">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="table-actions">
+                        <button type="submit" class="submit-btn" data-eval="{{ eval.id }}">Soumettre l'évaluation</button>
+                    </div>
+                </div>
             {% empty %}
-            <tr>
-                <td colspan="5">Aucun discours à venir</td>
-            </tr>
+                <div class="no-data">
+                    <i class="fa-solid fa-star"></i>
+                    <p>Aucune évaluation en cours</p>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
-</div>
-</div>
+        </div>
+    </div>
 
 
-<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
-      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+    <div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
+        style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
 
-<h3 class="section-title">Evaluations reçues</h3>
-<div class="table-wrapper"> 
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Evaluateur</th>
-                <th>Type</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for eval in received_evals %}
-            <tr>
-                <td>{{ eval.date|date:"d M Y" }}</td>
-                <td>{{ eval.evaluator.get_full_name|title }}</td>
-                <td>{{ eval.get_type|title }}</td>
-                <td>
-                    <a href="#">
-                      Voir
-                    </a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">Aucune évaluation reçue</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <h3 class="section-title">Evaluations reçues</h3>
+        <div class="table-wrapper"> 
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Evaluateur</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for answer in received_evals %}
+                    <tr>
+                        <td>{{ answer.evaluation.date|date:"d M Y" }}</td>
+                        <td>{{ answer.evaluation.evaluator.get_full_name|title }}</td>
+                        <td>{{ answer.evaluation.evaluation_type|title }}</td>
+                        <td>
+                            <a href="#" class="show-btn" data-show-url="{% url 'show_evaluation_answer' answer.id %}">
+                                Voir
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">Aucune évaluation reçue</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-</div>
-</div>
+<script>
+    document.addEventListener('click', function(e) {
+    if (e.target.id === 'start-eval-btn' || e.target.closest('#start-eval-btn')) {
+        setTimeout(() => initEvaluation(), 100);
+    }
+});
+</script>
 
 
 

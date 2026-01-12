@@ -29,14 +29,14 @@ class Meeting(models.Model):
     format = models.CharField(max_length=20, choices=FORMAT_CHOICES, default='présentiel')
     type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='ordinaire')
     attribution_role = models.CharField(max_length=15, choices=ATTRIBUTION_ROLE_CHOICES, default='manuelle')
-    location = models.TextField(max_length=100, null=True)
+    location = models.TextField(max_length=100, blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     top_grammar = models.CharField(max_length=100, blank=True, null=True)
     top_amelioration = models.CharField(max_length=100, blank=True, null=True)
 
 
     def __str__(self):
-        return f"Reunion du {self.date}"
+        return f"{self.date.strftime('%d-%m-%Y')} | {self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')}"
     
 class MeetingAttendance(models.Model):
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, related_name='attendances')

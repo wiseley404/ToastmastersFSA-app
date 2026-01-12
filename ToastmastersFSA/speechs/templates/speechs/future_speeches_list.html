@@ -5,7 +5,6 @@
 {% block head %}
 <script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
 <script type="text/javascript" src="{% static 'speechs/js/create_speech.js' %}?v=3" defer></script>
-<script type="text/javascript" src="{% static 'speechs/js/cancel_speech.js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -35,6 +34,7 @@
         <thead>
             <tr>
                 <th>Date</th>
+                <th>Heure</th>
                 <th>Type</th>
                 <th>Titre</th>
                 <th>Temps alloué</th>
@@ -45,6 +45,7 @@
             {% for speech in future_speeches.personnel %}
             <tr>
                 <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.meeting.start_time|time:"H:i" }} - {{ speech.meeting.end_time|time:"H:i" }}</td>
                 <td>{{ speech.role.title }}</td>
                 <td>
                     {% if speech.title %}{{ speech.title }}{% else %}-{% endif %}
@@ -88,14 +89,18 @@
         <select name="role" onchange="this.form.submit()">
             <option value="">Tous les rôles</option>
             {% for r in roles %}
-            <option value="{{ m }}" {% if request.GET.role == m %}selected{% endif %}>{{ m }}</option>
+            <option value="{{ r }}" {% if request.GET.role == r %}selected{% endif %}>
+                {{ r }}
+            </option>
             {% endfor %}
         </select>
 
-        <select name="meeting" onchange="this.form.submit()">
+        <select name="meeting_id" onchange="this.form.submit()">
             <option value="">Toutes les réunions</option>
             {% for m in meetings %}
-            <option value="{{ m }}" {% if request.GET.reunion == m %}selected{% endif %}>{{ m }}</option>
+            <option value="{{ m.id }}" {% if request.GET.meeting_id == m.id|stringformat:"s" %} selected{% endif %}>
+                {{ m.date|date:"d-m-Y" }} | {{ m.start_time|time:"H:i" }}
+            </option>
             {% endfor %}
         </select>
     </form>
@@ -107,6 +112,7 @@
         <thead>
             <tr>
                 <th>Date</th>
+                <th>Heure</th>
                 <th>Nom</th>
                 <th>Type</th>
                 <th>Titre</th>
@@ -118,6 +124,7 @@
             {% for speech in future_speeches.club %}
             <tr>
                 <td>{{ speech.meeting.date|date:"d M Y" }}</td>
+                <td>{{ speech.meeting.start_time|time:"H:i" }} - {{ speech.meeting.end_time|time:"H:i" }}</td>
                 <td>{{ speech.orator.get_full_name|title }}</td>
                 <td>{{ speech.role.title }}</td>
                 <td>
@@ -132,7 +139,7 @@
                 <td>
                     <form method="post" action="{% url 'confirm_role_deletion' speech.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="cancel-btn" data-delete-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
+                        <button type="submit" class="delete-btn" data-delete-url="{% url 'confirm_role_deletion' speech.id %}">Annuler</button>
                     </form>
                 </td>
             </tr>

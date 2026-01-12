@@ -10,15 +10,9 @@ from datetime import date, timedelta
 from django.utils.timezone import now
 from django.template.loader import render_to_string
 from weasyprint import HTML
-import locale
+from django.db.models import Q
+from django.db.models.functions import TruncMonth
 
-try:
-    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-except locale.Error:
-    try:
-        locale.setlocale(locale.LC_TIME, 'fr_FR')
-    except locale.Error:
-        pass
 
 # Create your views here.
 @login_required
@@ -28,27 +22,35 @@ def show_meeting_infos(request, pk):
 
 @login_required
 def show_meetings_list(request):
-    meetings = Meeting.objects.filter(date__gte=now()).order_by('date')
-    meetings_months = [{
-        "value": m.date.strftime("%Y-%m"),
-        "label": m.date.strftime("%B %Y")
-    } for m in meetings]
+    today = now()
+    meetings = Meeting.objects.filter(
+        Q(date=today.date(), end_time__gt=today.time()) |  
+        Q(date__gt=today.date())
+    ).order_by('date', 'start_time')
 
-    today = now().date()
+    unique_months = meetings.annotate(
+        month=TruncMonth('date')
+    ).values_list('month', flat=True).distinct().order_by('month')
+
+    meetings_months = [{
+        "value": d.strftime("%Y-%m"),
+        "date": d 
+    } for d in unique_months]
+
     past_meetings = Meeting.objects.filter(
-        date__lt=today
-    ).order_by('date')
+        Q(date=today.date(), end_time__lt=today.time()) |  
+        Q(date__lt=today.date())
+    ).order_by('-date', '-end_time')
 
     # Format filter
-    format = request.GET.get("format")
-    if format:
-        past_meetings = past_meetings.filter(format=format)
+    selected_format = request.GET.get("format", "")
+    if selected_format:
+        past_meetings = past_meetings.filter(format=selected_format)
 
     # Type filter
-    type = request.GET.get("type")
-    if type:
-        past_meetings = past_meetings.filter(type=type)
-
+    selected_type = request.GET.get("type", "")
+    if selected_type:
+        past_meetings = past_meetings.filter(type=selected_type)
 
     # Date filter
     date_filter = request.GET.get("date") 
@@ -64,12 +66,15 @@ def show_meetings_list(request):
         past_meetings = past_meetings.filter(date__gte=now() - timedelta(days=365))
 
     section_active = request.GET.get('section', 'personnel')
-    context ={
+    
+    context = {
         'past_meetings': past_meetings,
-        'formats': [c[1] for c in Meeting._meta.get_field('format').choices],
-        'types': [c[1] for c in Meeting._meta.get_field('type').choices],
+        'format_choices': Meeting._meta.get_field('format').choices,
+        'type_choices': Meeting._meta.get_field('type').choices,
         'meetings': meetings,
         'meetings_months': meetings_months,
+        'selected_format': selected_format,
+        'selected_type': selected_type,
         'section_active': 'reunions',
         'current_section': section_active
     }
@@ -84,10 +89,14 @@ def create_meeting(request):
         form = MeetingForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('meetings_list'))
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string('meetings/create_meeting.html', {'meeting': form}, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = MeetingForm()
-    return render(request, 'meetings/create_meeting.html', {'meeting':form})
+    return render(request, 'meetings/create_meeting.html', {'meeting': form})
+
 
 @login_required
 def create_meeting_pdf_download(request, meeting_id):
@@ -154,14 +163,18 @@ def delete_ressources(request, ressource_id):
 @staff_member_required
 def edit_meeting(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id)
+    
     if request.method == 'POST':
         form = MeetingForm(request.POST, instance=meeting)
         if form.is_valid():
             form.save()
-            return redirect(request.META.get("HTTP_REFERER", "/"))
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string('meetings/edit_meeting.html', {'form': form, 'meeting':meeting}, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = MeetingForm(instance=meeting)
-    return render(request, 'meetings/edit_meeting.html', {'form':form, 'meeting': meeting})
+    return render(request, 'meetings/edit_meeting.html', {'form': form, 'meeting':meeting})
 
 
 @staff_member_required

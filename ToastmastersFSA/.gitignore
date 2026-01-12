@@ -23,3 +23,6 @@ db.sqlite3
 
 # IDE
 .vscode/
+
+# Celery tasks
+celerybeat-schedule

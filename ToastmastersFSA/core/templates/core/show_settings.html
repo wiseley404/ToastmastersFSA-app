@@ -3,7 +3,7 @@
 
 {% block title %} Paramètres {% endblock %}
 {% block head %}
-
+    <script type="text/javascript" src="{% static 'core/js/add_member_to_board.js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -51,9 +51,9 @@
                                     <button type="button" title="Modifier" class="edit-btn" data-edit-url="{% url 'edit_board_role' member.id %}"><i class="fas fa-edit"></i></button>
                                 </a> 
 
-                                <a  href="{% url 'confirm_board_profile_deletion' member.id %}"></a>
+                                <a  href="{% url 'confirm_board_profile_remove' member.id %}"></a>
                                     <button type="button" title="Supprimer" class="delete-btn" 
-                                        data-delete-url="{% url 'confirm_board_profile_deletion' member.id %}">
+                                        data-delete-url="{% url 'confirm_board_profile_remove' member.id %}">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </a>

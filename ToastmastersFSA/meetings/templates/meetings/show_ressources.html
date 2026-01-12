@@ -3,10 +3,7 @@
 
 {% block title %} Ressources {% endblock %}
 {% block head %}
-<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/add_ressource.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/edit_ressource.js' %}" defer></script>
-<script type="text/javascript" src="{% static 'meetings/js/delete_ressource.js' %}" defer></script>
+
 {% endblock %}
 
 {% block body %}
@@ -16,7 +13,7 @@
         <h2>Ressources</h2>
     {% if user.is_staff %}
         <a href="{% url 'add_ressources' %}">
-            <button class="action-btn">Ajouter une ressource</button>
+            <button class="action-btn" data-create-url="{% url 'add_ressources' %}">Ajouter une ressource</button>
         </a>
     {% endif %}
     </div>

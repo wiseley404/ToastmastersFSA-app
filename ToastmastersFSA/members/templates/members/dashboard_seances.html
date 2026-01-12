@@ -57,13 +57,13 @@
         <div class="vertical-separator"></div>
 
         <div class="right-side">
-            {% for speech in next_meeting.speech.all %}
+            {% for speech in next_meeting.speeches.all %}
             <div class="slide {% if forloop.first %}active{% endif %}">
                 <h3 class="title-slide">{{ speech.role.title|capfirst }}</h3>
                 <p class="member-name">{{ speech.orator.get_full_name|title }}</p>
             </div>
             {% empty %}
-                <p>Aucun role pris pour cette séance.</p>
+                <p>Aucun rôle pris pour cette séance.</p>
             {% endfor %}
         </div>
     </div>
