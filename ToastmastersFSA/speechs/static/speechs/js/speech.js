@@ -1,28 +1,19 @@
-document.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll(".action-btn").forEach(btn => {
-    btn.addEventListener("click", e => {
-        e.preventDefault();
-        const speechUrl = btn.dataset.createUrl;
-
-        fetch(`${speechUrl}`)
-        .then(response => response.text())
-        .then(html => openPopup(html)) 
-        .then(() => {
-                const popupForm = document.querySelector('.popup-form');
-            initRoleSelect(popupForm);
-            initFieldVisibility(popupForm);
-        });
-
-    });
-    });
-});
-
-
-function initRoleSelect (FormElement) {
+function initSpeechForm() {
+    const popupForm = document.querySelector('#popup-body form');
+    if (!popupForm) return;
     
+    initRoleSelect(popupForm);
+    initFieldVisibility(popupForm);
+}
+
+function initRoleSelect(FormElement) {
     const meetingSelect = FormElement.querySelector('#id_meeting');
     const roleSelect = FormElement.querySelector('#id_role');
-    const rolesUrl = document.querySelector('.action-btn').dataset.roles;
+    const actionBtn = document.querySelector('[data-roles]');
+    
+    if (!meetingSelect || !roleSelect || !actionBtn) return;
+    
+    const rolesUrl = actionBtn.dataset.roles;
 
     meetingSelect.addEventListener('change', function() {
         const meetingId = this.value;
@@ -40,22 +31,21 @@ function initRoleSelect (FormElement) {
     });
 }
 
-
 function initFieldVisibility(form) {
     const roleSelect = form.querySelector('#id_role');
     const titleField = form.querySelector('#title-field');
     const themeField = form.querySelector('#theme-field');
     const highlightWordField = form.querySelector('#highlight_word-field');
 
+    if (!roleSelect) return;
+
     function updateVisibility() {
-        const roleText = roleSelect.options[roleSelect.selectedIndex].text;
-        titleField.style.display = (roleText === "Discours préparé") ? "block" : "none";
-        themeField.style.display = (roleText === "Meneur(se) des improvisations") ? "block" : "none";
-        highlightWordField.style.display = (roleText === "Grammairien(ne)") ? "block" : "none";
+        const roleText = roleSelect.options[roleSelect.selectedIndex]?.text || '';
+        if (titleField) titleField.style.display = (roleText === "Discours préparé") ? "block" : "none";
+        if (themeField) themeField.style.display = (roleText === "Meneur(se) des improvisations") ? "block" : "none";
+        if (highlightWordField) highlightWordField.style.display = (roleText === "Grammairien(ne)") ? "block" : "none";
     }
 
     roleSelect.addEventListener('change', updateVisibility);
     updateVisibility();
 }
-
-
