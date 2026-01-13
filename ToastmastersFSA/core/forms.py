@@ -21,6 +21,8 @@ class BoardProfileForm(forms.ModelForm):
         cleaned_data = super().clean()
         profile = cleaned_data.get("profile")
         role = cleaned_data.get("role")
+        start_date = cleaned_data.get("start_date")
+        end_date = cleaned_data.get("end_date")
 
         if profile and role:
             exists = BoardProfile.objects.filter(
@@ -35,6 +37,10 @@ class BoardProfileForm(forms.ModelForm):
                 raise forms.ValidationError(
                     f"{profile.user.last_name} a déjà ce rôle actif."
                 )
+            
+        if start_date and end_date:
+            if end_date <= start_date:
+                self.add_error('end_date', "La date de fin doit être après la date de début.")
 
         return cleaned_data
     
