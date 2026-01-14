@@ -86,17 +86,24 @@ def remove_board_profile(request, board_profile_id):
     return redirect('settings')
 
 
+
 def edit_profile(request, profile_id):
     profile = get_object_or_404(Profile, id=profile_id)
     if request.method == 'POST':
         form = MemberProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect(request.META.get("HTTP_REFERER", "/"))
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string('core/edit_member_profile.html', {
+                'form': form,
+                'profile': profile
+            }, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = MemberProfileForm(instance=profile)
     context = {
-        'form':form,
-        'profile':profile,
+        'form': form,
+        'profile': profile,
     }
     return render(request, 'core/edit_member_profile.html', context)

@@ -366,7 +366,7 @@ def submit_evaluation(request):
 
 @login_required
 def show_evaluation_answer(request, answer_id):
-    answer = EvaluationAnswer.objects.get(id=answer_id, profile=request.user.profile)
+    answer = get_object_or_404(EvaluationAnswer, id=answer_id, profile=request.user.profile)
     
     return render(request, 'speechs/evaluation_answer_detail.html', {
         'answer': answer

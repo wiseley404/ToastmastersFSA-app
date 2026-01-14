@@ -3,7 +3,7 @@ from .models import Profile, Progression
 from meetings.models import Meeting, MeetingAttendance
 from speechs.models import Certificat
 from django.contrib.auth.decorators import login_required
-from .forms import UpdatePhoneNumberForm, UpdatePhotoForm, UpdateCurriculumsForm, UpdateStatutsForm
+from .forms import UpdatePhoneNumberForm, UpdatePhotoForm, UpdateCurriculumForm, UpdateStatutForm
 from accounts.forms import UpdateEmailForm, UpdateFirstNameForm, UpdateLastNameForm, UpdateUsernameForm
 from django.utils.timezone import now
 import json
@@ -13,10 +13,7 @@ from django.db.models import Q
 # Create your views here.
 @login_required
 def show_dashboard(request):
-    statuts = request.user.profile.statuts.all()
     board_profiles = request.user.profile.board_roles.all()
-    other_statuts = [s.title.capitalize() for s in statuts if s.title.lower() != 'membre officiel']
-    is_official_member = request.user.profile.statuts.filter(title__iexact='membre officiel').exists()
     is_board_member = request.user.profile.board_roles.exists()
     
 
@@ -92,8 +89,6 @@ def show_dashboard(request):
         'data_temps': json.dumps(data_temps),
         'data_eloquence': json.dumps(data_eloquence),
         'data_structure': json.dumps(data_structure),
-        'other_statuts': other_statuts,
-        'is_official_member': is_official_member,
         'is_board_member': is_board_member,
         'board_profiles': board_profiles,
         'section_active':'dashboard',
@@ -119,8 +114,8 @@ def edit_profile(request):
         'user_email_form': UpdateEmailForm(instance=user),
         'user_username_form': UpdateUsernameForm(instance=user),
         'user_telephone_form': UpdatePhoneNumberForm(instance=profile),
-        'user_statuts_form': UpdateStatutsForm(instance=profile),
-        'user_curriculums_form': UpdateCurriculumsForm(instance=profile),
+        'user_statut_form': UpdateStatutForm(instance=profile),
+        'user_curriculum_form': UpdateCurriculumForm(instance=profile),
         'user_photo_form': UpdatePhotoForm(instance=profile)
     }
     if request.method == 'POST':
@@ -138,10 +133,10 @@ def edit_profile(request):
             form = UpdateUsernameForm(request.POST, instance=profile)
         elif form_type == "telephone":
             form = UpdatePhoneNumberForm(request.POST, instance=profile)
-        elif form == "status":
-            form = UpdateStatutsForm(request.POST, instance=profile)
-        elif form == "curriculums":
-            form = UpdateCurriculumsForm(request.POST, instance=profile)
+        elif form == "statu":
+            form = UpdateStatutForm(request.POST, instance=profile)
+        elif form == "curriculum":
+            form = UpdateCurriculumForm(request.POST, instance=profile)
         else:
             form = None
         

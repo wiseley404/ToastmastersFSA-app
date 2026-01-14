@@ -17,4 +17,5 @@ urlpatterns = [
     path("email-scheduled/<int:email_scheduled_id>/delete/confirmation/", views.confirm_email_scheduled_deletion, name='confirm_email_scheduled_deletion'),
     path("email-scheduled/<int:email_scheduled_id>/delete/success/", views.delete_email_scheduled, name='delete_email_scheduled'),
     path("email-system/<int:system_email_id>/edit/", views.edit_system_email, name='edit_system_email'),
+    path('notification/<int:notif_id>/', views.show_notification_message, name='show_notification_message'),
 ]

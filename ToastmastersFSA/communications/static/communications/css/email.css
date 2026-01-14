@@ -1,0 +1,295 @@
+/* Email Section */
+.email-section {
+    background: #fff;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 36px;
+}
+
+.email-section .section-title {
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group > label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Recipients Box */
+.recipients-box {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recipient-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.recipient-label {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.recipients-box select,
+.recipients-box textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+/* Editor */
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.editor-toolbar button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.editor-toolbar button:hover {
+    background: #e0e0e0;
+    color: #000;
+}
+
+.editor-toolbar button.active {
+    background: #007BFF;
+    color: #fff;
+}
+
+.toolbar-separator {
+    width: 1px;
+    background: #ddd;
+    margin: 0 8px;
+}
+
+.editor-content {
+    min-height: 200px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    font-size: 1rem;
+    line-height: 1.6;
+    outline: none;
+}
+
+.editor-content:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Toggle Switch */
+.toggle-group {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #28a745;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+/* Scheduling Section */
+.scheduling-section {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.scheduling-section.hidden {
+    display: none;
+}
+
+.scheduling-section > label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.scheduling-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+}
+
+.schedule-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.schedule-field span {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.schedule-field input,
+.schedule-field select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+/* Form Footer */
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+.attachment-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.attachment-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.attachment-label:hover {
+    background: #e0e0e0;
+}
+
+.attachment-input {
+    display: none;
+}
+
+.attachment-names {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.send-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.send-btn:hover {
+    background: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .email-section {
+        padding: 16px;
+    }
+    
+    .scheduling-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .send-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

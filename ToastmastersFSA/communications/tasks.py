@@ -73,25 +73,36 @@ def send_scheduled_email(self, email_id):
 
 
 def get_recipients(email_scheduled):
-    """Logique destinataires: email + profile + liste"""
-    recipients = []
+    """Retourne tous les emails destinataires"""
+    emails = set()
     
-    if email_scheduled.to_email:
-        recipients.append(email_scheduled.to_email)
+    if email_scheduled.to_emails:
+        for email in email_scheduled.to_emails.split('\n'):
+            email = email.strip()
+            if email:
+                emails.add(email)
     
-    if email_scheduled.to_profile and email_scheduled.to_profile.user.email:
-        recipients.append(email_scheduled.to_profile.user.email)
+    for profile in email_scheduled.to_profiles.all():
+        if profile.user.email:
+            emails.add(profile.user.email)
+
+    for email_list in email_scheduled.to_lists.all():
+        for member in email_list.members.all():
+            if member.user.email:
+                emails.add(member.user.email)
     
-    if email_scheduled.to_list:
-        recipients.extend([m.user.email for m in email_scheduled.to_list.members.all() if m.user.email])
-    
-    return recipients
+    return list(emails)
 
 
 @shared_task
 def check_and_send_scheduled_emails():
     now = timezone.now()
     today = now.date()
+
+    EmailScheduled.objects.filter(
+        is_active=True,
+        end_date__lt=today
+    ).update(is_active=False)
 
     emails = EmailScheduled.objects.filter(
         is_active=True,
@@ -104,8 +115,6 @@ def check_and_send_scheduled_emails():
     for email in emails:
         if should_send(email, now):
             send_scheduled_email.delay(email.id)
-        if email.end_date and email.end_date <= today:
-            email.is_active = False
 
 
 

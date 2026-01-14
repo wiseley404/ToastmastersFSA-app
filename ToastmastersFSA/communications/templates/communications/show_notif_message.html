@@ -1,0 +1,7 @@
+<h2>{{ notif.title|title }}</h2>
+<p style="color: #888; font-size: 0.85rem; margin-top: -10px;">
+    {{ notif.created_at|date:"d M Y à H:i" }}
+</p>
+<div class="notif-message">
+    <p>{{ notif.message }}</p>
+</div>

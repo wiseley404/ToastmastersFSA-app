@@ -5,7 +5,7 @@ from .models import Profile, Statut, Curriculum
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('photo', 'telephone', 'curriculums')
+        fields = ('photo', 'statut', 'telephone', 'curriculum')
         
 
 class UpdatePhotoForm(forms.ModelForm):
@@ -20,21 +20,21 @@ class UpdatePhoneNumberForm(forms.ModelForm):
         fields = ['telephone']
 
 
-class UpdateStatutsForm(forms.ModelForm):
-    statuts = forms.ModelMultipleChoiceField(
+class UpdateStatutForm(forms.ModelForm):
+    statut = forms.ModelMultipleChoiceField(
         queryset=Statut.objects.all(),
         widget=forms.CheckboxSelectMultiple
     )
     class Meta:
         model = Profile
-        fields = ['statuts']
+        fields = ['statut']
         
 
-class UpdateCurriculumsForm(forms.ModelForm):
-    curriculums = forms.ModelMultipleChoiceField(
+class UpdateCurriculumForm(forms.ModelForm):
+    curriculum = forms.ModelMultipleChoiceField(
         queryset=Curriculum.objects.all(),
         widget=forms.CheckboxSelectMultiple
     )
     class Meta:
         model = Profile
-        fields = ['curriculums']
+        fields = ['curriculum']

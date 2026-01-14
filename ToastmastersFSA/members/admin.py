@@ -13,9 +13,9 @@ class StatutAdmin(admin.ModelAdmin):
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('get_last_name', 'get_first_name','get_email',
-                     'telephone', 'get_curriculums', 'get_statuts', 'get_photo_thumbnail'
+                     'telephone', 'get_curriculum', 'get_statut', 'get_photo_thumbnail'
                     )
-    search_fields = ('user__username', 'user__last_name', 'user__first_name', 'status')
+    search_fields = ('user__username', 'user__last_name', 'user__first_name', 'statu')
 
 
     def get_last_name(self, obj):
@@ -32,9 +32,9 @@ class ProfileAdmin(admin.ModelAdmin):
         return obj.user.email
     get_email.short_description = 'Email'
 
-    def get_curriculums(self, obj):
-        return ', '.join(str(c) for c in obj.curriculums.all())
-    get_curriculums.short_description = 'Programmes'
+    def get_curriculum(self, obj):
+        return obj.curriculum
+    get_curriculum.short_description = 'Programme'
 
     def get_photo_thumbnail(self, obj):
         if obj.photo:
@@ -43,9 +43,9 @@ class ProfileAdmin(admin.ModelAdmin):
     get_photo_thumbnail.short_description = 'Photo'
     
 
-    def get_statuts(self, obj):
-        return ', '.join([str(statut) for statut in obj.statuts.all()])
-    get_statuts.short_description = 'Statuts'
+    def get_statut(self, obj):
+        return obj.statut
+    get_statut.short_description = 'Statut'
 
 
 class ProgressionAdmin(admin.ModelAdmin):
