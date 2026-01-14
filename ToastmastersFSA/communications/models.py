@@ -47,19 +47,17 @@ class EmailScheduled(models.Model):
     message = models.TextField()
     attachments = models.ManyToManyField('EmailAttachment', blank=True)
 
-    to_email = models.EmailField(blank=True, null=True) 
-    to_profile = models.ForeignKey(
+    to_emails = models.TextField(blank=True, null=True)
+    
+    to_profiles = models.ManyToManyField(
         "members.Profile", 
-        on_delete=models.SET_NULL,
         blank=True,
-        null=True,
         related_name="emails_scheduled",
     )
-    to_list = models.ForeignKey(
+    
+    to_lists = models.ManyToManyField(
         EmailList, 
-        on_delete=models.SET_NULL,
         blank=True,
-        null=True,
         related_name="emails_scheduled",
     )
 
@@ -70,11 +68,11 @@ class EmailScheduled(models.Model):
     send_time = models.TimeField(blank=True, null=True)
 
     FREQUENCY_CHOICES = [
-        ("Une seule fois", "Une seule fois"),
-        ("Quotidien", "Quotidien"),
-        ("Hebdomadaire", "Hebdomadaire"),
-        ("Aux deux semaines", "Aux deux semaines"),
-        ("Mensuel", "Mensuel"),
+        ("once", "Une seule fois"),
+        ("daily", "Quotidien"),
+        ("weekly", "Hebdomadaire"),
+        ("biweekly", "Aux deux semaines"),
+        ("monthly", "Mensuel"),
     ]
     frequency = models.CharField(
         max_length=20,

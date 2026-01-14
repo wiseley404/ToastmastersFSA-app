@@ -53,7 +53,7 @@ class MemberProfileForm(forms.ModelForm):
     
     class Meta:
         model = Profile
-        fields = ['telephone', 'statuts', 'curriculums']
+        fields = ['telephone', 'statut', 'curriculum']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

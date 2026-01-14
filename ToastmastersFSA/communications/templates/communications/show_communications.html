@@ -3,7 +3,15 @@
 
 {% block title %} Communications {% endblock %}
 {% block head %}
+    <link rel="stylesheet" href="{% static 'communications/css/email.css' %}?v=1">
     <script src="{% static 'communications/js/email_list.js' %}?v=2" defer></script>
+    <script src="{% static 'communications/js/email.js' %}?v=2" defer></script>
+    <script src="{% static 'communications/js/email_scheduled.js' %}?v=2" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initEmailScheduledForm();
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -26,24 +34,108 @@
     </a>
 </div>
 
-
-<div class="email-section">  
+<div class="email-sender">
     <h3 class="section-title">Envoyer/Programmer un mail</h3>
-    <form action="{% url 'create_email_scheduled' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="">
-            <label>Pièces jointes (optionnel)</label>
-            <input type="file" name="attachments" multiple class="form-control">
-        </div>
-        {{ form.as_p }}
-        <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px;
-            border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
-        {% if form.send_now %} Envoyer maintenant {% else %} Planifier {% endif %}
-        </button>
-        
-    </form>
-</div>
+        <div class="email-section">  
+            <form action="{% url 'create_email_scheduled' %}" method="post" enctype="multipart/form-data" id="email-form">
+                {% csrf_token %}
+                
+                <!-- Objet -->
+                <div class="form-group">
+                    <label for="id_title">Objet</label>
+                    {{ form.title }}
+                </div>
 
+                <!-- Destinataires -->
+                <div class="form-group">
+                    <label>Destinataires</label>
+                    <div class="recipients-box">
+                        <div class="recipient-field">
+                            <span class="recipient-label">Emails</span>
+                            {{ form.to_emails }}
+                        </div>
+                        <div class="recipient-field">
+                            <span class="recipient-label">Membres</span>
+                            {{ form.to_profiles }}
+                        </div>
+                        <div class="recipient-field">
+                            <span class="recipient-label">Listes</span>
+                            {{ form.to_lists }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message avec éditeur -->
+                <div class="form-group">
+                    <label for="id_message">Message</label>
+                    <div class="editor-toolbar">
+                        <button type="button" data-command="bold" title="Gras"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic" title="Italique"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline" title="Souligné"><i class="fas fa-underline"></i></button>
+                        <span class="toolbar-separator"></span>
+                        <button type="button" data-command="insertUnorderedList" title="Liste à puces"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" data-command="insertOrderedList" title="Liste numérotée"><i class="fas fa-list-ol"></i></button>
+                        <span class="toolbar-separator"></span>
+                        <button type="button" data-command="justifyLeft" title="Aligner à gauche"><i class="fas fa-align-left"></i></button>
+                        <button type="button" data-command="justifyCenter" title="Centrer"><i class="fas fa-align-center"></i></button>
+                        <button type="button" data-command="justifyRight" title="Aligner à droite"><i class="fas fa-align-right"></i></button>
+                    </div>
+                    <div class="editor-content" contenteditable="true" id="message-editor"></div>
+                    <textarea name="message" id="id_message" style="display:none;">{{ form.message.value|default:'' }}</textarea>
+                </div>
+
+                <!-- Toggle Envoyer maintenant -->
+                <div class="form-group toggle-group">
+                    <label class="toggle-label">
+                        <span>Envoyer maintenant</span>
+                        <div class="toggle-switch">
+                            <input type="checkbox" name="send_now" id="id_send_now" {{ form.send_now.value|yesno:"checked," }}>
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Planification (cachée si send_now) -->
+                <div class="scheduling-section" id="scheduling-section">
+                    <label>Planification</label>
+                    <div class="scheduling-grid">
+                        <div class="schedule-field">
+                            <span>Fréquence</span>
+                            {{ form.frequency }}
+                        </div>
+                        <div class="schedule-field">
+                            <span>Date début</span>
+                            {{ form.start_date }}
+                        </div>
+                        <div class="schedule-field">
+                            <span>Date fin</span>
+                            {{ form.end_date }}
+                        </div>
+                        <div class="schedule-field">
+                            <span>Heure d'envoi</span>
+                            {{ form.send_time }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pièces jointes + Bouton -->
+                <div class="form-footer">
+                    <div class="attachment-field">
+                        <label for="attachments" class="attachment-label">
+                            <i class="fas fa-paperclip"></i> Pièces jointes
+                        </label>
+                        <input type="file" name="attachments" id="attachments" multiple class="attachment-input">
+                        <span class="attachment-names"></span>
+                    </div>
+                    <button type="submit" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span id="btn-text">Planifier</span>
+                    </button>
+                </div>
+                
+            </form>
+        </div>
+</div>
 
 <div id="email-list-section" class="email-list-section">  
     <h3 class="section-title">Listes de diffusion</h3>
@@ -63,7 +155,7 @@
                         <tr>
                             <td>{{ email_list.title|title }}</td>
                             <td>{{ email_list.created_by.get_full_name|title }}</td>
-                            <td>{{ email_list.created_at|date:"d-m-Y H:i" }}</td>
+                            <td>{{ email_list.created_at|date:"d M Y H:i" }}</td>
                             <td>{{ email_list.total_members }}</td>
                             <td>
                                 <a href="{% url 'edit_email_list' email_list.id %}">
@@ -104,8 +196,8 @@
                         <tr>
                             <td>{{ mail.title|title }}</td>
                             <td>{{ mail.message|truncatechars:30 }}</td>
-                            <td>{{ mail.start_date|date:"d-m-Y" }}</td>
-                            <td>{{ mail.end_date|date:"d-m-Y" }}</td>
+                            <td>{{ mail.start_date|date:"d M Y" }}</td>
+                            <td>{{ mail.end_date|date:"d M Y" }}</td>
                             <td>{{ mail.send_time|time:"H:i" }}</td>
                             <td>{{ mail.frequency }}</td>
                             <td>
@@ -209,9 +301,9 @@
         <tbody>
             {% for notif in published_notifs %}
                 <tr>
-                    <td>{{ notif.created_at|date:"d-m-Y H:i" }}</td>
+                    <td>{{ notif.created_at|date:"d M Y H:i" }}</td>
                     <td>{{ notif.sender.get_full_name|title|default:"-" }}</td>
-                    <td><a href="#" title="Voir">{{ notif.title|title }}</a></td>
+                    <td><a href="#" class="show-btn" data-show-url="{% url 'show_notification_message' notif.id %}" title="Voir">{{ notif.title|title }}</a></td>
                     <td>{{ notif.message|truncatechars:30 }}</td>
                     <td>
                         <a href="{% url 'edit_notif' notif.id %}">

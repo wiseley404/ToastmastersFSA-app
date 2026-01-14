@@ -28,9 +28,9 @@ def upload_profile_photo(instance, filename):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     photo = models.ImageField(upload_to=upload_profile_photo, blank=True, null=True)
-    statuts = models.ManyToManyField(Statut, default='Membre', blank=True, related_name='profiles')
+    statut = models.ForeignKey(Statut, on_delete=models.SET_NULL, null=True, blank=True, related_name='profiles')
     telephone = PhoneNumberField(region='CA', blank=True, null=True)
-    curriculums = models.ManyToManyField(Curriculum, blank=True, related_name='profiles')
+    curriculum = models.ForeignKey(Curriculum, on_delete=models.SET_NULL, null=True, blank=True, related_name='profiles')
 
     def __str__(self):
         return self.user.get_full_name() or self.user.username
