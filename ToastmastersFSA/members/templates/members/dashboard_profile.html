@@ -16,7 +16,9 @@
         </div>
         <div class="profile-infos">
             <h2 class="profile-name">{{ user.profile.user.get_full_name.title }}</h2>
-            <p>{{ user.profile.curriculums.all|join:" - " }}</p>
+            {% if user.profile.curriculum %}
+            <p>Programme: {{ user.profile.curriculum}}</p>
+            {% endif %}
             <p>
                 Statut(s): 
                 {% if user.profile.statut %}

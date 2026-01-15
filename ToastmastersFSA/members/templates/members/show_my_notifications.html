@@ -1,0 +1,56 @@
+{% extends 'base_login.html' %}
+{% load static %}
+
+{% block title %} Mes notifications {% endblock %}
+{% block head %}
+<script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+{% endblock %}
+
+{% block body %}
+{% include 'includes/popup.html' %}
+<div class="page-container">
+<div class="page-header">
+<h2>Notifications</h2>
+
+</div>
+
+<h3 class="section-title">Mes Notifications</h3>
+<div class="table-wrapper">  
+    <table>
+        <thead>
+            <tr>
+                <th>NOTIFICATIONS <i class="fas fa-bell"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notif in my_notifs %}
+            <tr>
+                <td>
+                    <a href="{% url 'show_notification_message' notif.id %}" data-show-url="{% url 'show_notification_message' notif.id %}">
+                        {{ notif.title }} 
+                    </a> </br>
+                    <small>{{ notif.created_at|date:"d M Y H:i" }}</small>
+                    <p>
+                        {{ notif.message|title|truncatechars:250 }}
+                    </p>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="1">Aucune notification</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}

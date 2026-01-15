@@ -49,4 +49,27 @@ class BoardProfile(models.Model):
         return f"{self.profile.user.get_full_name().title()} - {self.role.title.title()}"
     
 
+
+class SocialLink(models.Model):
+    PLATFORM_CHOICES = [
+        ('facebook', 'Facebook'),
+        ('instagram', 'Instagram'),
+        ('linkedin', 'LinkedIn'),
+        ('twitter', 'Twitter'),
+        ('youtube', 'YouTube'),
+        ('tiktok', 'TikTok'),
+        ('contact', 'Contactez-nous'),
+    ]
+    
+    platform = models.CharField(max_length=50, choices=PLATFORM_CHOICES, unique=True)
+    url = models.URLField()
+    order = models.PositiveIntegerField(default=0)
+    
+    class Meta:
+        ordering = ['order']
+    
+    def __str__(self):
+        return self.get_platform_display()
+    
+
     

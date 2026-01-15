@@ -41,8 +41,23 @@ class FormForm(forms.ModelForm):
     class Meta:
         model = Form
         fields = ("title", "description", "date")
+        labels = {
+            'title': 'Titre',
+            'description': 'Description'
+        }
         widgets = {
-            'date':forms.DateInput(attrs={'type':'date'})
+            'date':forms.DateInput(attrs={'type':'date'}),
+            'title': forms.Textarea(attrs={
+                'placeholder': 'Titre de l\'entete du formulaire',
+                'rows':1,
+                'style': 'resize:vertical;',
+            }),
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Mini-description pour l\'entete du formulaire',
+                'rows':2,
+                'style': 'resize:vertical;'
+            })
+            
         }
 
 

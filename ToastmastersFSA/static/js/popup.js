@@ -52,7 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const form = e.target.closest('#popup-body form');
         if (!form) return;
         
-        if (form.action.includes('delete') || form.action.includes('remove')) return;
+        if (form.action.includes('delete') || form.action.includes('remove') || 
+            form.action.includes('create_form')){
+                return;
+            } 
         
         e.preventDefault();
         
@@ -66,7 +69,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url; 
+                } else {
+                    location.reload();
+                }
             } else {
                 document.querySelector('#popup-body').innerHTML = data.html;
                 initPopupForms();

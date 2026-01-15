@@ -1,0 +1,130 @@
+.profile-form {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-form h3 {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #111;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-section label {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.form-section input,
+.form-section select,
+.form-section textarea {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.form-section input:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.15);
+}
+
+/* PHOTO */
+.photo-section {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.photo-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.photo-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Camera icon overlay */
+.photo-change {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #007BFF;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.photo-change:hover {
+    background: #0056b3;
+}
+
+/* Trash icon overlay */
+.photo-remove {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.photo-remove i {
+    color: #d9534f;
+}
+
+.btn-primary {
+    margin-top: 20px;
+    padding: 12px 16px;
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+/* Hide actual file input */
+.profile-form input[type="file"] {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .photo-preview {
+        width: 80px;
+        height: 80px;
+    }
+    .photo-change {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+}
