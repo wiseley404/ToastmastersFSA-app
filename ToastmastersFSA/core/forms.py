@@ -80,12 +80,10 @@ class MemberProfileForm(forms.ModelForm):
         return profile
 
 
-# core/forms.py
-
 class SocialLinkForm(forms.ModelForm):
     class Meta:
         model = SocialLink
-        fields = ['platform', 'url', 'is_active', 'order']
+        fields = ['platform', 'url']
         widgets = {
             'url': forms.URLInput(attrs={'placeholder': 'https://...'}),
         }
