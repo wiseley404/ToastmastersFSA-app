@@ -4,7 +4,6 @@ Django==5.2.5
 django-allauth==65.13.1
 django-celery-beat==2.8.1
 django-phonenumber-field==8.1.0
-django-select2==8.4.7
 django-timezone-field==7.1
 fonttools==4.61.1
 gunicorn==21.2.0

@@ -59,29 +59,10 @@ class CustomAuthentificationForm(AuthenticationForm):
     }
 
 
-class UpdateFirstNameForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['first_name']
-
-
-class UpdateLastNameForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['last_name']
-
-
-class UpdateUsernameForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username']
-
-
-class UpdateEmailForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['email']
-
+        fields = ['first_name', 'last_name', 'username', 'email']
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):

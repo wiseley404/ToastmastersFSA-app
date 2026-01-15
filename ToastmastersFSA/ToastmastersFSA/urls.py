@@ -33,9 +33,6 @@ urlpatterns = [
     path("forms/", include("forms.urls")),
     path("communications/", include("communications.urls")),
     path("core/", include("core.urls")),
-
-    # Django select2
-    path('select2/', include('django_select2.urls')),
 ]
 
 if settings.DEBUG:

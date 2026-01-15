@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
+
+from communications.models import Notification
 from .models import Profile, Progression
 from meetings.models import Meeting, MeetingAttendance
 from speechs.models import Certificat
 from django.contrib.auth.decorators import login_required
-from .forms import UpdatePhoneNumberForm, UpdatePhotoForm, UpdateCurriculumForm, UpdateStatutForm
-from accounts.forms import UpdateEmailForm, UpdateFirstNameForm, UpdateLastNameForm, UpdateUsernameForm
+from .forms import ProfileForm
+from accounts.forms import UserForm
 from django.utils.timezone import now
 import json
 from django.db.models import Q
@@ -108,40 +110,38 @@ def show_dashboard(request):
 def edit_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     user = request.user
-    context = {
-        'user_firstname_form': UpdateFirstNameForm(instance=user),
-        'user_lastname_form': UpdateLastNameForm(instance=user),
-        'user_email_form': UpdateEmailForm(instance=user),
-        'user_username_form': UpdateUsernameForm(instance=user),
-        'user_telephone_form': UpdatePhoneNumberForm(instance=profile),
-        'user_statut_form': UpdateStatutForm(instance=profile),
-        'user_curriculum_form': UpdateCurriculumForm(instance=profile),
-        'user_photo_form': UpdatePhotoForm(instance=profile)
-    }
+
     if request.method == 'POST':
-        form_type = request.POST.get("form_type")
+        user_form = UserForm(request.POST, instance=user)
+        profile_form = ProfileForm(
+            request.POST,
+            request.FILES,
+            instance=profile
+        )
 
-        if form_type == "firstname":
-            form = UpdateFirstNameForm(request.POST, instance=profile)
-        elif form_type == "lastname":
-            form = UpdateLastNameForm(request.POST, instance=profile)
-        elif form_type == "email":
-            form = UpdateEmailForm(request.POST, instance=profile)
-        elif form_type == "photo":
-            form = UpdatePhotoForm(request.POST, request.FILES, instance=profile)
-        elif form_type == "username":
-            form = UpdateUsernameForm(request.POST, instance=profile)
-        elif form_type == "telephone":
-            form = UpdatePhoneNumberForm(request.POST, instance=profile)
-        elif form == "statu":
-            form = UpdateStatutForm(request.POST, instance=profile)
-        elif form == "curriculum":
-            form = UpdateCurriculumForm(request.POST, instance=profile)
-        else:
-            form = None
-        
-        if form and form.is_valid():
-            form.save()
-        return redirect('edit_profile')
+        if user_form.is_valid() and profile_form.is_valid():
+            if profile_form.cleaned_data.get('remove_photo'):
+                if profile.photo:
+                    profile.photo.delete(save=False)
+                    profile.photo = None
 
-    return render(request, 'members/edit_profile.html', context)
+            user_form.save()
+            profile_form.save()
+
+            return redirect('edit_profile')
+
+    else:
+        user_form = UserForm(instance=user)
+        profile_form = ProfileForm(instance=profile)
+
+    return render(request, 'members/edit_profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'profile': profile
+    })
+
+
+
+def show_my_notifications(request):
+    my_notifs = request.user.profile.notifications.all()
+    return render(request, 'members/show_my_notifications.html', {'my_notifs': my_notifs})

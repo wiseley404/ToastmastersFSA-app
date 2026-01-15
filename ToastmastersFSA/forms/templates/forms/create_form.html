@@ -1,8 +1,7 @@
-<h2>Creer un formulaire</h2>
-<form action="{% url 'create_form' %}" method="post">
+<h2>Créer un formulaire</h2>
+<form class="form-group" action="{% url 'create_form' %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <a href="{% url 'forms_list' %}"><button type="button">Annuler</button></a>
     <button type="submit">Continuer</button>
     
 </form>

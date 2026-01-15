@@ -1,0 +1,15 @@
+<footer class="footer-login">
+    <div class="footer-content">
+        {% if social_links %}
+        <div class="footer-links">
+            {% for link in social_links %}
+                <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.get_platform_display }}</a>
+                {% if not forloop.last %}<span class="footer-separator">·</span>{% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="footer-copyright">
+            © {% now "Y" %} Toastmasters FSA-ULaval. Tous droits réservés.
+        </div>
+    </div>
+</footer>

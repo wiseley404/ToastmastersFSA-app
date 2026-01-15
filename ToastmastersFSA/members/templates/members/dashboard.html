@@ -20,6 +20,7 @@
 {% endblock %}
 
 {% block body %}
+{% include 'includes/popup.html' %}
 <div class="page-container">
 <div class="layout-dashboard">
     <div class="column1-dashboard">
@@ -90,8 +91,10 @@
             <ul class="notifications-list">
                 {% for notif in notifications %}
                 <li class="notification-item {% if not notif.is_read %}non-lue{% endif %}">
-                    {{notif.title}}</br>
-                    {{ notif.message| truncatechars:60 }}
+                    <a href="{% url 'show_notification_message' notif.id %}" data-show-url="{% url 'show_notification_message' notif.id %}"> 
+                        {{notif.title}}</br>
+                        {{ notif.message| truncatechars:60 }}
+                    </a>
                     <small class="notification-date">{{ notif.created_at|date:"d/m/Y H:i" }}</small>
                 </li>
                 {% empty %}
@@ -100,7 +103,7 @@
             </ul>
             {% if notifications %}
                 <div class="notif-link-section">
-                    <a href="#" class="notif-link">
+                    <a href="{% url 'show_my_notifications' %}" class="notif-link">
                         Voir toutes les notifications
                     </a>
                 </div>

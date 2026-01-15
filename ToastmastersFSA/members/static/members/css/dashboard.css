@@ -246,9 +246,10 @@
   font-weight: 500;
 }
 
-.notification-item.non-lue {
+.notification-item.non-lue, a {
   font-weight: 700;
   color: #007BFF; 
+  text-decoration: none;
 }
 
 .notification-date {

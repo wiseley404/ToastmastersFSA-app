@@ -171,7 +171,7 @@ def show_published_forms_list(request):
 @staff_member_required
 def show_historique_forms_list(request):
     inactive_published_forms = Form.objects.filter(is_published=True, is_active=False).order_by('-date')
-    return render(request, 'forms/historique_forms.html', {
+    return render(request, 'forms/forms_list.html', {
         'inactive_published_forms': inactive_published_forms
     })
 

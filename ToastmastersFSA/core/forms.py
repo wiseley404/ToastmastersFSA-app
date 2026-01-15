@@ -1,5 +1,5 @@
 from django import forms
-from .models import BoardProfile, BoardRole
+from .models import BoardProfile, BoardRole, SocialLink
 from members.models import Profile
 
 
@@ -78,3 +78,14 @@ class MemberProfileForm(forms.ModelForm):
             self.save_m2m()
 
         return profile
+
+
+# core/forms.py
+
+class SocialLinkForm(forms.ModelForm):
+    class Meta:
+        model = SocialLink
+        fields = ['platform', 'url', 'is_active', 'order']
+        widgets = {
+            'url': forms.URLInput(attrs={'placeholder': 'https://...'}),
+        }
