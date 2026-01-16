@@ -1,0 +1,180 @@
+/* Settings Page */
+.settings-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 0;
+}
+
+.settings-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.settings-section .section-header {
+    padding: 20px 24px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.settings-section .section-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.section-description {
+    margin: 4px 0 0 0;
+    font-size: 0.85rem;
+    color: #888;
+    width: 100%;
+}
+
+.settings-section .settings-content {
+    padding: 24px;
+}
+
+/* Social Links Grid */
+.social-links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.social-link-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.social-link-field.full-width {
+    grid-column: span 2;
+}
+
+.social-link-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.social-link-label i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.social-link-field input {
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.social-link-field input:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.social-link-field input::placeholder {
+    color: #bbb;
+}
+
+/* Form Actions */
+.settings-section .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-save:hover {
+    background: #0056b3;
+}
+
+/* Coming Soon */
+.coming-soon .section-header {
+    background: #fafafa;
+}
+
+.badge-soon {
+    padding: 4px 10px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.coming-soon-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #bbb;
+    text-align: center;
+}
+
+.coming-soon-content i {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.coming-soon-content p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settings-page {
+        padding: 16px;
+    }
+    
+    .social-links-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .social-link-field.full-width {
+        grid-column: span 1;
+    }
+    
+    .settings-section .form-actions {
+        justify-content: stretch;
+    }
+    
+    .btn-save {
+        width: 100%;
+        justify-content: center;
+    }
+}

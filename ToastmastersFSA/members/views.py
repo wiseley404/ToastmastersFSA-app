@@ -10,6 +10,8 @@ from accounts.forms import UserForm
 from django.utils.timezone import now
 import json
 from django.db.models import Q
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -142,6 +144,46 @@ def edit_profile(request):
 
 
 
+@login_required
 def show_my_notifications(request):
-    my_notifs = request.user.profile.notifications.all()
+    filter_param = request.GET.get('filter', 'all')
+    
+    qs = request.user.profile.notifications.all()
+    
+    if filter_param == 'unread':
+        qs = qs.filter(is_read=False, is_archived=False) 
+    elif filter_param == 'archived':
+        qs = qs.filter(is_archived=True) 
+    else:
+        qs = qs.filter(is_archived=False)
+    
+    my_notifs = qs.order_by('-created_at')
     return render(request, 'members/show_my_notifications.html', {'my_notifs': my_notifs})
+
+
+
+@require_POST
+@login_required
+def update_notification(request):
+    notif_id = request.POST.get("id")
+    action = request.POST.get("action")
+
+    notif = get_object_or_404(
+        request.user.profile.notifications,
+        id=notif_id
+    )
+
+    if action == "read":
+        notif.is_read = True
+
+    elif action == "unread":
+        notif.is_read = False
+
+    elif action == "archived":
+        notif.is_archived = True
+
+    elif action == "unarchived":
+        notif.is_archived = False
+
+    notif.save()
+    return JsonResponse({"success": True})

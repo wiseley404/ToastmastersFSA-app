@@ -4,291 +4,7 @@
 {% block title %}Mon profil{% endblock %}
 
 {% block head %}
-<style>
-/* Profile Page */
-.profile-page {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 24px;
-}
-
-/* Profile Header */
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    padding: 32px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 32px;
-}
-
-.profile-avatar {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    flex-shrink: 0;
-}
-
-.profile-avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #f0f0f0;
-}
-
-.profile-avatar-edit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 32px;
-    height: 32px;
-    background: #007BFF;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.profile-avatar-edit:hover {
-    background: #0056b3;
-}
-
-.profile-avatar-edit i {
-    color: #fff;
-    font-size: 14px;
-}
-
-.profile-avatar-edit input {
-    display: none;
-}
-
-.profile-avatar-remove {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 24px;
-    height: 24px;
-    background: #dc3545;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.2s;
-    border: none;
-}
-
-.profile-avatar-remove:hover {
-    background: #b02a37;
-}
-
-.profile-avatar-remove i {
-    color: #fff;
-    font-size: 12px;
-}
-
-.profile-avatar-remove input {
-    display: none;
-}
-
-.profile-info {
-    flex: 1;
-}
-
-.profile-name {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 4px 0;
-}
-
-.profile-username {
-    color: #666;
-    font-size: 0.95rem;
-    margin: 0 0 8px 0;
-}
-
-.profile-status {
-    display: inline-block;
-    padding: 4px 12px;
-    background: #e8f4fd;
-    color: #007BFF;
-    border-radius: 20px;
-    font-size: 0.85rem;
-}
-
-/* Section Cards */
-.profile-section {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    margin-bottom: 24px;
-    overflow: hidden;
-}
-
-.section-header {
-    padding: 16px 24px;
-    background: #f8f8f8;
-    border-bottom: 1px solid #eee;
-}
-
-.section-header h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #333;
-}
-
-.section-content {
-    padding: 24px;
-}
-
-/* Form Grid */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.form-field.full-width {
-    grid-column: span 2;
-}
-
-.form-field label {
-    font-size: 0.85rem;
-    color: #666;
-    font-weight: 500;
-}
-
-.form-field input,
-.form-field select {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.form-field input:focus,
-.form-field select:focus {
-    border-color: #007BFF;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-}
-
-/* Actions */
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid #eee;
-    margin-top: 8px;
-}
-
-.btn-save {
-    padding: 12px 32px;
-    background: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn-save:hover {
-    background: #0056b3;
-}
-
-.btn-cancel {
-    padding: 12px 24px;
-    background: #f0f0f0;
-    color: #333;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.2s;
-    text-decoration: none;
-    text-align: center;
-}
-
-.btn-cancel:hover {
-    background: #e0e0e0;
-}
-
-/* Account Settings Links */
-.settings-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 0;
-    border-bottom: 1px solid #f0f0f0;
-    text-decoration: none;
-    color: #333;
-    transition: color 0.2s;
-}
-
-.settings-link:last-child {
-    border-bottom: none;
-}
-
-.settings-link:hover {
-    color: #007BFF;
-}
-
-.settings-link i {
-    color: #999;
-    transition: color 0.2s;
-}
-
-.settings-link:hover i {
-    color: #007BFF;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .profile-page {
-        padding: 16px;
-    }
-    
-    .profile-header {
-        flex-direction: column;
-        text-align: center;
-        padding: 24px;
-    }
-    
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-field.full-width {
-        grid-column: span 1;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .btn-save, .btn-cancel {
-        width: 100%;
-        box-sizing: border-box;
-    }
-}
-</style>
+    <link rel="stylesheet" href="{% static 'members/css/profile.css' %}?v=1">
 {% endblock %}
 
 {% block body %}
@@ -296,7 +12,6 @@
 {% csrf_token %}
 <div class="profile-page">
     
-    <!-- Profile Header -->
     <div class="profile-header">
         <div class="profile-avatar">
             <img src="{% if request.user.profile.photo %}{{ request.user.profile.photo.url }}{% else %}{% static 'images/avatar.jpg' %}{% endif %}" alt="Photo de profil" id="avatar-preview">
@@ -322,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Informations personnelles -->
     <div class="profile-section">
         <div class="section-header">
             <h3>Informations personnelles</h3>
@@ -349,7 +63,6 @@
         </div>
     </div>
 
-    <!-- Coordonnées -->
     <div class="profile-section">
         <div class="section-header">
             <h3>Coordonnées</h3>
@@ -368,7 +81,6 @@
         </div>
     </div>
 
-    <!-- Actions -->
     <div class="profile-section">
         <div class="section-content">
             <div class="form-actions">
@@ -381,7 +93,6 @@
 </div>
 </form>
 
-<!-- Paramètres du compte -->
 <div class="profile-page" style="margin-top: -8px;">
     <div class="profile-section">
         <div class="section-header">
@@ -397,7 +108,6 @@
 </div>
 
 <script>
-// Preview photo avant enregistrement
 document.getElementById('id_photo').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -409,7 +119,7 @@ document.getElementById('id_photo').addEventListener('change', function(e) {
     }
 });
 
-// Supprimer photo (coche le checkbox caché et soumet le form)
+
 const removeCheckbox = document.getElementById('remove-photo-checkbox');
 if (removeCheckbox) {
     removeCheckbox.parentElement.addEventListener('click', function(e) {

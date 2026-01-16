@@ -1,0 +1,85 @@
+    .notifications-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.notifications-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.notifications-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.notifications-tabs .tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background: #f1f1f1;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.notifications-tabs .tab.active {
+    background: #007BFF;
+    color: #fff;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.notification-item.unread {
+    border-left: 4px solid #007BFF;
+    background: #f5faff;
+}
+
+.notification-content p {
+    margin: 6px 0;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.notification-content small {
+    color: #999;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.notification-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #777;
+    font-size: 1rem;
+}
+
+.notification-actions button:hover {
+    color: #007BFF;
+}
+
+.empty-state {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+}

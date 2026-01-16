@@ -4,6 +4,7 @@
 {% block title %} Paramètres {% endblock %}
 {% block head %}
     <script type="text/javascript" src="{% static 'core/js/init_board_form.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'core/css/settings.css' %}?v=1">
 {% endblock %}
 
 {% block body %}
@@ -13,13 +14,13 @@
 <h2>Paramètres</h2>
 {% if user.is_staff %}
 <div class="container">
-  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">Club</button>
-  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Website</button>
+  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club-section">Club</button>
+  <button class="toggle-text-btn {% if current_section == 'website' %}active{% endif %}" data-target="website-section">Website</button>
 </div>
 </div>
 
-<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
-     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+<div class="section-content {% if current_section == 'club' %}active{% endif %}" id="club-section" 
+     style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
 <div class="page-header">
     <a href="{% url 'add_member_to_board' %}">
         <button type="button" class="action-btn" data-create-url="{% url 'add_member_to_board' %}">Nouveau role</button>
@@ -112,14 +113,123 @@
 </div>
 
 
-<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
-      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; font-size: 1.2rem;">
-        <i class="fa-solid fa-gear" style="font-size: 96px; color: #bbb;"></i>
-
-        <h2 style="margin-top: 24px;">Paramètres du website en cours de développement</h2>
-        <p>La gestion des modifications du website sera bientôt disponible.</p>
+<div  class="section-content {% if current_section == 'website' %}active{% endif %}" id="website-section" 
+      style="display:{% if current_section == 'website' %}block{% else %}none{% endif %};">
+ <form method="post" action="{% url 'update_social_links' %}">
+    {% csrf_token %}
+    
+    <div class="settings-page">
+        
+        <!-- Réseaux sociaux -->
+        <div class="settings-section">
+            <div class="section-header">
+                <h3>Réseaux sociaux & Contact</h3>
+                <p class="section-description">Ajoutez vos liens pour qu'ils apparaissent au bas du site, dans les mails, etc...</p>
+            </div>
+            <div class="settings-content">
+                <div class="social-links-grid">
+                    
+                    <div class="social-link-field">
+                        <div class="social-link-label">
+                            <i class="fab fa-facebook"></i>
+                            <span>Facebook</span>
+                        </div>
+                        <input type="url" name="facebook" value="{{ social_links_dict.facebook|default:'' }}" placeholder="https://facebook.com/votre-page">
+                    </div>
+                    
+                    <div class="social-link-field">
+                        <div class="social-link-label">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </div>
+                        <input type="url" name="instagram" value="{{ social_links_dict.instagram|default:'' }}" placeholder="https://instagram.com/votre-compte">
+                    </div>
+                    
+                    <div class="social-link-field">
+                        <div class="social-link-label">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        </div>
+                        <input type="url" name="linkedin" value="{{ social_links_dict.linkedin|default:'' }}" placeholder="https://linkedin.com/company/votre-page">
+                    </div>
+                    
+                    <div class="social-link-field">
+                        <div class="social-link-label">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter / X</span>
+                        </div>
+                        <input type="url" name="twitter" value="{{ social_links_dict.twitter|default:'' }}" placeholder="https://twitter.com/votre-compte">
+                    </div>
+                    
+                    <div class="social-link-field">
+                        <div class="social-link-label">
+                            <i class="fab fa-youtube"></i>
+                            <span>YouTube</span>
+                        </div>
+                        <input type="url" name="youtube" value="{{ social_links_dict.youtube|default:'' }}" placeholder="https://youtube.com/votre-chaine">
+                    </div>
+                    
+                    <div class="social-link-field">
+                        <div class="social-link-label">
+                            <i class="fab fa-tiktok"></i>
+                            <span>TikTok</span>
+                        </div>
+                        <input type="url" name="tiktok" value="{{ social_links_dict.tiktok|default:'' }}" placeholder="https://tiktok.com/@votre-compte">
+                    </div>
+                    
+                    <div class="social-link-field full-width">
+                        <div class="social-link-label">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email de contact</span>
+                        </div>
+                        <input type="email" name="contact" value="{{ social_links_dict.contact|default:'' }}" placeholder="contact@votreclub.com">
+                    </div>
+                    
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">
+                      Enregistrer
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Placeholder pour futures fonctionnalités -->
+        <div class="settings-section coming-soon">
+            <div class="section-header">
+                <h3>Site public</h3>
+                <span class="badge-soon">Bientôt</span>
+            </div>
+            <div class="settings-content">
+                <div class="coming-soon-content">
+                    <i class="fas fa-globe"></i>
+                    <p>La personnalisation du site public sera bientôt disponible.</p>
+                </div>
+            </div>
+        </div>
+        
     </div>
+    
+    </form>
+
+    <script>
+        document.querySelectorAll('.toggle-text-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const target = this.dataset.target;
+                
+                document.querySelectorAll('.section-content').forEach(s => s.style.display = 'none');
+                
+                const section = document.getElementById(target);
+                if (section) {
+                    section.style.display = 'block';
+                }
+                
+                document.querySelectorAll('.toggle-text-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
 </div>
 {% endif %}
 </div>

@@ -3,7 +3,11 @@
         {% if social_links %}
         <div class="footer-links">
             {% for link in social_links %}
-                <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.get_platform_display }}</a>
+                 {% if link.platform == 'contact' %}
+                    <a href="mailto:{{ link.url }}">{{ link.get_platform_display }}</a>
+                {% else %}
+                    <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.get_platform_display }}</a>
+                {% endif %}
                 {% if not forloop.last %}<span class="footer-separator">·</span>{% endif %}
             {% endfor %}
         </div>
