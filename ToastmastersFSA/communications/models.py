@@ -12,6 +12,7 @@ class Notification(models.Model):
     message = models.TextField(max_length=1000) 
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_at']

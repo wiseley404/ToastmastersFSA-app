@@ -1,10 +1,182 @@
-{% extends "base_login.html" %}
+{% extends 'base_login.html' %}
+{% load static %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'core/css/statistics.css' %}?v=6">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+      const chartData = {
+          membersLabels: {{ members_labels|safe }},
+          membersData: {{ members_data|safe }},
+          newMembersData: {{ new_members_data|safe }},
+          attendanceLabels: {{ attendance_labels|safe }},
+          attendanceData: {{ attendance_data|safe }},
+          meetingsLabels: {{ meetings_labels|safe }},
+          meetingsData: {{ meetings_data|safe }}
+      };
+  </script>
+  <script src="{% static 'core/js/statistics.js' %}" defer></script>
+
+{% endblock %}
 
 {% block body %}
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; color: #bbb; font-size: 1.2rem;">
-  <i class="fa-solid fa-chart-pie" style="font-size: 96px; color: #bbb;"></i>
-
-  <h2 style="margin-top: 24px;">Statistiques en cours de développement</h2>
-  <p>La section statistiques sera bientôt disponible.</p>
+<div class="stats-page">
+    
+    <!-- Header avec filtres -->
+    <div class="stats-header">
+        <h1>Statistiques</h1>
+        <form class="stats-filters" method="get">
+            <a href="?period=week" class="filter-btn {% if current_period == 'week' %}active{% endif %}">Semaine</a>
+            <a href="?period=month" class="filter-btn {% if current_period == 'month' %}active{% endif %}">Mois</a>
+            <a href="?period=year" class="filter-btn {% if current_period == 'year' %}active{% endif %}">Année</a>
+            <a href="?period=all" class="filter-btn {% if current_period == 'all' %}active{% endif %}">Tout</a>
+            <div class="filter-divider"></div>
+            <div class="filter-custom">
+                <input type="date" name="from" value="{{ date_from|default:'' }}">
+                <input type="date" name="to" value="{{ date_to|default:'' }}">
+                <input type="hidden" name="period" value="custom">
+                <button type="submit" class="filter-custom-btn">Filtrer</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Stats principales -->
+    <div class="stats-cards">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon blue">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">{{ active_members }}</div>
+            <div class="stat-card-label">Membres actifs</div>
+            <div class="stat-card-sub">{{ total_members }} membres au total</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon green">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">{{ total_meetings }}</div>
+            <div class="stat-card-label">Réunions</div>
+            <div class="stat-card-sub">{{ in_person_meetings }} présentiel · {{ online_meetings }} en ligne</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon orange">
+                    <i class="fas fa-microphone"></i>
+                </div>
+            </div>
+            <div class="stat-card-value">{{ total_speeches }}</div>
+            <div class="stat-card-label">Discours préparés</div>
+            <div class="stat-card-sub">~{{ avg_speeches_per_meeting }} par réunion</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon purple">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                {% if attendance_trend != 0 %}
+                <div class="stat-card-trend {% if attendance_trend > 0 %}up{% else %}down{% endif %}">
+                    <i class="fas fa-arrow-{% if attendance_trend > 0 %}up{% else %}down{% endif %}"></i>
+                    {{ attendance_trend|floatformat:1 }}%
+                </div>
+                {% endif %}
+            </div>
+            <div class="stat-card-value">{{ attendance_rate }}%</div>
+            <div class="stat-card-label">Taux de présence</div>
+            <div class="stat-card-sub">vs période précédente</div>
+        </div>
+    </div>
+    
+    <!-- Mini stats -->
+    <div class="mini-stats">
+        <div class="mini-stat">
+            <div class="mini-stat-value">{{ new_members }}</div>
+            <div class="mini-stat-label">Nouveaux membres</div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-value">{{ total_certificats }}</div>
+            <div class="mini-stat-label">Certificats gagnés</div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-value">{{ active_board_members }}</div>
+            <div class="mini-stat-label">Membres du comité</div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-value">{{ roles_distribution|length }}</div>
+            <div class="mini-stat-label">Rôles différents</div>
+        </div>
+    </div>
+    
+    <!-- Graphiques -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>Évolution des membres actifs</h3>
+            </div>
+            <div class="chart-card-body">
+                <canvas id="membersChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>Taux de présence</h3>
+            </div>
+            <div class="chart-card-body">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>Réunions par mois</h3>
+            </div>
+            <div class="chart-card-body">
+                <canvas id="meetingsChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <h3>Membres les plus actifs</h3>
+            </div>
+            <div class="top-members-list">
+                {% for member in top_members %}
+                <div class="top-member-item">
+                    <div class="top-member-rank rank-{{ forloop.counter }}">{{ forloop.counter }}</div>
+                    <div class="top-member-info">
+                        <div class="top-member-name">{{ member.name }}</div>
+                        <div class="top-member-details">{{ member.certificats_count }} certificat{{ member.certificats_count|pluralize }}</div>
+                    </div>
+                    <div class="top-member-stats">
+                        <div class="top-member-stat">
+                            <div class="top-member-stat-value">{{ member.speeches_count }}</div>
+                            <div class="top-member-stat-label">Discours</div>
+                        </div>
+                        <div class="top-member-stat">
+                            <div class="top-member-stat-value">{{ member.attendance_rate }}%</div>
+                            <div class="top-member-stat-label">Présence</div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="padding: 40px; text-align: center; color: #888;">
+                    Pas encore de données
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
 </div>
+
 {% endblock %}

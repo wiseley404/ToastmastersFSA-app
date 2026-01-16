@@ -3,54 +3,67 @@
 
 {% block title %} Mes notifications {% endblock %}
 {% block head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+<link rel="stylesheet" href="{% static 'members/css/notifications.css' %}?v=6">
 <script type="text/javascript" src="{% static 'js/popup.js' %}" defer></script>
+<script type="text/javascript" src="{% static 'members/js/notifications.js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
 {% include 'includes/popup.html' %}
 <div class="page-container">
-<div class="page-header">
-<h2>Notifications</h2>
+    <div class="page-header">
+        <h2>Notifications</h2>
+    </div>
 
-</div>
+    <div class="notifications-container">
+        <div class="notifications-header">
+            <div class="notifications-tabs">
+                <a href="?filter=all" class="tab {% if request.GET.filter != 'unread' and request.GET.filter != 'archived' %}active{% endif %}">Toutes</a>
+                <a href="?filter=unread" class="tab {% if request.GET.filter == 'unread' %}active{% endif %}">Non lues</a>
+                <a href="?filter=archived" class="tab {% if request.GET.filter == 'archived' %}active{% endif %}">Archivées</a>
+            </div>
+        </div>
 
-<h3 class="section-title">Mes Notifications</h3>
-<div class="table-wrapper">  
-    <table>
-        <thead>
-            <tr>
-                <th>NOTIFICATIONS <i class="fas fa-bell"></i></th>
-            </tr>
-        </thead>
-        <tbody>
+        <div class="notifications-list">
             {% for notif in my_notifs %}
-            <tr>
-                <td>
-                    <a href="{% url 'show_notification_message' notif.id %}" data-show-url="{% url 'show_notification_message' notif.id %}">
-                        {{ notif.title }} 
-                    </a> </br>
+            <div class="notification-item {% if not notif.is_read %}unread{% endif %}" data-id="{{ notif.id }}">
+
+                <div class="notification-content">
+                    <a href="#" class="show-btn" data-show-url="{% url 'show_notification_message' notif.id %}">
+                        <strong>{{ notif.title }}</strong>
+                    </a>
+                    <p>{{ notif.message|truncatechars:160 }}</p>
                     <small>{{ notif.created_at|date:"d M Y H:i" }}</small>
-                    <p>
-                        {{ notif.message|title|truncatechars:250 }}
-                    </p>
-                </td>
-            </tr>
+                </div>
+
+                <div class="notification-actions">
+                    {% if not notif.is_read %}
+                    <button title="Marquer comme lu" class="notif-btn" data-action="read" data-id="{{ notif.id }}">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    {% else %}
+                    <button title="Marquer comme non lu" class="notif-btn" data-action="unread" data-id="{{ notif.id }}">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    {% endif %}
+                    
+                    {% if not notif.is_archived %}
+                    <button title="Archiver" class="notif-btn" data-action="archived" data-id="{{ notif.id }}">
+                        <i class="fas fa-archive"></i>
+                    </button>
+                    {% else %}
+                    <button title="Désarchiver" class="notif-btn" data-action="unarchived" data-id="{{ notif.id }}">
+                        <i class="fas fa-inbox"></i>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
             {% empty %}
-            <tr>
-                <td colspan="1">Aucune notification</td>
-            </tr>
+            <p class="empty-state">Aucune notification</p>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>
-</div>
-
-
-
-
-
-
-
-
 
 {% endblock %}
