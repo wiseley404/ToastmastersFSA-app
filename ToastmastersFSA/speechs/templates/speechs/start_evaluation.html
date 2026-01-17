@@ -1,37 +1,46 @@
 <h2>Configurer l'évaluation</h2> 
 
-<form id="eval-config-form">
+<form class="form-group" id="eval-config-form">
     {% csrf_token %}
     
     <div class="form-group">
         <label>Réunion :</label>
         <select id="eval-meeting" name="meeting" required>
-            <option value="">-- Choisir une réunion --</option>
+            <option value="">Choisir une réunion</option>
             {% for meeting in meetings %}
                 <option value="{{ meeting.id }}">{{ meeting.date|date:"d-m-Y" }} | {{ meeting.start_time|time:"H:i" }} - {{ meeting.end_time|time:"H:i" }}</option>
             {% endfor %}
         </select>
     </div>
-    
+    <br>
+
     <div class="form-group">
         <label>Type d'évaluation :</label>
         <select id="eval-type" name="evaluation_type" required>
-            <option value="">-- Choisir --</option>
+            <option value="">Choisir  un type d'évaluation</option>
             {% for type in evaluation_types %}
                 <option value="{{ type.id }}">{{ type.get_name_display }}</option>
             {% endfor %}
         </select>
     </div>
-    
-    <div class="form-group">
-        <label>Critères à évaluer :</label>
-        <div id="criteria-list" style="border:1px solid #ccc; padding:10px; max-height:200px; overflow-y:auto;"></div>
-    </div>
+    <br>
 
     <div class="form-group">
-        <label>Personnes à évaluer :</label>
-        <div id="members-list" style="border:1px solid #ccc; padding:10px; max-height:200px; overflow-y:auto;"></div>
+    <label>Critères à évaluer :</label>
+    <select id="criteria-select" multiple style="width:100%"></select>
     </div>
-    
-    <button type="submit" class="action-btn">Générer une grille</button>
+
+    <br>
+
+    <div class="form-group">
+    <label>Personnes à évaluer :</label>
+    <select id="members-select" multiple style="width:100%"></select>
+    </div>
+
+    <br>
+
+    <button type="submit" class="action-btn" style="background-color: #007BFF;color: white; padding: 10px 18px; margin-top: 25px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+        Générer une grille
+    </button>
 </form>

@@ -10,7 +10,7 @@ class SpeechForm(forms.ModelForm):
     highlight_word = forms.CharField(max_length=100, required=False)
     orator = forms.ModelChoiceField(
         queryset=User.objects.all(), 
-        empty_label="--- Choisir un orateur ---", 
+        empty_label="Choisir un orateur", 
         required=False 
     )
 
@@ -28,8 +28,8 @@ class SpeechForm(forms.ModelForm):
             Q(date__gt=today) |
             Q(date=today, start_time__gt=now().time())
         )
-        self.fields['meeting'].empty_label = "--- Choisir une réunion ---"
-        self.fields['role'].empty_label = "--- Choisir un rôle disponible ---"
+        self.fields['meeting'].empty_label = "Choisir une réunion"
+        self.fields['role'].empty_label = "Choisir un rôle disponible"
 
     
     def save(self, commit = True):

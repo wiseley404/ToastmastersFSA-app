@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Form, Response, Submission, Option
 from .forms import make_form, FormForm, FieldForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 
 
 # Create your views here.
@@ -68,10 +69,10 @@ def submit_form(request, form_id):
 
         if form.is_valid():
             submission = Submission.objects.create(
-            user=request.user if request.user.is_authenticated else None,
-            form=formulaire
-        )
-            for field in form.fields.all():
+                user=request.user if request.user.is_authenticated else None,
+                form=formulaire
+            )
+            for field in formulaire.fields.all():
                 value = form.cleaned_data.get(field.description)
                 if isinstance(value, list):
                     for val in value:
@@ -86,7 +87,15 @@ def submit_form(request, form_id):
                         field=field,
                         value=value
                     )
-            return render(request, "forms/show_form.html", {"submitted_successfully": True})
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string('forms/show_form.html', {
+                'form': form,
+                'formulaire': formulaire
+            }, request)
+            return JsonResponse({'success': False, 'html': html})
+    
+    return render(request, 'forms/show_form.html', {'form': FormClass(), 'formulaire': formulaire})
 
 
 @staff_member_required
@@ -94,8 +103,11 @@ def create_form(request):
     if request.method == "POST":
         form = FormForm(request.POST)
         if form.is_valid():
-            formulaire= form.save()
-            return HttpResponseRedirect(reverse('edit_form', args=[formulaire.id]))
+            formulaire = form.save()
+            return JsonResponse({'success': True, 'redirect_url': reverse('edit_form', args=[formulaire.id])})
+        else:
+            html = render_to_string('forms/create_form.html', {'form': form}, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = FormForm()
     return render(request, 'forms/create_form.html', {'form': form})
@@ -107,6 +119,7 @@ def add_fields(request, form_id):
     formulaire = get_object_or_404(Form, id=form_id)
     formulaire.in_creation_mode = True
     formulaire.save()
+    
     if request.method == 'POST':
         form = FieldForm(request.POST)
         if form.is_valid():
@@ -118,9 +131,14 @@ def add_fields(request, form_id):
                 options = request.POST.getlist('options')
                 for option in options:
                     Option.objects.create(field=field, value=option.strip())
-                return HttpResponseRedirect(reverse('edit_form', args=[formulaire.id]))
-            else:
-                return HttpResponseRedirect(reverse('edit_form', args=[formulaire.id]))
+            
+            return JsonResponse({'success': True, 'redirect_url': reverse('edit_form', args=[formulaire.id])})
+        else:
+            html = render_to_string('forms/add_field.html', {
+                'form': form,
+                'formulaire': formulaire
+            }, request)
+            return JsonResponse({'success': False, 'html': html})
     else:
         form = FieldForm()
     return render(request, 'forms/add_field.html', {'form': form, 'formulaire': formulaire})
@@ -139,7 +157,7 @@ def publish_form(request, form_id):
     form.is_active = True
     form.in_creation_mode = False
     form.save()
-    return HttpResponseRedirect(reverse('forms_list'))
+    return JsonResponse({'success': True})
 
 
 @staff_member_required
@@ -153,26 +171,22 @@ def close_form(request, form_id):
     form = get_object_or_404(Form, id=form_id)
     form.is_active = False
     form.save()
-    return HttpResponseRedirect(reverse('historique_forms'))
+    return JsonResponse({'success': True})
 
 
 @login_required
-def show_published_forms_list(request):
+def show_forms_list(request):
     active_published_forms = Form.objects.filter(is_published=True, is_active=True).order_by('-date')
     not_published_forms = Form.objects.filter(is_published=False).order_by('-date')
+    inactive_published_forms = Form.objects.filter(is_published=True, is_active=False).order_by('-date')
+    section_active = request.GET.get('section', 'actuel')
+    
     return render(request, 'forms/forms_list.html', {
         'active_published_forms': active_published_forms,
         'not_published_forms': not_published_forms,
-        'section_active':'votes'
-        }
-    )
-
-
-@staff_member_required
-def show_historique_forms_list(request):
-    inactive_published_forms = Form.objects.filter(is_published=True, is_active=False).order_by('-date')
-    return render(request, 'forms/forms_list.html', {
-        'inactive_published_forms': inactive_published_forms
+        'inactive_published_forms': inactive_published_forms,
+        'section_active': 'votes',
+        'current_section': section_active,
     })
 
 

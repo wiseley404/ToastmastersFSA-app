@@ -21,13 +21,13 @@
 <h2>Communications</h2>
 {% if user.is_staff %}
 <div class="container">
-  <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">E-mail</button>
-  <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Notifications</button>
+  <button class="toggle-text-btn {% if current_section == 'email' %}active{% endif %}" data-target="email-section">E-mail</button>
+  <button class="toggle-text-btn {% if current_section == 'notifications' %}active{% endif %}" data-target="notifications-section">Notifications</button>
 </div>
 </div>
 
-<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
-     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+<div class="section-content {% if current_section == 'email' %}active{% endif %}" id="email-section" 
+     style="display:{% if current_section == 'email' %}block{% else %}none{% endif %};">
 <div class="page-header">
     <a href="{% url 'create_email_list' %}">
         <button type="button" class="action-btn" data-create-url="{% url 'create_email_list' %}">Créer une liste</button>
@@ -278,8 +278,8 @@
 
 
 
-<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
-      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+<div  class="section-content {% if current_section == 'notifications' %}active{% endif %}" id="notifications-section" 
+      style="display:{% if current_section == 'notifications' %}block{% else %}none{% endif %};">
 <div class="page-header">
     <a href="{% url 'create_notif' %}">
         <button type="button" class="action-btn" data-create-url="{% url 'create_notif' %}">Publier une notification</button>

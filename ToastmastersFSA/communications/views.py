@@ -18,7 +18,7 @@ def manage_communications(request):
     emails_list = EmailList.objects.all()
     emails_scheduled = EmailScheduled.objects.filter(is_active=True)
     system_emails = SystemEmail.objects.filter(is_active=True)
-    section_active = request.GET.get('section', 'personnel')
+    section_active = request.GET.get('section', 'email')
     context = {
         'current_section':section_active,
         'section_active':'communications',

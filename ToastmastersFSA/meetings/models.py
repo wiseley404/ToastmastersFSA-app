@@ -59,6 +59,7 @@ class Role(models.Model):
 
 class Ressources(models.Model):
     TYPE_CHOICES =[
+        ('', 'Sélectionnez un type de ressource'),
         ('video', 'Vidéo'),
         ('youtube', 'Youtube'),
         ('pdf', 'PDF'),

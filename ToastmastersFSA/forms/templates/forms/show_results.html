@@ -1,15 +1,11 @@
-{% extends 'base_login.html' %}
-
-{% block title %} Resultats {% endblock %}
-
-{% block body %}
-<h2>Resultats du formulaire: {{ form.title }}</h2>
+<h2>Resultats du formulaire</h2>
 
 <table>
     <thead>
         <tr>
             <th>Champ</th>
-            <th>Top resultat</th>
+            <th>Meilleur Score</th>
+            <th>Votes</th>
         </tr>
     </thead>
     <tbody>
@@ -18,11 +14,12 @@
                 <td>{{field.description }}</td>
                 <td>
                     {% if field.top_responses %}
-                        {{ field.top_responses }}
+                        {{ field.top_responses.0|join:", " }}
                     {% else %}
                         Aucune reponse
                     {% endif %}
                 </td>
+                <td>{{ field.top_responses.1|default:'-' }}</td>
             </tr>
         {% empty %}
             <tr>
@@ -31,4 +28,3 @@
         {% endfor %}
     </tbody>
 </table>
-{% endblock %}

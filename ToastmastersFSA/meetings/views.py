@@ -65,7 +65,7 @@ def show_meetings_list(request):
     elif date_filter == "365j":
         past_meetings = past_meetings.filter(date__gte=now() - timedelta(days=365))
 
-    section_active = request.GET.get('section', 'personnel')
+    section_active = request.GET.get('section', 'aVenir')
     
     context = {
         'past_meetings': past_meetings,
@@ -114,12 +114,31 @@ def create_meeting_pdf_download(request, meeting_id):
 def add_ressources(request):
     if request.method == 'POST':
         form = RessourcesForm(request.POST, request.FILES)
+
         if form.is_valid():
             form.save()
-            return redirect('show_ressources')
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string(
+                'meetings/add_ressources.html',
+                {'form': form},
+                request=request
+            )
+            return JsonResponse({
+                'success': False,
+                'html': html
+            })
+
     else:
         form = RessourcesForm()
-    return render(request, 'meetings/add_ressources.html', {'form':form})
+
+    context = {
+        'form': form,
+        'section_active': 'meetings',
+    }
+
+    return render(request, 'meetings/add_ressources.html', context)
+
 
 
 @login_required
@@ -132,17 +151,39 @@ def show_ressources(request):
 @staff_member_required
 def edit_ressources(request, ressource_id):
     ressource = get_object_or_404(Ressources, id=ressource_id)
+
     if request.method == 'POST':
-        form = RessourcesForm(request.POST, request.FILES, instance=ressource)
+        form = RessourcesForm(
+            request.POST,
+            request.FILES,
+            instance=ressource
+        )
+
         if form.is_valid():
             form.save()
-            return redirect('show_ressources')
+            return JsonResponse({'success': True})
+        else:
+            html = render_to_string(
+                'meetings/edit_ressource.html',
+                {
+                    'form': form,
+                    'ressource': ressource
+                },
+                request=request
+            )
+            return JsonResponse({
+                'success': False,
+                'html': html
+            })
+
     else:
         form = RessourcesForm(instance=ressource)
+
     return render(request, 'meetings/edit_ressource.html', {
-        'form':form,
-        'ressource':ressource
-        })
+        'form': form,
+        'ressource': ressource
+    })
+
 
 
 @staff_member_required
@@ -159,22 +200,38 @@ def delete_ressources(request, ressource_id):
     return redirect('show_ressources')
 
 
-
 @staff_member_required
 def edit_meeting(request, meeting_id):
     meeting = get_object_or_404(Meeting, id=meeting_id)
-    
+
     if request.method == 'POST':
         form = MeetingForm(request.POST, instance=meeting)
+
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
         else:
-            html = render_to_string('meetings/edit_meeting.html', {'form': form, 'meeting':meeting}, request)
-            return JsonResponse({'success': False, 'html': html})
+            html = render_to_string(
+                'meetings/edit_meeting.html',
+                {
+                    'form': form,
+                    'meeting': meeting
+                },
+                request=request
+            )
+            return JsonResponse({
+                'success': False,
+                'html': html
+            })
+
     else:
         form = MeetingForm(instance=meeting)
-    return render(request, 'meetings/edit_meeting.html', {'form': form, 'meeting':meeting})
+
+    return render(request, 'meetings/edit_meeting.html', {
+        'form': form,
+        'meeting': meeting
+    })
+
 
 
 @staff_member_required
@@ -188,18 +245,13 @@ def delete_meeting(request, meeting_id):
 
 @login_required
 def check_attendance(request):
-    current_time = now()
-    print(f"Current time: {current_time}")
-    print(f"Date: {current_time.date()}, Time: {current_time.time()}")
-    
+    current_time = now()   
     meeting = Meeting.objects.filter(
         date=current_time.date(),
         start_time__lte=current_time.time(),
         end_time__gte=current_time.time()
     ).first()
-    
-    print(f"Meeting found: {meeting}")
-    # ...
+
     if meeting:
         attendance, created = MeetingAttendance.objects.get_or_create(
             meeting=meeting,

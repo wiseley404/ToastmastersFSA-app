@@ -55,7 +55,7 @@ class FormForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'placeholder': 'Mini-description pour l\'entete du formulaire',
                 'rows':2,
-                'style': 'resize:vertical;'
+                'style': 'resize:vertical;',
             })
             
         }
@@ -65,16 +65,22 @@ class FieldForm(forms.ModelForm):
     class Meta:
         model = Field
         fields = ("description", "required", "type")
+        labels ={
+            'description': 'Question'
+        }
         widgets ={
             'description': forms.Textarea(attrs={
-                'placeholder': 'EX: Meilleur discours/ Meilleure improvisation'
+                'placeholder': 'EX: Meilleur discours/ Meilleure improvisation',
+                'rows':2,
+                'style': 'resize:vertical;',
+
             })
         }
 FieldFormSet = forms.inlineformset_factory(
     Form, Field,
     fields=('description', 'required', 'type'),
-    extra=1,  # to add an empty default field 
-    can_delete=True  # to delete fields
+    extra=1,  
+    can_delete=True 
 )
 
 class OptionForm(forms.ModelForm):
