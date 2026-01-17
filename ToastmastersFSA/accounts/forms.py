@@ -68,13 +68,22 @@ class UserForm(forms.ModelForm):
 class CustomPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(
         label="Ancien mot de passe",
-        widget=forms.PasswordInput(attrs={"placeholder": "Ancien mot de passe"})
+        widget=forms.PasswordInput(attrs={
+            "placeholder": "Ancien mot de passe",
+            'style': 'width : 100%; height: 30px; font-family: Inter, system-ui, sans-serif;',
+            })
     )
     new_password1 = forms.CharField(
         label="Nouveau mot de passe",
-        widget=forms.PasswordInput(attrs={"placeholder": "Nouveau mot de passe"})
+        widget=forms.PasswordInput(attrs={
+            "placeholder": "Nouveau mot de passe",
+            'style': 'width : 100%; height: 30px; font-family: Inter, system-ui, sans-serif;',
+            })
     )
     new_password2 = forms.CharField(
         label="Confirmation",
-        widget=forms.PasswordInput(attrs={"placeholder": "Password Confirmation"})
+        widget=forms.PasswordInput(attrs={
+            "placeholder": "Password Confirmation",
+            'style': 'width : 100%; height: 30px; font-family: Inter, system-ui, sans-serif;',
+            })
     )

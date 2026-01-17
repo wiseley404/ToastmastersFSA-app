@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block body %}
+{% include 'includes/popup.html' %}
+
 <form method="post" enctype="multipart/form-data" id="profile-form">
 {% csrf_token %}
 <div class="profile-page">
@@ -99,7 +101,7 @@
             <h3>Paramètres du compte</h3>
         </div>
         <div class="section-content">
-            <a href="{% url 'password_change' %}" class="settings-link">
+            <a href="{% url 'password_change' %}" class="settings-link" data-edit-url="{% url 'password_change' %}">
                 <span>Changer mon mot de passe</span>
                 <i class="fas fa-chevron-right"></i>
             </a>
