@@ -13,13 +13,13 @@
     <div class="page-header">
         <h2>Evaluations</h2>
         <div class="container">
-        <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A faire</button>
-        <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Reçues</button>
+        <button class="toggle-text-btn {% if current_section == 'aFaire' %}active{% endif %}" data-target="aFaire-section">A faire</button>
+        <button class="toggle-text-btn {% if current_section == 'recues' %}active{% endif %}" data-target="recues-section">Reçues</button>
         </div>
     </div>
 
-    <div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
-        style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+    <div class="section-content {% if current_section == 'aFaire' %}active{% endif %}" id="aFaire-section" 
+        style="display:{% if current_section == 'aFaire' %}block{% else %}none{% endif %};">
         <div class="page-header">
             <a href="{% url 'start_evaluation' %}">
                 <button type="button" class="action-btn" id="start-eval-btn" data-create-url="{% url 'start_evaluation' %}">Commencer une évaluation</button>
@@ -92,8 +92,8 @@
     </div>
 
 
-    <div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
-        style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+    <div  class="section-content {% if current_section == 'recues' %}active{% endif %}" id="recues-section" 
+        style="display:{% if current_section == 'recues' %}block{% else %}none{% endif %};">
 
         <h3 class="section-title">Evaluations reçues</h3>
         <div class="table-wrapper"> 

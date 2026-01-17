@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!target) return;
         
         e.preventDefault();
+        e.stopImmediatePropagation();  // ← empêche le <a> de naviguer
+        
         const url = addBtn ? addBtn.dataset.createUrl : 
                     editBtn ? editBtn.dataset.editUrl : 
                     deleteBtn ? deleteBtn.dataset.deleteUrl :
@@ -48,16 +50,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Soumettre le form en AJAX
+    let isSubmitting = false;  // Flag anti-double
+    
     document.addEventListener('submit', function(e) {
         const form = e.target.closest('#popup-body form');
         if (!form) return;
         
-        if (form.action.includes('delete') || form.action.includes('remove') || 
-            form.action.includes('create_form')){
-                return;
-            } 
+        if (form.action.includes('delete') || form.action.includes('remove')) return;
+        
+        if (isSubmitting) return;  // Évite double soumission
+        isSubmitting = true;
         
         e.preventDefault();
+        e.stopImmediatePropagation();
         
         fetch(form.action, {
             method: 'POST',
@@ -68,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            isSubmitting = false;
             if (data.success) {
                 if (data.redirect_url) {
                     window.location.href = data.redirect_url; 
@@ -79,7 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 initPopupForms();
             }
         })
-        .catch(error => console.error('Erreur submit:', error));
+        .catch(error => {
+            isSubmitting = false;
+            console.error('Erreur submit:', error);
+        });
     });
     
 });
@@ -89,4 +98,5 @@ function initPopupForms() {
     if (typeof initBoardForm === 'function') initBoardForm();
     if (typeof initSpeechForm === 'function') initSpeechForm();
     if (typeof initEmailListForm === 'function') initEmailListForm();
+    if (typeof initAddOption === 'function') initAddOption();
 }

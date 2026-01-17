@@ -56,11 +56,9 @@ class MeetingForm(forms.ModelForm):
                 'class': 'form-control',
                 'style': 'resize: vertical;'
             }),
-            'url': forms.Textarea(attrs={
-                'placeholder': 'zoom ou Teams, si en ligne.',
-                'rows': 2,
-                'class': 'form-control',
-                'style': 'resize: vertical;'
+            'url': forms.URLInput(attrs={
+                'placeholder':'Lien zoom ou Teams si en ligne, ex: https://....',
+                'style': 'width:95%; height:40px;',
             }),
         }
 
@@ -109,6 +107,26 @@ class RessourcesForm(forms.ModelForm):
     class Meta:
         model = Ressources
         fields = ['title', 'description', 'type', 'file', 'url']
+        labels = {
+            'title':'Titre',
+            'description': 'Description',
+            'type': 'Type',
+            'file': 'Fichier',
+            'url': 'URL',
+        }
         widgets = {
-            'url': forms.URLInput(attrs={'placeholder':'Si youtube ou website :)'})
+            'title': forms.Textarea(attrs={
+                'placeholder': 'Sujet de la ressource',
+                'rows': 1,
+                'style': 'resize: vertical;',
+            }),
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Petite description de la ressource',
+                'rows': 3,
+                'style': 'resize: vertical;',
+            }),
+            'url': forms.URLInput(attrs={
+                'placeholder':'Lien si en ligne, ex: https://....',
+                'style': 'width:95%; height:40px;',
+            })
         }

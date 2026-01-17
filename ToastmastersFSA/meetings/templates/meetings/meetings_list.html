@@ -37,13 +37,13 @@
     <h2>Réunions</h2>
 
     <div class="container">
-    <button class="toggle-text-btn {% if current_section == 'personnel' %}active{% endif %}" data-target="personnel">A venir</button>
-    <button class="toggle-text-btn {% if current_section == 'club' %}active{% endif %}" data-target="club">Historique</button>
+    <button class="toggle-text-btn {% if current_section == 'aVenir' %}active{% endif %}" data-target="aVenir-section">A venir</button>
+    <button class="toggle-text-btn {% if current_section == 'historique' %}active{% endif %}" data-target="historique-section">Historique</button>
     </div>
 </div>
 
-<div class="section-content {% if current_section == 'personnel' %}active{% endif %}" id="personnel" 
-     style="display:{% if current_section == 'personnel' %}block{% else %}none{% endif %};">
+<div class="section-content {% if current_section == 'aVenir' %}active{% endif %}" id="aVenir-section" 
+     style="display:{% if current_section == 'aVenir' %}block{% else %}none{% endif %};">
     {% if user.is_staff %}
     <div class="page-header">
         <a href="{% url 'create_meeting' %}">
@@ -128,8 +128,8 @@
 
 
 
-<div  class="section-content {% if current_section == 'club' %}active{% endif %}" id="club" 
-      style="display:{% if current_section == 'club' %}block{% else %}none{% endif %};">
+<div  class="section-content {% if current_section == 'historique' %}active{% endif %}" id="historique-section" 
+      style="display:{% if current_section == 'historique' %}block{% else %}none{% endif %};">
 <div class="advanced-filtre">
     <form method="get">
         <input type="hidden" name="section" value="club">

@@ -1,5 +1,5 @@
 <h2>Modifier cet email système</h2>
-<form class="popup-form" action="{% url 'edit_system_email' email_system.id %}" method="post" enctype="multipart/form-data">
+<form class="form-group" action="{% url 'edit_system_email' email_system.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     

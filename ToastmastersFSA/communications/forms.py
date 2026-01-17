@@ -27,9 +27,11 @@ class EmailListForm(forms.ModelForm):
         model = EmailList
         fields = ['title', 'members']
         widgets = {
-            'title': forms.TextInput(attrs={
+            'title': forms.Textarea(attrs={
                 'class': 'form-control', 
-                'placeholder': 'Nom de la liste e-mail'
+                'placeholder': 'Nom de la liste e-mail',
+                'rows':1,
+                'style': 'resize:vertical;',
             }),
             'members': forms.SelectMultiple(
                 attrs={

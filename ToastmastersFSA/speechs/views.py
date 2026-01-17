@@ -234,7 +234,7 @@ def show_certificats(request):
 
 @login_required
 def show_evaluations(request):
-    section_active = request.GET.get('section', 'personnel')
+    section_active = request.GET.get('section', 'aFaire')
     evaluations = Evaluation.objects.filter(evaluator=request.user, is_submitted=False)
     evaluation_types = EvaluationType.objects.all()
     evalution_levels = EvaluationLevel.objects.all()

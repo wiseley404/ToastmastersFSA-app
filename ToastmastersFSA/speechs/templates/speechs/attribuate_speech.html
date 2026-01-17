@@ -1,5 +1,5 @@
 <h2>Attribuer un rôle</h2>
-<form class="popup-form" action="{% url 'attribuate_speech' %}" method="post">
+<form class="form-group" action="{% url 'attribuate_speech' %}" method="post">
     {% csrf_token %}
     <p>Date: {{ speech.meeting }}</p>
     <p>Orateur: {{ speech.orator }}</p>

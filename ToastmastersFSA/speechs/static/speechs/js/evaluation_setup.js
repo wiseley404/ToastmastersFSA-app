@@ -1,46 +1,59 @@
 function initEvaluation() {
-    console.log('Init evaluation');
-    
+
+    const criteriaSelect = $('#criteria-select');
+    const membersSelect = $('#members-select');
+
+    // INIT SELECT2
+    criteriaSelect.select2({
+        width: '100%',
+        placeholder: 'Sélectionner des critères...',
+        allowClear: true,
+        dropdownParent: $('#popup-body')
+    });
+
+    membersSelect.select2({
+        width: '100%',
+        placeholder: 'Sélectionner des membres...',
+        allowClear: true,
+        dropdownParent: $('#popup-body')
+    });
+
     fetch('/speechs/evaluations/get-all-criteria/')
         .then(r => r.json())
-        .then(data => displayCriteria(data.criteria))
-        .catch(err => console.error('Criteria error:', err));
+        .then(data => updateCriteriaSelect(data.criteria));
 
     fetch('/speechs/evaluations/get-all-members/')
         .then(r => r.json())
-        .then(data => displayMembers(data.members))
-        .catch(err => console.error('Members error:', err));
+        .then(data => updateMembersSelect(data.members));
+
     
-    // Délégation d'événements
     document.addEventListener('change', function(e) {
         if (e.target.id === 'eval-type') {
             console.log('Type changed:', e.target.value);
             if (!e.target.value) {
-                // Réinitialise avec TOUS les critères
                 fetch('/speechs/evaluations/get-all-criteria/')
                     .then(r => r.json())
-                    .then(data => displayCriteria(data.criteria));
+                    .then(data => updateCriteriaSelect(data.criteria));
                 return;
             }
             
             fetch(`/speechs/evaluations/get-criteria/${e.target.value}/`)
                 .then(r => r.json())
-                .then(data => displayCriteria(data.criteria));
+                .then(data => updateCriteriaSelect(data.criteria));
         }
         
         if (e.target.id === 'eval-meeting') {
             console.log('Meeting changed:', e.target.value);
             if (!e.target.value) {
-                // Réinitialise avec TOUS les membres
                 fetch('/speechs/evaluations/get-all-members/')
                     .then(r => r.json())
-                    .then(data => displayMembers(data.members));
+                    .then(data => updateMembersSelect(data.members));
                 return;
             }
             
             fetch(`/speechs/evaluations/get-meeting-members/${e.target.value}/`)
                 .then(r => r.json())
-                .then(data => displayMembers(data.members));
+                .then(data => updateMembersSelect(data.members));
         }
     });
 
@@ -48,8 +61,6 @@ function initEvaluation() {
         if (e.target.id === 'eval-config-form') {
             e.preventDefault();
             
-            const criteria = Array.from(document.querySelectorAll('input[name="criteria"]:checked')).map(c => c.value);
-            const members = Array.from(document.querySelectorAll('input[name="members"]:checked')).map(m => m.value);
             const meeting = document.getElementById('eval-meeting').value;
             const type = document.getElementById('eval-type').value;
             
@@ -57,12 +68,14 @@ function initEvaluation() {
             
             fetch('/speechs/evaluations/generate-table/', {
                 method: 'POST',
-                headers: {'X-CSRFToken': csrfToken},
+                headers: {'X-CSRFToken': csrfToken,
+                          'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     meeting_id: meeting,
                     evaluation_type_id: type,
-                    criteria_ids: criteria,
-                    member_ids: members
+                    criteria_ids: criteriaSelect.val(),
+                    member_ids: membersSelect.val()
                 })
             })
             .then(r => r.json())
@@ -75,20 +88,24 @@ function initEvaluation() {
     
 }
 
-function displayCriteria(criteria) {
-    const list = document.getElementById('criteria-list');
-    if (!list) return;
-    list.innerHTML = '';
+function updateCriteriaSelect(criteria) {
+    const select = $('#criteria-select');
+    select.empty();
+
     criteria.forEach(c => {
-        list.innerHTML += `<label><input type="checkbox" name="criteria" value="${c.id}"> ${c.name}</label><br>`;
+        select.append(new Option(c.name, c.id));
     });
+
+    select.trigger('change');
 }
 
-function displayMembers(members) {
-    const list = document.getElementById('members-list');
-    if (!list) return;
-    list.innerHTML = '';
+function updateMembersSelect(members) {
+    const select = $('#members-select');
+    select.empty();
+
     members.forEach(m => {
-        list.innerHTML += `<label><input type="checkbox" name="members" value="${m.id}"> ${m.name}</label><br>`;
+        select.append(new Option(m.name, m.id));
     });
+
+    select.trigger('change');
 }

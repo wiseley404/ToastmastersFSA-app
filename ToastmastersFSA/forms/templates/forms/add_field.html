@@ -1,5 +1,5 @@
 <h2>Ajouter un champ</h2>
-<form class="popup-form" action="{% url 'add_fields' formulaire.id %}" method="post">
+<form class="form-group" action="{% url 'add_fields' formulaire.id %}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
@@ -10,5 +10,8 @@
         </div>
         <button type="button" id="addOption" style="margin-bottom: 5px;">Ajouter options</button>
     </div>
-    <button type="submit" style="margin-top: 25px;">Sauvegarder</button>
+    <button type="submit" style="background-color: #007BFF;color: white; padding: 10px 18px; margin-top:25px;
+        border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: background 0.3s ease;">
+        Sauvegarder
+    </button>
 </form>

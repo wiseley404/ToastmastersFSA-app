@@ -15,13 +15,14 @@
     <h2>Formulaires</h2>
 {% if user.is_staff %}
 <div class="container">
-  <button class="toggle-text-btn active" data-target="personnel">Actuel</button>
-  <button class="toggle-text-btn" data-target="club">Historique</button>
+  <button class="toggle-text-btn {% if current_section == 'actuel' %}active{% endif %}" data-target="actuel-section">Actuel</button>
+  <button class="toggle-text-btn {% if current_section == 'historique' %}active{% endif %}" data-target="historique-section">Historique</button>
 </div>
 {% endif %}
 </div>
 
-<div class="section-content active" id="personnel" style="display:block;">
+<div class="section-content {% if current_section == 'actuel' %}active{% endif %}" id="actuel-section" 
+     style="display:{% if current_section == 'actuel' %}block{% else %}none{% endif %};">
     <div class="page-header">
     {% if user.is_staff %}
         <a href="{% url 'create_form' %}">
@@ -110,7 +111,8 @@
 
 
 {% if user.is_staff %}
-<div class="section-content" id="club" style="display:none;">
+<div class="section-content {% if current_section == 'historique' %}active{% endif %}" id="historique-section" 
+     style="display:{% if current_section == 'historique' %}block{% else %}none{% endif %};">
 <h3 class="section-title">Publiés/Fermés</h3>
 <div class="table-wrapper">
 <table>
@@ -125,10 +127,14 @@
     <tbody>
         {% for form in inactive_published_forms %}
             <tr>
-                <td>{{ form.title|title }}</td>
+                <td>{{ form.title|title|default:'-' }}</td>
                 <td>{{ form.date|date:"d-m-Y" }}</td>
-                <td>{{ form.submission_numbers }}</td>
-                <td><a href="{% url 'show_results' form.id %}">Voir stats</a></td>
+                <td>{{ form.submissions_numbers|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'show_results' form.id %}" data-show-url="{% url 'show_results' form.id %}">
+                        Voir stats
+                    </a>
+                </td>
             </tr>
         {% empty %}
             <tr><td colspan="6">Aucun formulaire soumis pour l'instant</td></tr>

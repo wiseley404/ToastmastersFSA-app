@@ -1,5 +1,5 @@
 <h2>Planifier une réunion</h2>
-<form action="{% url 'create_meeting' %}" method="post">
+<form class="form-group" action="{% url 'create_meeting' %}" method="post">
     {% csrf_token %}
     
     {% if meeting.errors %}

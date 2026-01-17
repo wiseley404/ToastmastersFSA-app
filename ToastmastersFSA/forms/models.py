@@ -45,19 +45,20 @@ class Field(models.Model):
             )
         return {}
     
-    def top_responses(self):
+    def  top_responses(self):
         counts = (
             self.responses
             .annotate(valeur_lower=models.functions.Lower('value'))
-            .values('value_lower')
+            .values('valeur_lower')
             .annotate(total=models.Count('id'))
-            )
+        )
 
-        max = counts.aggregate(max_total=models.Max('total'))['max_total']
-        if max is None:
-            return '-'
-        max_value = [data['value_lower'].title() for data in counts if data['total'] == max]
-        return ", ".join(max_value)
+        max_total = counts.aggregate(max_total=models.Max('total'))['max_total']
+        if max_total is None:
+            return None, 0
+        
+        max_values = [data['valeur_lower'].title() for data in counts if data['total'] == max_total]
+        return max_values, max_total
 
         
 class Option(models.Model):
