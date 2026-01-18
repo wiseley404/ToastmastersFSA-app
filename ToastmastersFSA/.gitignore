@@ -11,8 +11,9 @@ __pycache__/
 venv/
 env/
 
-# Media file
+# Media + static files
 media/
+staticfiles/
 
 # OS
 .DS_Store

@@ -22,10 +22,11 @@
             <p>
                 Statut(s): 
                 {% if user.profile.statut %}
-                    {{ user.profile.statut.title|title }} /
+                    {{ user.profile.statut.title|title }} 
                 {% endif %}
 
                 {% if is_board_member %}
+                        /
                      {% for bp in board_profiles %}
                             {{ bp.role.title }}{% if not forloop.last %} / {% endif %}
                       {% endfor %}

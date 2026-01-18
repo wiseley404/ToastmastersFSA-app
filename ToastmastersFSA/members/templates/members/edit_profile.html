@@ -5,6 +5,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'members/css/profile.css' %}?v=1">
+    <script type="text/javascript" src="{% static 'accounts/js/password_change.js' %}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -13,7 +14,15 @@
 <form method="post" enctype="multipart/form-data" id="profile-form">
 {% csrf_token %}
 <div class="profile-page">
-    
+    {% if messages %}
+    <div class="messages" style="margin-bottom: 20px;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="profile-header">
         <div class="profile-avatar">
             <img src="{% if request.user.profile.photo %}{{ request.user.profile.photo.url }}{% else %}{% static 'images/avatar.jpg' %}{% endif %}" alt="Photo de profil" id="avatar-preview">
