@@ -7,7 +7,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
-    overflow: hidden;
 }
 
 .auth-container {
@@ -86,6 +85,7 @@ body {
     padding: 40px;
     background-color: #f8f9fa;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 768px) {
@@ -105,6 +105,7 @@ body {
     max-width: 450px;
     width: 100%;
     margin: 0 auto;
+    animation: slideIn 0.3s ease-out;
 }
 
 /* Logo */
@@ -328,8 +329,19 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 767px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .auth-container {
+        min-height: 100vh;
+        height: auto;
+    }
+    
     .form-section {
-        padding: 30px 20px;
+        min-height: 100vh;
+        padding-bottom: 60px; 
     }
 
     .logo img {
