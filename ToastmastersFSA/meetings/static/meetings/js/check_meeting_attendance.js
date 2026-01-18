@@ -10,9 +10,18 @@ function showAttendancePopup(data) {
   const html = `
     <div class="popup-body">
       <h2>Confirmez votre présence</h2>
-      <p>Etes-vous present a la reunion d'aujourd'hui: ${data.date} ?</p>
-      <button onclick="confirmAttendance(${data.meeting_id}, true)">Présent</button>
-      <button onclick="confirmAttendance(${data.meeting_id}, false)">Absent</button>
+      <p>Etes-vous présent(e) à notre reunion actuellement ?</p>
+      <button onclick="confirmAttendance(${data.meeting_id}, true)" 
+          style="padding: 0.5rem 1rem; border: none; border-radius: 6px;
+                cursor: pointer; font-weight: bold;  background-color: #007BFF;>
+        Présent(e)
+      </button>
+
+      <button onclick="confirmAttendance(${data.meeting_id}, false)" 
+          style="padding: 0.5rem 1rem; border: 2px solid #007BFF; border-radius: 6px;
+            cursor: pointer; font-weight: bold; background-color: #fff; color: #007BFF;">
+        Absent(e)
+      </button>
     </div>
   `;
   openPopup(html);

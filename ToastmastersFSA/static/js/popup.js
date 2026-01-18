@@ -99,4 +99,5 @@ function initPopupForms() {
     if (typeof initSpeechForm === 'function') initSpeechForm();
     if (typeof initEmailListForm === 'function') initEmailListForm();
     if (typeof initAddOption === 'function') initAddOption();
+    if (typeof initPasswordChangeForm === 'function') initPasswordChangeForm();
 }
