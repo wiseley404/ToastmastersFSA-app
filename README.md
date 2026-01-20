@@ -116,11 +116,12 @@ ToastmastersFSA/
 - **Custom authentication flow** with email verification
 
 ## 👨‍💻 Author
+Developed by **[Ton Nom]**  
+🐙 [GitHub] [https://github.com/wiseley404/]
+🌐 [Portfolio/Site Web] [https://github.io/wiseley404/portfolio]   
+📧 [Email] [mailto:wppet@ulaval.ca]  
+💼 [LinkedIn ][https://www.linkedin.com/in/petitonwiseley]
 
-Développé par [Petiton Wiseley Paul-Enzer]  
-📧 [wppet@ulaval.ca]  
-💼 [https://www.linkedin.com/in/petitonwiseley]
-🐙 [https://github.com/wiseley404/]
 
 ## 📝 License
 
