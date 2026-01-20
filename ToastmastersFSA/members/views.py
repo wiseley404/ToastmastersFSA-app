@@ -17,7 +17,7 @@ from django.http import JsonResponse
 # Create your views here.
 @login_required
 def show_dashboard(request):
-    board_profiles = request.user.profile.board_roles.all()
+    board_profiles = request.user.profile.board_roles.filter(is_active=True)
     is_board_member = request.user.profile.board_roles.exists()
     
 
