@@ -15,6 +15,15 @@ This app automates club operations including meeting management, member tracking
 - **Role Assignment**: Automatic role distribution for meetings with conflict detection
 - **Responsive Design**: Mobile-first design for access on any device
 
+## 🔐 User Roles
+
+The app features **role-based access control**:
+
+- **Members**: View schedules, manage personal profile, submit evaluations, ...
+- **Board Members**: Full administrative access including meeting creation, member management, email campaigns, analytics, and club configuration.
+
+*Screenshots below show the board member interface with complete access.*
+
 ## 📸 Screenshots
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/64dcfb99-d5ae-4534-b963-86875186e8e8" />
