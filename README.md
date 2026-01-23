@@ -37,6 +37,7 @@ The app features **role-based access control**:
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/7cd95523-95fe-40fb-8329-d743c7c6175c" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/cca6f018-9938-42d5-b4f0-3d30316acec9" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/2701aa12-f111-47e7-9cee-6782bd3ebeb9" />
+<img width="1275" height="663" alt="image" src="https://github.com/user-attachments/assets/4c259ac1-35b7-4d0f-9ae6-b09660c03e08" />
 
 
 
